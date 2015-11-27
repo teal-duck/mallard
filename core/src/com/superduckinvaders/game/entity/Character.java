@@ -1,6 +1,6 @@
 package com.superduckinvaders.game.entity;
 
-public class Character {
+public class Character extends Entity {
 
     /**
      * Character is facing tile above.
@@ -40,6 +40,6 @@ public class Character {
     /**
      * Whether or not this Character collides with other objects.
      */
-    private boolean collides = true;Initial implementation.
+    private boolean collides = true;
 
 }

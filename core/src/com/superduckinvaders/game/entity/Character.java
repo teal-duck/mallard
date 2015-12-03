@@ -33,7 +33,7 @@ public abstract class Character extends Entity {
     private int speed = 0;
 
     /**
-     * Current facing of this Character.
+     * Current direction this Character is facing.
      */
     private int direction = 0;
 
@@ -43,7 +43,7 @@ public abstract class Character extends Entity {
     private boolean collides = true;
 
     public void move() {
-        //TODO implement me
+        // TODO: implement me
     }
 
     /**
@@ -77,6 +77,7 @@ public abstract class Character extends Entity {
      * @param speed the new speed of this Character.
      */
     public void setSpeed(int speed) {
+        // TODO: determine what units speed are
         if(this.speed >= 0) {
             this.speed = speed;
         }

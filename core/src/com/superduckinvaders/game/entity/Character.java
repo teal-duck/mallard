@@ -3,48 +3,24 @@ package com.superduckinvaders.game.entity;
 public abstract class Character extends Entity {
 
     /**
-     * Character is facing tile above.
-     */
-    public static final int DIRECTION_NORTH = 0;
-
-    /**
-     * Character is facing tile to the right.
-     */
-    public static final int DIRECTION_EAST = 1;
-
-    /**
-     * Character is facing tile below.
-     */
-    public static final int DIRECTION_SOUTH = 2;
-
-    /**
-     * Character is facing tile to the left.
-     */
-    public static final int DIRECTION_WEST = 3;
-
-    /**
      * Current health of this Character.
      */
     private int health = 10;
 
     /**
-     * Current speed of this Character.
+     * Current speed of this Character in pixels per second.
      */
     private int speed = 0;
 
     /**
-     * Current direction this Character is facing.
+     * The coordinates of the destination tile of this Character.
      */
-    private int direction = 0;
+    private int destX = 0, destY = 0;
 
     /**
      * Whether or not this Character collides with other objects.
      */
     private boolean collides = true;
-
-    public void move() {
-        // TODO: implement me
-    }
 
     /**
      * Gets the health of this Character in hearts.
@@ -65,40 +41,53 @@ public abstract class Character extends Entity {
     }
 
     /**
-     * Gets the speed of this Character.
-     * @return the speed of this Character
+     * Gets the speed of this Character in pixels per tick.
+     * @return the speed of this Character in pixels per tick
      */
     public int getSpeed() {
         return speed;
     }
 
     /**
-     * Sets the speed of this Character.
-     * @param speed the new speed of this Character.
+     * Sets the speed of this Character in pixels per tick.
+     * @param speed the new speed of this Character in pixels per tick
      */
     public void setSpeed(int speed) {
-        // TODO: determine what units speed are
         if(this.speed >= 0) {
             this.speed = speed;
         }
     }
 
     /**
-     * Gets the direction that this Character is facing.
-     * @return the direction that this Character is facing (one of the DIRECTION_ constants in this class)
+     * Gets the X coordinate of the destination tile of this Character.
+     * @return the X coordinate of the destination tile
      */
-    public int getDirection() {
-        return direction;
+    public int getDestX() {
+        return destX;
     }
 
     /**
-     * Sets the direction that this Character is facing.
-     * @param direction the direction that this Character is facing (one of the DIRECTION_ constants in this class)
+     * Sets the X coordinate of the destination tile of this Character.
+     * @param destX the X coordinate of the destination tile
      */
-    public void setDirection(int direction) {
-        if(direction >= DIRECTION_NORTH && direction <= DIRECTION_WEST) {
-            this.direction = direction;
-        }
+    public void setDestX(int destX) {
+        this.destX = destX;
+    }
+
+    /**
+     * Gets the Y coordinate of the destination tile of this Character.
+     * @return the Y coordinate of the destination tile
+     */
+    public int getDestY() {
+        return destY;
+    }
+
+    /**
+     * Sets the Y coordinate of the destination tile of this Character.
+     * @param destY the Y coordinate of the destination tile
+     */
+    public void setDestY(int destY) {
+        this.destY = destY;
     }
 
     /**
@@ -107,5 +96,22 @@ public abstract class Character extends Entity {
      */
     public boolean doesCollide() {
         return collides;
+    }
+
+    /**
+     * Sets whether or not this Character collides with other entities.
+     * @param collides whether or not this Character collides with other entities
+     */
+    public void setCollides(boolean collides) {
+        this.collides = collides;
+    }
+
+    public int getDirection() {
+        return (int) Math.atan((double) (destX - x) / (destY - y));
+        //TODO: finish implementing this.
+    }
+
+    public void move() {
+        //TODO: finish implementing this.
     }
 }

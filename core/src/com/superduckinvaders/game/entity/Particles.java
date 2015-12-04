@@ -1,5 +1,5 @@
 package com.superduckinvaders.game.entity;
 
-public class Particles {
+public class Particles extends Entity {
 
 }

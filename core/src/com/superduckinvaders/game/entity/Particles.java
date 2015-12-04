@@ -11,7 +11,4 @@ public class Particles extends Entity {
 	
 	public void update() {
 	}
-
 }
-
-

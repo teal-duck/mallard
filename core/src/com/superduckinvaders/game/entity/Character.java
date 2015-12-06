@@ -41,9 +41,16 @@ public abstract class Character extends Entity {
      * Whether or not this Character collides with other objects.
      */
     private boolean collides = true;
-
-    public void move() {
+    
+    //adrian here - could you represent the target coordinate as two ints please?
+    public void move(int targetX, int targetY) {
         // TODO: implement me
+    }
+    
+    //adrian - could you implements this as well please?
+    public boolean isMoving(){
+    	// TODO: implement me
+    	return false;
     }
 
     /**

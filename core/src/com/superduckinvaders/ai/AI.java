@@ -7,11 +7,11 @@ import com.superduckinvaders.game.entity.Player;
 public abstract class AI {
 	
 	public static enum AIType {
-		ZOMBIE, SPREADER, SNIPER
+		DUMMY, ZOMBIE, SPREADER, SNIPER
 	}
 	
-	Tile[][] mapPointer;//possible pointing error!!!
-	Player playerPointer;
+	protected Tile[][] mapPointer;//possible pointing error!!!
+	protected Player playerPointer;
 	
 	public AI(Tile[][] tiles, Player playerPointer)
 	{

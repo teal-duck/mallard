@@ -1,6 +1,6 @@
 package com.superduckinvaders.ai;
 
-import com.superduckinvaders.game.entity.Character;
+import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.round.Tile;
 
@@ -11,7 +11,13 @@ public class DummyAI extends AI {
 	}
 
 	@Override
-	public void execute(Character character) {
+	public void execute(Mob mob) {
+	}
+	
+	@Override
+	public boolean StillActive(Mob mob){
+		//TODO Finish
+		return true;
 	}
 
 }

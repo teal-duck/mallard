@@ -43,6 +43,8 @@ public abstract class Character extends Entity {
     private boolean collides = true;
     
     //adrian here - could you represent the target coordinate as two ints please?
+    //also just note that I want to keep moving mobs every frame - even if they've not finished moving to target coordinate -
+    //could you make sure that they change their coordinates mid-movement accordingly?
     public void move(int targetX, int targetY) {
         // TODO: implement me
     }

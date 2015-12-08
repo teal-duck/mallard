@@ -1,8 +1,9 @@
 package com.superduckinvaders.ai;
 
-import com.superduckinvaders.game.entity.Character;
+import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.round.Tile;
+
 import java.util.ArrayList;
 
 public class ZombieAI extends AI {
@@ -16,10 +17,15 @@ public class ZombieAI extends AI {
 	
 	
 	@Override
-	public void execute(Character character) {
-		int[] coord = FindPath(character.x, character.y, playerPointer.x, playerPointer.y);
-		character.move(coord[0], coord[1]);
-		
+	public void execute(Mob mob) {
+		int[] coord = FindPath(mob.x, mob.y, playerPointer.x, playerPointer.y);
+		mob.move(coord[0], coord[1]);
+	}
+	
+	@Override
+	public boolean StillActive(Mob mob){
+		//TODO Finish
+		return true;
 	}
 	
 

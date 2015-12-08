@@ -1,6 +1,6 @@
 package com.superduckinvaders.ai;
 
-import com.superduckinvaders.game.entity.Character;
+import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.round.Tile;
 import com.superduckinvaders.game.entity.Player;
 
@@ -19,11 +19,19 @@ public abstract class AI {
 		this.playerPointer = playerPointer;
 	}
 	
-	public boolean StillActive(Character character)
-	{
-		//TODO finish me
-		return false;
-	}
+	/**
+	 * checks whether the character is still active
+	 * left to AI as some AI may still be active off screen 
+	 * (i.e. zombie once active should never deactivate)
+	 * 
+	 * @param mob - pointer to the Mob
+	 * @return whether character is still active 
+	 */
+	public abstract boolean StillActive(Mob mob);
 	
-	public abstract void execute(Character character);
+	/**
+	 * execute the AI on a per-frame basis
+	 * @param mob pointer to the Mob
+	 */
+	public abstract void execute(Mob mob);
 }

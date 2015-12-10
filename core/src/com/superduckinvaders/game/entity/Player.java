@@ -1,5 +1,5 @@
 package com.superduckinvaders.game.entity;
 
-public class Player {
+public class Player extends Character {
 
 }

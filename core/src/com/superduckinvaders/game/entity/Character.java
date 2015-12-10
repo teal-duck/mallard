@@ -8,12 +8,12 @@ public abstract class Character extends Entity {
     private int health = 10;
 
     /**
-     * Current speed of this Character in pixels per second.
+     * Movement speed of this Character in pixels per second.
      */
     private int speed = 0;
 
     /**
-     * The coordinates of the destination tile of this Character.
+     * The coordinates of the destination of this Character.
      */
     private int destX = 0, destY = 0;
 
@@ -21,6 +21,25 @@ public abstract class Character extends Entity {
      * Whether or not this Character collides with other objects.
      */
     private boolean collides = true;
+
+    /**
+     * Begins moving this Character toward the specified destination coordinates.
+     * @param destX the X coordinate of the destination
+     * @param destY the Y coordinate of the destination
+     */
+    public void move(int destX, int destY) {
+        this.destX = destX;
+        this.destY = destY;
+    }
+
+    /**
+     * Gets whether or not this Character is moving.
+     * A Character is considered to be moving when its current coordinates do not match those of its destination and its movement speed is nonzero.
+     * @return whether or not this Character is moving
+     */
+    public boolean isMoving() {
+        return (x != destX || y != destY) && speed > 0;
+    }
 
     /**
      * Gets the health of this Character in hearts.
@@ -35,25 +54,26 @@ public abstract class Character extends Entity {
      * @param health the new health of this Character in hearts
      */
     public void setHealth(int health) {
-        if(this.health >= 0) {
+        if(health >= 0) {
             this.health = health;
         }
     }
 
     /**
-     * Gets the speed of this Character in pixels per tick.
-     * @return the speed of this Character in pixels per tick
+     * Gets the movement speed of this Character in pixels per tick.
+     * @return the movement speed of this Character in pixels per tick
      */
     public int getSpeed() {
         return speed;
     }
 
     /**
-     * Sets the speed of this Character in pixels per tick.
-     * @param speed the new speed of this Character in pixels per tick
+     * Sets the movement speed of this Character in pixels per tick.
+     * @param speed the new movement speed of this Character in pixels per tick
      */
     public void setSpeed(int speed) {
-        if(this.speed >= 0) {
+        // Can't have a negative speed
+        if(speed >= 0) {
             this.speed = speed;
         }
     }
@@ -67,27 +87,11 @@ public abstract class Character extends Entity {
     }
 
     /**
-     * Sets the X coordinate of the destination tile of this Character.
-     * @param destX the X coordinate of the destination tile
-     */
-    public void setDestX(int destX) {
-        this.destX = destX;
-    }
-
-    /**
      * Gets the Y coordinate of the destination tile of this Character.
      * @return the Y coordinate of the destination tile
      */
     public int getDestY() {
         return destY;
-    }
-
-    /**
-     * Sets the Y coordinate of the destination tile of this Character.
-     * @param destY the Y coordinate of the destination tile
-     */
-    public void setDestY(int destY) {
-        this.destY = destY;
     }
 
     /**
@@ -106,12 +110,40 @@ public abstract class Character extends Entity {
         this.collides = collides;
     }
 
-    public int getDirection() {
-        return (int) Math.atan((double) (destX - x) / (destY - y));
-        //TODO: finish implementing this.
+    /**
+     * Gets the current facing of this Character in radians.
+     * Facing is calculated based on the Character's current position and that of its destination.
+     * @return the current facing of this Character in radians
+     */
+    public double getDirection() {
+        return Math.atan2((double) destY - y, (double) destX - x);
     }
 
-    public void move() {
-        //TODO: finish implementing this.
+    /**
+     * Updates the position of this Character, moving it nearer to its target coordinates.
+     * Ensure that super.update() is called in the update method of each subclass.
+     */
+    @Override
+    public void update() {
+        // TODO: account for collision detection here?
+
+        // Update X position
+        if (destX < x) {
+            // Destination is to the left
+            // Conditional is to ensure that we do not 'overshoot' the target coordinate
+            x -= (x - speed >= destX ? speed : x - destX);
+        } else if (destX > x) {
+            // Destination is to the right
+            x += (x + speed <= destX ? speed : destX - x);
+        }
+
+        // Update Y position
+        if(destY < y) {
+            // Destination is below
+            y -= (y - speed >= destY ? speed : y - destY);
+        } else if (destY > y) {
+            // Destination is above
+            y += (y + speed <= destY ? speed : destY - y);
+        }
     }
 }

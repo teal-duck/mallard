@@ -12,6 +12,7 @@ public abstract class Character extends Entity {
      */
     private int speed = 0;
 
+    // TODO: confirm WHERE the movement code should go
     /**
      * The coordinates of the destination of this Character.
      */
@@ -125,10 +126,10 @@ public abstract class Character extends Entity {
      */
     @Override
     public void update() {
-        // TODO: account for collision detection here?
+        // TODO: decide once and for all where this code is going
 
         // Update X position
-        if (destX < x) {
+        /*if (destX < x) {
             // Destination is to the left
             // Conditional is to ensure that we do not 'overshoot' the target coordinate
             x -= (x - speed >= destX ? speed : x - destX);
@@ -144,6 +145,6 @@ public abstract class Character extends Entity {
         } else if (destY > y) {
             // Destination is above
             y += (y + speed <= destY ? speed : destY - y);
-        }
+        }*/
     }
 }

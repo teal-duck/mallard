@@ -12,8 +12,8 @@ public class DuckGame extends Game {
 	GameScreen gameScreen;
 	@Override
 	public void create() {
-        gameScreen = new GameScreen(this);
-        setScreen(gameScreen);
+		gameScreen = new GameScreen(this);
+		setScreen(gameScreen);
 	}
 
 	@Override

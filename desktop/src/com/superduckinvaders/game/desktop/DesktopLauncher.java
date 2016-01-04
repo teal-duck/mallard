@@ -2,7 +2,7 @@ package com.superduckinvaders.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.superduckinvaders.game.Game;
+import com.superduckinvaders.game.DuckGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
@@ -10,7 +10,6 @@ public class DesktopLauncher {
 		config.width = 1280;
 		config.height = 720;
 		config.title = "SUPER DUCK INVADERS! - v0.01";
-		config.foregroundFPS = 60;
-		new LwjglApplication(new Game(), config);
+		new LwjglApplication(new DuckGame(), config);
 	}
 }

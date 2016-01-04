@@ -132,6 +132,8 @@ public class Player extends Character {
     @Override
     public void update() {
         super.update();
+        y += 1;
+        x += 1;
 
         // Decrement powerup timer if powerup is not infinite (i.e. powerupTimer = -1).
         if (powerupTimer > 0) {

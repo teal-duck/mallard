@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Character {
-
     // TODO: determine what powerups we have
     /**
      * No powerup.

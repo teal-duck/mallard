@@ -1,4 +1,4 @@
-package com.superduckinvaders.ai;
+package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.entity.Player;

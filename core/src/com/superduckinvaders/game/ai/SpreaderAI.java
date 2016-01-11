@@ -1,12 +1,12 @@
-package com.superduckinvaders.ai;
+package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.round.Tile;
 
-public class SniperAI extends AI{
+public class SpreaderAI extends AI {
 	
-	public SniperAI(Tile[][] tiles, Player playerPointer)
+	public SpreaderAI(Tile[][] tiles, Player playerPointer)
 	{
 		super(tiles, playerPointer);
 	}
@@ -14,7 +14,6 @@ public class SniperAI extends AI{
 	@Override
 	public void execute(Mob mob) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override

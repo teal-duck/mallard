@@ -18,11 +18,12 @@ public abstract class Character extends Entity {
      */
     private int destX = 0, destY = 0;
 
+
     /**
      * Whether or not this Character collides with other objects.
      */
     private boolean collides = true;
-
+    
     /**
      * Begins moving this Character toward the specified destination coordinates.
      * @param destX the X coordinate of the destination

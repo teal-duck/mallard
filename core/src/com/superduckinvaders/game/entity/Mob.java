@@ -1,7 +1,7 @@
 
 package com.superduckinvaders.game.entity;
 
-import com.superduckinvaders.ai.*;
+import com.superduckinvaders.game.ai.*;
 import com.superduckinvaders.game.round.Tile;
 
 public class Mob extends Character {	
@@ -12,6 +12,10 @@ public class Mob extends Character {
 	 */
 	private boolean active = false;
 
+	/**
+	 * getter for active
+	 * @return active status of the mob
+	 */
 	public boolean getActive(){
 		return active;
 	}
@@ -44,8 +48,9 @@ public class Mob extends Character {
 			break;	
 		}
 	}
-
-	public void Update()
+	
+	@Override
+	public void update()
 	{
 		if(active)
 		{
@@ -66,6 +71,13 @@ public class Mob extends Character {
 			}
 		}
 	}
+	
+	@Override
+	public void render()
+	{
+		super.render();
+	}
+			
 
 	public boolean onScreen()
 	{

@@ -1,4 +1,4 @@
-package com.superduckinvaders.ai;
+package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.entity.Player;
@@ -52,7 +52,7 @@ public class ZombieAI extends AI {
 				perm[3] = new int[]{coord[0]-1, coord[1], coord[2]+1};
 				for(int[] currentPerm : perm)
 				{
-					if(!(mapPointer[currentPerm[0]][currentPerm[1]]).solid() || CoordInQueue(currentPerm, queue))
+					if(!(mapPointer[currentPerm[0]][currentPerm[1]]).solid || CoordInQueue(currentPerm, queue))
 						queue.add(currentPerm);
 					if(currentPerm[0]==targetX && currentPerm[1]==targetY)
 					{

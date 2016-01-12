@@ -1,8 +1,5 @@
 package com.superduckinvaders.game.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.superduckinvaders.game.round.Round;
 
 public class Player extends Character {
@@ -31,11 +28,6 @@ public class Player extends Character {
      * Player's current score.
      */
     private int points = 0;
-
-    /**
-     * Player's current inventory of items.
-     */
-    private List<Item> items = new ArrayList<Item>(16);
 
     /**
      * Player's current powerup.
@@ -67,34 +59,6 @@ public class Player extends Character {
      */
     public int getScore() {
         return points;
-    }
-
-    /**
-     * Adds the specified Item to the Player's inventory.
-     *
-     * @param item the item to add
-     */
-    public void addItem(Item item) {
-        items.add(item);
-    }
-
-    /**
-     * Gets whether or not the Player has the specified Item in their inventory.
-     *
-     * @param item the item to test for
-     * @return true if the item is in the player's inventory, false if not
-     */
-    public boolean hasItem(Item item) {
-        return items.contains(item);
-    }
-
-    /**
-     * Removes the specified item from the Player's inventory. Does nothing if the Item is not in the inventory.
-     *
-     * @param item the item to remove
-     */
-    public void removeItem(Item item) {
-        items.remove(item);
     }
 
     /**

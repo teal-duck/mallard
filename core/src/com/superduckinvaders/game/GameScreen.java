@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
 	public void show() {
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 
-		mapRenderer = new OrthogonalTiledMapRenderer(parent.getMap());
+		mapRenderer = new OrthogonalTiledMapRenderer(round.getMap());
 		spriteBatch = new SpriteBatch();
 	}
 

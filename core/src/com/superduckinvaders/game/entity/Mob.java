@@ -1,88 +1,33 @@
 
 package com.superduckinvaders.game.entity;
 
-import com.superduckinvaders.game.ai.*;
-import com.superduckinvaders.game.round.Tile;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.superduckinvaders.game.graphics.TextureSet;
 
-public class Mob extends Character {	
-
-	/**
-	 * variable that tracks whether enemy physics/behaviour is
-	 * active i.e. whether it's off screen etc.
-	 */
-	private boolean active = false;
+public class Mob extends Character {
 
 	/**
-	 * getter for active
-	 * @return active status of the mob
+	 * The texture set to use for this Mob.
 	 */
-	public boolean getActive(){
-		return active;
-	}
+	private TextureSet textureSet;
 
-	/**
-	 * mob AI, specified in AI class
-	 */
-	private AI mobAI;
-	
-	/**
-	 * pointer to all the player projectiles (the ones that hurt the mob)
-	 */
-	private Projectile[] playerProjectilesPointer;
-
-	public void setAI(AI.AIType newType, Tile[][] mapPointer, Player playerPointer)
-	{
-		switch (newType)
-		{
-		case DUMMY:
-			mobAI = new DummyAI(mapPointer, playerPointer);
-			break;
-		case ZOMBIE:
-			mobAI = new ZombieAI(mapPointer, playerPointer);
-			break;
-		case SNIPER:
-			mobAI = new SniperAI(mapPointer, playerPointer);
-			break;
-		case SPREADER:
-			mobAI = new SpreaderAI(mapPointer, playerPointer);
-			break;	
-		}
-	}
-	
 	@Override
-	public void update()
-	{
-		if(active)
-		{
-			if (doesCollide())
-			{
-				for(Projectile projectile:playerProjectilesPointer)
-				{
-					//COLLISION DETECION LOGIC HERE???
-				}
-			}
-			mobAI.execute(this);
-		}
-		else
-		{
-			if(onScreen())
-			{
-				active = true;
-			}
-		}
+	public int getWidth() {
+		return 0;
 	}
-	
+
 	@Override
-	public void render()
-	{
-		super.render();
-	}
-			
-
-	public boolean onScreen()
-	{
-		//TODO FINISH ME
-		return false;
+	public int getHeight() {
+		return 0;
 	}
 
+	@Override
+	public void render(SpriteBatch spriteBatch) {
+
+	}
+
+	@Override
+	public void update(float delta) {
+		// TODO: implement mob update code
+	}
 }

@@ -51,7 +51,7 @@ public abstract class Character extends Entity {
     }
 
     /**
-     * Heals this Entity's health by the specified number of points.
+     * Heals this Character's health by the specified number of points.
      * @param health the number of health points to heal
      */
     public void heal(int health) {
@@ -63,7 +63,7 @@ public abstract class Character extends Entity {
     }
 
     /**
-     * Damages this Entity's health by the specified number of points.
+     * Damages this Character's health by the specified number of points.
      *
      * @param health the number of points to damage
      */
@@ -77,7 +77,7 @@ public abstract class Character extends Entity {
     }
 
     /**
-     * @return whether this Entity is dead (i.e. its health is 0)
+     * @return whether this Character is dead (i.e. its health is 0)
      */
     public boolean isDead() {
         return health == 0;

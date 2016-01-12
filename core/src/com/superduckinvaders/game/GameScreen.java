@@ -5,121 +5,121 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.superduckinvaders.game.entity.Player;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
+import com.superduckinvaders.game.entity.Entity;
+import com.superduckinvaders.game.entity.Projectile;
 import com.superduckinvaders.game.round.Round;
 
 public class GameScreen implements Screen {
 
 	public static int WIDTH = 1280; // 640
 	public static int HEIGHT = 720; // 448
-	private int xOffset, yOffset;
-	
-	DuckGame game;
-	OrthographicCamera camera;
-	Round round;
-	Player player;
 
-	double delta2 = 0;
-	final double ns = 1000000000.0 / 60;
-	long lastTime;
-	long now;
-	 
-	SpriteBatch batch;
-	
-	public GameScreen (DuckGame game) {
-		this.game = game;
-		camera = new OrthographicCamera(WIDTH, HEIGHT);
-		camera.position.set(WIDTH / 2, HEIGHT / 2, 0);
-		lastTime = System.nanoTime();
+	/**
+	 * The game camera.
+	 */
+	private OrthographicCamera camera;
 
-		batch = new SpriteBatch();
-		
+	/**
+	 * The renderer for the tile map.
+	 */
+	private OrthogonalTiledMapRenderer mapRenderer;
+
+	/**
+	 * The sprite batch for texture rendering.
+	 */
+	private SpriteBatch spriteBatch;
+
+	/**
+	 * The Round this GameScreen renders.
+	 */
+	private Round round;
+
+	public GameScreen(Round round) {
+		this.round = round;
 	}
 
-	
-	@Override
-	public void render(float delta) {
-		now = System.nanoTime();
-		
-		delta2 += (now - lastTime) / ns;
-		lastTime = now;
-		while (delta2 >= 1) {
-			update();
-			delta2--;
-		}
-		draw();
+	/**
+	 * Converts screen coordinates to world coordinates.
+	 *
+	 * @param x the x coordinate on screen
+	 * @param y the y coordinate on screen
+	 * @return a Vector3 containing the world coordinates (x and y)
+	 */
+	public Vector3 unproject(int x, int y) {
+		return camera.unproject(new Vector3(x, y, 0));
 	}
-
-	private void draw() {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		batch.begin();
-		xOffset = player.x - WIDTH/2;
-		yOffset = player.y - HEIGHT/2;
-		
-		round.render(xOffset, yOffset, this);
-		batch.end();
-		//player.update();
-		
-	}
-
-	private void update() {
-		round.update();
-		player.update();
-		
-		
-	}
-	
-	public void renderTile(int x, int y, TextureRegion sprite) {
-		batch.draw(sprite, x - xOffset, y - yOffset);
-	}
-
-	public void renderPlayer(int x, int y, TextureRegion sprite) {
-		//TODO Modify for Player
-		batch.draw(sprite, x, y);
-	}
-	
-	public void renderProjectile(int x, int y, double angle, TextureRegion sprite) {
-		//TODO Modify for Projectile
-		batch.draw(sprite, x, y);
-	}
-
 
 	@Override
 	public void show() {
-		
+		camera = new OrthographicCamera(WIDTH, HEIGHT);
+
+		mapRenderer = new OrthogonalTiledMapRenderer(parent.getMap());
+		spriteBatch = new SpriteBatch();
 	}
 
+	@Override
+	public void render(float delta) {
+		round.update(delta);
+
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		// Centre the camera on the player.
+		camera.position.set((int) round.getPlayer().getX() + round.getPlayer().getWidth() / 2, (int) round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
+		camera.update();
+
+		mapRenderer.setView(camera);
+		mapRenderer.render();
+
+		spriteBatch.setProjectionMatrix(camera.combined);
+		spriteBatch.begin();
+
+		// Draw all entities.
+		for (Entity entity : round.getEntities()) {
+			entity.render(spriteBatch);
+		}
+
+		for (Projectile projectile : round.getProjectiles()) {
+			projectile.render(spriteBatch);
+		}
+
+		spriteBatch.end();
+	}
 
 	@Override
 	public void resize(int width, int height) {
-		
+		// TODO Auto-generated method stub
+
 	}
 
 
 	@Override
 	public void pause() {
-		
+		// TODO Auto-generated method stub
+
 	}
 
 
 	@Override
 	public void resume() {
-		
+		// TODO Auto-generated method stub
+
 	}
 
 
 	@Override
 	public void hide() {
-		
+		// TODO Auto-generated method stub
+
 	}
 
 
 	@Override
 	public void dispose() {
-		
+		// TODO Auto-generated method stub
+
 	}
 
 }

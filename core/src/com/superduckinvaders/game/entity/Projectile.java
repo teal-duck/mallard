@@ -1,6 +1,7 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.superduckinvaders.game.graphics.Assets;
 import com.superduckinvaders.game.round.Round;
 
 /**
@@ -35,12 +36,12 @@ public class Projectile extends Entity {
 
     @Override
     public int getWidth() {
-        //return Assets.projectile.getRegionWidth();
+		return Assets.projectile.getRegionWidth();
     }
 
     @Override
     public int getHeight() {
-        //return Assets.projectile.getRegionHeight();
+		return Assets.projectile.getRegionHeight();
     }
 
     @Override
@@ -57,6 +58,8 @@ public class Projectile extends Entity {
             return;
         }
 
+
+        /*
         // Otherwise check with collisions with every other entity.
         for (Entity entity : parent.getEntities()) {
             // Don't damage my owner.
@@ -70,6 +73,7 @@ public class Projectile extends Entity {
                 removed = true;
             }
         }
+        */
     }
 
     @Override

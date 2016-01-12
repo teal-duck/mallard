@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.superduckinvaders.game.graphics.Assets;
 import com.superduckinvaders.game.round.Round;
 
 public class DuckGame extends Game {
@@ -13,8 +14,11 @@ public class DuckGame extends Game {
 	GameScreen gameScreen;
 	@Override
 	public void create() {
-		gameScreen = new GameScreen(this);
-		setScreen(gameScreen);
+		Assets.load();
+
+		Round round = new Round(this, Assets.levelOneMap);
+
+		setScreen(gameScreen = new GameScreen(round));
 	}
 
 	@Override

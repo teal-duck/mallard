@@ -3,6 +3,8 @@ package com.superduckinvaders.game.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.superduckinvaders.game.round.Round;
+
 public class Player extends Character {
     // TODO: determine what powerups we have
     /**
@@ -45,7 +47,11 @@ public class Player extends Character {
      */
     private int powerupTimer = 0;
 
-    /**
+    public Player(Round round) {
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
      * Increases the Player's score by the specified amount.
      *
      * @param amount the amount to increase the score by

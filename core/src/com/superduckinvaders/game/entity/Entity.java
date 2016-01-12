@@ -5,7 +5,7 @@ public abstract class Entity {
 	public int x, y;
 	private boolean removed = false;
 
-	public void update() {
+	public void update(float delta) {
 
 	}
 

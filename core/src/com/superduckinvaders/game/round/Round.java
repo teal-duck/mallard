@@ -11,9 +11,6 @@ import com.superduckinvaders.game.entity.Projectile;
 
 import java.util.Iterator;
 
-/**
- * Created by Oliver on 10/01/2016.
- */
 public final class Round {
 
     /**

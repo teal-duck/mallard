@@ -6,51 +6,83 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.superduckinvaders.game.entity.Player;
+import com.superduckinvaders.game.entity.Projectile;
 import com.superduckinvaders.game.round.Round;
 
 public class GameScreen implements Screen {
 
 	public static int WIDTH = 1280; // 640
 	public static int HEIGHT = 720; // 448
-	private int xOffset, yOffset;
-	
-	DuckGame game;
-	OrthographicCamera camera;
+	final double ns = 1000000000.0 / 60;
 	Round round;
 	Player player;
-
 	double delta2 = 0;
-	final double ns = 1000000000.0 / 60;
 	long lastTime;
 	long now;
-	 
 	SpriteBatch batch;
-	
-	public GameScreen (DuckGame game) {
-		this.game = game;
+	private int xOffset, yOffset;
+	/**
+	 * The game camera.
+	 */
+	private OrthographicCamera camera;
+	/**
+	 * The renderer for the tile map.
+	 */
+	private OrthogonalTiledMapRenderer mapRenderer;
+	/**
+	 * The sprite batch for texture rendering.
+	 */
+	private SpriteBatch spriteBatch;
+
+	public GameScreen(Round round) {
+		this.parent = parent;
+
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
-		camera.position.set(WIDTH / 2, HEIGHT / 2, 0);
+		mapRenderer = new OrthogonalTiledMapRenderer()
+
 		lastTime = System.nanoTime();
 
-		batch = new SpriteBatch();
-		
 		round = new Round();
 		player = new Player();
 	}
 
-	
+	@Override
+	public void show() {
+		camera = new OrthographicCamera(WIDTH, HEIGHT);
+
+		mapRenderer = new OrthogonalTiledMapRenderer(parent.getMap());
+		spriteBatch = new SpriteBatch();
+	}
+
 	@Override
 	public void render(float delta) {
-		now = System.nanoTime();
-		
-		delta2 += (now - lastTime) / ns;
-		lastTime = now;
-		while (delta2 >= 1) {
-			update();
-			delta2--;
+		round.update(delta);
+
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		// Centre the camera on the player.
+		camera.position.set((int) round.getPlayer().getX() + round.getPlayer().getWidth() / 2, (int) round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
+		camera.update();
+
+		mapRenderer.setView(camera);
+		mapRenderer.render();
+
+		spriteBatch.setProjectionMatrix(camera.combined);
+		spriteBatch.begin();
+
+		// Draw all entities.
+		for (Entity entity : round.getEntities()) {
+			entity.render(spriteBatch);
 		}
-		draw();
+
+		for (Projectile projectile : round.getProjectiles()) {
+			projecti.render(spriteBatch);
+		}
+
+		spriteBatch.end();
 	}
 
 	private void draw() {
@@ -68,14 +100,7 @@ public class GameScreen implements Screen {
 	}
 
 	private void update() {
-		round.update();
-		player.update();
-		
-		
-	}
-	
-	public void renderTile(int x, int y, TextureRegion sprite) {
-		batch.draw(sprite, x - xOffset, y - yOffset);
+		parent.update();
 	}
 
 	public void renderPlayer(int x, int y, TextureRegion sprite) {
@@ -86,13 +111,6 @@ public class GameScreen implements Screen {
 	public void renderProjectile(int x, int y, double angle, TextureRegion sprite) {
 		//TODO Modify for Projectile
 		batch.draw(sprite, x, y);
-	}
-
-
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
 	}
 
 

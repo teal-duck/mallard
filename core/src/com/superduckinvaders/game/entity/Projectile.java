@@ -8,6 +8,8 @@ import com.superduckinvaders.game.round.Round;
  */
 public class Projectile extends Entity {
 
+    // TODO: deal with rendering projectiles
+
     /**
      * The owner of this Projectile (i.e. the Entity that fired it).
      */
@@ -62,10 +64,10 @@ public class Projectile extends Entity {
                 continue;
             }
 
-            if (entity.intersects(x, y, getWidth(), getHeight())) {
-                entity.damage(damage);
+            // If entity is character, damage it and then delete myself.
+            if (entity instanceof Character) {
+                ((Character) entity).damage(damage);
                 removed = true;
-                break;
             }
         }
     }

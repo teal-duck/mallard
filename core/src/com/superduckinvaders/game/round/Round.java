@@ -48,7 +48,7 @@ public final class Round {
         this.parent = parent;
         this.map = map;
 
-        player = new Player(this);
+        player = new Player(this, 0, 0, 100);
 
         entities = new Array<Entity>();
         entities.add(player);
@@ -64,48 +64,48 @@ public final class Round {
     }
 
     /**
-     * @return this Level's main map layer
+     * @return this Level's collision map layer
      */
-    public TiledMapTileLayer getMapLayer() {
-        return (TiledMapTileLayer) getMap().getLayers().get(0);
+    public TiledMapTileLayer getCollisionLayer() {
+        return (TiledMapTileLayer) getMap().getLayers().get(1);
     }
 
     /**
      * @return the width of this Level's map in pixels
      */
     public int getMapWidth() {
-        return (int) (getMapLayer().getWidth() * getMapLayer().getTileWidth());
+        return (int) (getCollisionLayer().getWidth() * getCollisionLayer().getTileWidth());
     }
 
     /**
      * @return the height of this Level's map in pixels
      */
     public int getMapHeight() {
-        return (int) (getMapLayer().getHeight() * getMapLayer().getTileHeight());
+        return (int) (getCollisionLayer().getHeight() * getCollisionLayer().getTileHeight());
     }
 
     /**
-     * Gets the map tile at the specified coordinates.
+     * Gets the map tile at the specified coordinates on the map's collision layer.
      * @param x the x coordinate of the map tile
      * @param y the y coordinate of the map tile
      * @return the map tile at the specified coordinates
      */
     public TiledMapTileLayer.Cell getTile(int x, int y) {
-        return getMapLayer().getCell(x / getTileWidth(), y / getTileHeight());
+        return getCollisionLayer().getCell(x / getTileWidth(), y / getTileHeight());
     }
 
     /**
      * @return the width of one tile in this Level's map
      */
     public int getTileWidth() {
-        return (int) getMapLayer().getTileWidth();
+        return (int) getCollisionLayer().getTileWidth();
     }
 
     /**
      * @return the height of one tile in this Level's map
      */
     public int getTileHeight() {
-        return (int) getMapLayer().getTileHeight();
+        return (int) getCollisionLayer().getTileHeight();
     }
 
     /**

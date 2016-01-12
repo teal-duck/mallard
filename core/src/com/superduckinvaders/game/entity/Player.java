@@ -1,9 +1,27 @@
 package com.superduckinvaders.game.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.superduckinvaders.game.round.Round;
 
 public class Player extends Character {
-    // TODO: determine what powerups we have
+
+    /**
+     * Player's maximum health.
+     */
+    public static final int PLAYER_HEALTH = 100;
+
+    /**
+     * Player's standard movement speed in pixels per second.
+     */
+    public static final int PLAYER_SPEED = 200;
+
+    /**
+     * How much the Player's speed should be multiplied by if they have POWERUP_SUPER_SPEED;
+     */
+    public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 1.5;
+
     /**
      * No powerup.
      */
@@ -25,11 +43,6 @@ public class Player extends Character {
     public static final int POWERUP_INVULNERABLE = 3;
 
     /**
-     * Player's current score.
-     */
-    private int points = 0;
-
-    /**
      * Player's current powerup.
      */
     private int powerup = POWERUP_NONE;
@@ -37,11 +50,23 @@ public class Player extends Character {
     /**
      * How much time is remaining on the Player's powerup.
      */
-    private int powerupTimer = 0;
+    private double powerupTimer = 0;
 
-    public Player(Round round) {
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * Player's current score.
+     */
+    private int points = 0;
+
+    /**
+     * Initialises this Player at the specified coordinates and with the specified initial health.
+     *
+     * @param parent the round this Player belongs to
+     * @param x      the initial x coordinate
+     * @param y      the initial y coordinate
+     */
+    public Player(Round parent, double x, double y) {
+        super(parent, x, y, PLAYER_HEALTH);
+    }
 
 	/**
      * Increases the Player's score by the specified amount.
@@ -75,7 +100,7 @@ public class Player extends Character {
      *
      * @return the time remaining on the powerup
      */
-    public int getPowerupTime() {
+    public double getPowerupTime() {
         return powerupTimer;
     }
 
@@ -91,30 +116,55 @@ public class Player extends Character {
      * Sets the Player's current powerup and how long it should last. Use -1 for time for an infinite powerup.
      *
      * @param powerup the powerup to set (one of the POWERUP_ constants)
-     * @param time    how long the powerup should last, in game ticks
+     * @param time    how long the powerup should last, in seconds
      */
-    public void setPowerup(int powerup, int time) {
+    public void setPowerup(int powerup, double time) {
         this.powerup = powerup;
         this.powerupTimer = time;
     }
 
     @Override
-    public void update() {
-        super.update();
-        y += 1;
-        x += 1;
-
-        // Decrement powerup timer if powerup is not infinite (i.e. powerupTimer = -1).
-        if (powerupTimer > 0) {
-            powerupTimer--;
-        } else if (powerupTimer == 0) {
-            clearPowerup();
-        }
+    public int getWidth() {
+        // TODO: implement me
     }
 
     @Override
-    public void render() {
+    public int getHeight() {
+        // TODO: implement me
+    }
+
+    @Override
+    public void update(float delta) {
+        // Decrement powerup timer.
+        if (powerupTimer > 0) {
+            powerupTimer -= delta;
+        } else if (powerupTimer <= 0) {
+            clearPowerup();
+        }
+
+        // Calculate speed at which to move the player.
+        double speed = PLAYER_SPEED * (powerup == POWERUP_SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
+
+        // Left/right movement.
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            velocityX = -speed;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            velocityX = speed;
+        }
+
+        // Left/right movement.
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            velocityY = speed;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            velocityY = -speed;
+        }
+
+        // Update movement.
+        super.update(delta);
+    }
+
+    @Override
+    public void render(SpriteBatch spriteBatch) {
         // TODO: rendering code for Player
-        super.render();
     }
 }

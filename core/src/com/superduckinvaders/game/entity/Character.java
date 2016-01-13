@@ -18,12 +18,12 @@ public abstract class Character extends Entity {
     /**
      * Current health and the maximum health of this Character.
      */
-    protected int baseHealth, currentHealth;
+    protected int maximumHealth, currentHealth;
 
-    public Character(Round parent, double x, double y, int baseHealth) {
+    public Character(Round parent, double x, double y, int maximumHealth) {
         super(parent, x, y);
 
-        this.baseHealth = this.currentHealth = baseHealth;
+        this.maximumHealth = this.currentHealth = maximumHealth;
     }
 
     /**
@@ -42,12 +42,12 @@ public abstract class Character extends Entity {
     }
 
     /**
-     * Gets the base health of this Character.
+     * Gets the maximim health of this Character.
      *
-     * @return the base health of this Character
+     * @return the maximum health of this Character
      */
-    public int getBaseHealth() {
-        return baseHealth;
+    public int getMaximumHealth() {
+        return maximumHealth;
     }
 
     /**
@@ -56,6 +56,10 @@ public abstract class Character extends Entity {
      */
     public void heal(int health) {
         this.currentHealth += health;
+
+        if (currentHealth > maximumHealth) {
+            currentHealth = maximumHealth;
+        }
     }
 
     /**
@@ -71,7 +75,7 @@ public abstract class Character extends Entity {
      * @return whether this Character is dead (i.e. its health is 0)
      */
     public boolean isDead() {
-        return currentHealth == 0;
+        return currentHealth <= 0;
     }
 
     @Override

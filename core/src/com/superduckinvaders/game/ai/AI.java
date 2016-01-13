@@ -11,7 +11,7 @@ public abstract class AI {
 	/**
 	 * pointer to the current round
 	 */
-	private Round roundPointer;
+	protected Round roundPointer;
 	
 	public AI(Round currentRound){
 		roundPointer = currentRound;

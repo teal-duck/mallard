@@ -1,9 +1,10 @@
-
+/*
 package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.round.Round;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class ZombieAI extends AI {
 	
 	@Override
 	public void update(Mob mob) {
-		int[] coord = FindPath(mob.getX(), mob.getY(), mob.parent.getPlayer().getX(), roundPointer.getPlayer().getY());
+		int[] coord = FindPath(mob);
 		mob.setVelocity(coord[0], coord[1]);
 	}
 	
@@ -33,25 +34,34 @@ public class ZombieAI extends AI {
 	 * Recalculated every tick as player might move and change pathfinding coordinates.
 	 */
 /*
-	private int[] FindPath(int sourceX, int sourceY, int targetX, int targetY){
-		ArrayList<int[]> queue = new ArrayList<int[]>();
-		queue.add(new int[]{sourceX, sourceY, 0});
+	private int[] FindPath(Mob mob){
+		int startCoord[] = {(int)mob.getX(), (int)mob.getY()};
+		int finalCoord[] = {(int)roundPointer.getPlayer().getX(), (int)roundPointer.getPlayer().getY()};
 		
-		int[] finalCoord = null;
+		TiledMapTileLayer.Cell playerTile = roundPointer.getTile(finalCoord[0], finalCoord[1]);
+		
+		int tileWidth = roundPointer.getTileWidth();
+		int tileHeight = roundPointer.getTileHeight();
+		
+		ArrayList<int[]> queue = new ArrayList<int[]>();
+		queue.add(new int[]{startCoord[0], startCoord[1], 0});
+		
+		Boolean pathFound = false;
 		
 		//block below tries to find a valid path in a limited amount of steps
 		for(int i = 0; i<PATHFINDING_ITERATION_LIMIT; i++)
 		{
-			for (int[] coord : queue)
+			//generate N, E, S, W tile coordinates
+			for (int j = 0; j<queue.size(); j++)
 			{
 				int[][]perm = new int[4][];
-				perm[0] = new int[]{coord[0], coord[1]+1, coord[2]+1};
-				perm[1] = new int[]{coord[0]+1, coord[1], coord[2]+1};
-				perm[2] = new int[]{coord[0], coord[1]-1, coord[2]+1};
-				perm[3] = new int[]{coord[0]-1, coord[1], coord[2]+1};
+				perm[0] = new int[]{queue.get(j)[0], queue.get(j)[1]+tileHeight, queue.get(j)[2]+1};
+				perm[1] = new int[]{queue.get(j)[0]+tileWidth, queue.get(j)[1], queue.get(j)[2]+1};
+				perm[2] = new int[]{queue.get(j)[0], queue.get(j)[1]-tileHeight, queue.get(j)[2]+1};
+				perm[3] = new int[]{queue.get(j)[0]-tileWidth, queue.get(j)[1], queue.get(j)[2]+1};
 				for(int[] currentPerm : perm)
 				{
-					if(!(mapPointer[currentPerm[0]][currentPerm[1]]).solid || CoordInQueue(currentPerm, queue))
+					if(!(roundPointer.isTileBlocked(currentPerm[0], currentPerm[1]) || CoordInQueue(currentPerm, queue))
 						queue.add(currentPerm);
 					if(currentPerm[0]==targetX && currentPerm[1]==targetY)
 					{

@@ -60,7 +60,7 @@ public class AITest {
 	@Test
 	public void pathFindingTest1() {
 		String[] mapData = new String[5];
-		mapData[0]="oooog";
+		mapData[0]="oooog"; 
 		mapData[1]="ooooo";
 		mapData[2]="ooooo";
 		mapData[3]="ooooo";

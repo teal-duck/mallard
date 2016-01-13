@@ -12,13 +12,22 @@ public class DuckGame extends Game {
 	Texture tiles;
 	TextureRegion img;
 	GameScreen gameScreen;
+	private Round round;
+	
 	@Override
 	public void create() {
 		Assets.load();
 
-		Round round = new Round(this, Assets.levelOneMap);
+		round = new Round(this, Assets.levelOneMap);
 
 		setScreen(gameScreen = new GameScreen(round));
+	}
+	
+	/**
+	 * testing purposes, do not touch
+	 */
+	public Round getRound(){
+		return round;
 	}
 
 	@Override

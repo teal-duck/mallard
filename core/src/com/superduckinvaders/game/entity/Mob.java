@@ -61,6 +61,7 @@ public class Mob extends Character {
 		this.textureSet = textureSet;
 		this.speed = speed;
 	}
+	//test
 	
 	
 

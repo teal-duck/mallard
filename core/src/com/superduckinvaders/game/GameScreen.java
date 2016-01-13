@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.entity.Entity;
+import com.superduckinvaders.game.graphics.Assets;
 import com.superduckinvaders.game.round.Round;
 
 public class GameScreen implements Screen {
@@ -29,6 +30,7 @@ public class GameScreen implements Screen {
 	 * The sprite batch for texture rendering.
 	 */
 	private SpriteBatch spriteBatch;
+	private SpriteBatch uiBatch;
 
 	/**
 	 * The Round this GameScreen renders.
@@ -56,6 +58,7 @@ public class GameScreen implements Screen {
 
 		mapRenderer = new OrthogonalTiledMapRenderer(round.getMap());
 		spriteBatch = new SpriteBatch();
+		uiBatch = new SpriteBatch();
 	}
 
 	@Override
@@ -79,8 +82,12 @@ public class GameScreen implements Screen {
 		for (Entity entity : round.getEntities()) {
 			entity.render(spriteBatch);
 		}
-
 		spriteBatch.end();
+		
+		uiBatch.begin();
+		Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+		Assets.font.draw(uiBatch, "test string please ignore", 25, 160);
+		uiBatch.end();
 	}
 
 	@Override

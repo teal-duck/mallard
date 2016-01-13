@@ -18,7 +18,6 @@ public class ZombieAI extends AI {
 	
 	@Override
 	public boolean StillActive(Mob mob){
-		//TODO Finish
 		return true;
 	}
 	

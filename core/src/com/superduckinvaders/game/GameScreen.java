@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.entity.Entity;
@@ -73,7 +74,10 @@ public class GameScreen implements Screen {
 		camera.update();
 		
 		mapRenderer.setView(camera);
-		mapRenderer.render();
+
+		// Render base and collision layers.
+		mapRenderer.renderTileLayer(round.getBaseLayer());
+		mapRenderer.renderTileLayer(round.getCollisionLayer());
 
 		spriteBatch.setProjectionMatrix(camera.combined);
 		spriteBatch.begin();
@@ -82,7 +86,11 @@ public class GameScreen implements Screen {
 		for (Entity entity : round.getEntities()) {
 			entity.render(spriteBatch);
 		}
+
 		spriteBatch.end();
+
+		// Render overhang layer (draws over the player).
+		mapRenderer.renderTileLayer((TiledMapTileLayer) round.getMap().getLayers().get("Overhang"));
 		
 		uiBatch.begin();
 		Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);

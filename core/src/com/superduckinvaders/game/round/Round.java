@@ -41,6 +41,11 @@ public final class Round {
     private Objective objective;
 
     /**
+     * Stores whether each pixel in the map is blocked. Used for accurate collision detection.
+     */
+    private boolean[] blockedMap;
+
+    /**
      * Initialises a new Round with the specified map.
      * @param map the Round's map
      */
@@ -66,14 +71,14 @@ public final class Round {
     /**
      * @return this Round's base layer (used for calculating map width/height).
      */
-    private TiledMapTileLayer getBaseLayer() {
+    public TiledMapTileLayer getBaseLayer() {
         return (TiledMapTileLayer) getMap().getLayers().get("Base");
     }
 
     /**
      * @return this Round's collision map layer
      */
-    private TiledMapTileLayer getCollisionLayer() {
+    public TiledMapTileLayer getCollisionLayer() {
         return (TiledMapTileLayer) getMap().getLayers().get("Collisions");
     }
 

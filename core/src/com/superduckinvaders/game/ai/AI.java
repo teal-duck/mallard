@@ -1,23 +1,14 @@
 package com.superduckinvaders.game.ai;
 
+import com.superduckinvaders.game.round.Round;
 import com.superduckinvaders.game.entity.Mob;
-import com.superduckinvaders.game.round.Tile;
-import com.superduckinvaders.game.entity.Player;
 
 public abstract class AI {
 	
-	public static enum AIType {
-		DUMMY, ZOMBIE, SPREADER, SNIPER
+	public static enum type {
+		DUMMY, ZOMBIE
 	}
 	
-	protected Tile[][] mapPointer;//possible pointing error!!!
-	protected Player playerPointer;
-	
-	public AI(Tile[][] tiles, Player playerPointer)
-	{
-		mapPointer = tiles;
-		this.playerPointer = playerPointer;
-	}
 	
 	/**
 	 * checks whether the character is still active
@@ -33,5 +24,5 @@ public abstract class AI {
 	 * execute the AI on a per-frame basis
 	 * @param mob pointer to the Mob
 	 */
-	public abstract void execute(Mob mob);
+	public abstract void update(Mob mob);
 }

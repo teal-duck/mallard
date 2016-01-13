@@ -34,6 +34,7 @@ public abstract class Objective {
 
     /**
      * Initialises this Objective in the specified round.
+     *
      * @param parent the round that this Objective belongs to
      */
     public Objective(Round parent) {
@@ -42,6 +43,7 @@ public abstract class Objective {
 
     /**
      * Gets the current status of the Objective.
+     *
      * @return the current status of the Objective (one of the OBJECTIVE_ constants);
      */
     public int getStatus() {
@@ -50,12 +52,14 @@ public abstract class Objective {
 
     /**
      * Gets a string describing this Objective to be printed on screen.
+     *
      * @return a string describing this Objective
      */
     public abstract String getObjectiveString();
 
     /**
      * Updates the status towards this Objective.
+     *
      * @param delta the time since the last tick
      */
     public abstract void update(float delta);

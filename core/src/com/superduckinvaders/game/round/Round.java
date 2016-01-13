@@ -8,7 +8,6 @@ import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.entity.Projectile;
 import com.superduckinvaders.game.objective.Objective;
-import javafx.beans.binding.ObjectExpression;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,6 +149,7 @@ public final class Round {
 
     /**
      * Sets the current objective of this Round.
+     *
      * @param objective the new objective
      */
     public void setObjective(Objective objective) {
@@ -175,7 +175,7 @@ public final class Round {
      * @param delta the time elapsed since the last update
      */
     public void update(float delta) {
-        if(objective != null) {
+        if (objective != null) {
             objective.update(delta);
 
             // TODO: code for winning/losing goes here.

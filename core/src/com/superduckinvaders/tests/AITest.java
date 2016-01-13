@@ -1,12 +1,6 @@
 /*package com.superduckinvaders.tests;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.superduckinvaders.game.ai.AI;
-import com.superduckinvaders.game.graphics.Sprite;
-import com.superduckinvaders.game.round.Tile;
 import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.entity.Player;
 

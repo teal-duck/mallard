@@ -22,6 +22,10 @@ public class Projectile extends Entity {
     private int damage;
 
     public Projectile(Round parent, double x, double y, double targetX, double targetY, double speed, int damage, Entity owner) {
+        this(parent, x, y, targetX, targetY, speed, 0, 0, damage, owner);
+    }
+
+    public Projectile(Round parent, double x, double y, double targetX, double targetY, double speed, double velocityXOffset, double velocityYOffset, int damage, Entity owner) {
         super(parent, x, y);
 
         // Angle between initial position and target.
@@ -29,6 +33,10 @@ public class Projectile extends Entity {
 
         velocityX = Math.round(Math.cos(angle) * speed);
         velocityY = Math.round(Math.sin(angle) * speed);
+
+        // Projectile should only move faster if we're moving in the same direction.
+        velocityX += (Math.signum(velocityX) == Math.signum(velocityXOffset) ? velocityXOffset : 0);
+        velocityY += (Math.signum(velocityY) == Math.signum(velocityYOffset) ? velocityYOffset : 0);
 
         this.damage = damage;
         this.owner = owner;
@@ -65,8 +73,8 @@ public class Projectile extends Entity {
                 continue;
             }
 
-            // If entity is character, damage it and then delete myself.
-            if (entity instanceof Character) {
+            // If entity is character and we have hit it, damage it and then delete myself.
+            if (entity instanceof Character && entity.intersects(x, y, getWidth(), getHeight())) {
                 ((Character) entity).damage(damage);
                 removed = true;
             }

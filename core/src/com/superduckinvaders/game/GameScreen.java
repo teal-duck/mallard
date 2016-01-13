@@ -86,12 +86,12 @@ public class GameScreen implements Screen {
 			entity.render(spriteBatch);
 		}
 
-		spriteBatch.end();
-
 		// Render overhang layer (draws over the player).
 		if(round.getOverhangLayer() != null) {
 			mapRenderer.renderTileLayer(round.getOverhangLayer());
 		}
+
+		spriteBatch.end();
 		
 		uiBatch.begin();
 		// TODO something meaningful here

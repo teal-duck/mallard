@@ -144,6 +144,12 @@ public class Player extends Character {
             velocityY = 0;
         }
 
+        // If moving diagonally, move slower.
+        if (velocityX != 0 && velocityY != 0) {
+            velocityX *= 1 / Math.sqrt(2);
+            velocityY *= 1 / Math.sqrt(2);
+        }
+
         if (Gdx.input.justTouched()) {
             Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
 

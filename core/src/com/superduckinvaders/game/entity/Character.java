@@ -42,7 +42,7 @@ public abstract class Character extends Entity {
     }
 
     /**
-     * Gets the maximim health of this Character.
+     * Gets the maximum health of this Character.
      *
      * @return the maximum health of this Character
      */

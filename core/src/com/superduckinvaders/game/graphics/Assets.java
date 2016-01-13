@@ -59,7 +59,7 @@ public class Assets {
 
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
 
-        levelOneMap = loadTiledMap("maps/map_test.tmx");
+        levelOneMap = loadTiledMap("maps/map.tmx");
         
         font = new BitmapFont(Gdx.files.internal("font/gamefont.fnt"), Gdx.files.internal("font/gamefont.png"), false);
     }

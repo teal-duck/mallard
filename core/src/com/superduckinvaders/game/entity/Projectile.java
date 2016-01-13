@@ -75,6 +75,6 @@ public class Projectile extends Entity {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        //spriteBatch.draw(Assets.projectile, (int) x, (int) y);
+        spriteBatch.draw(Assets.projectile, (int) x, (int) y);
     }
 }

@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
 		
 		uiBatch.begin();
 		Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-		Assets.font.draw(uiBatch, "test string please ignore", 25, 160);
+		Assets.font.draw(uiBatch, "Objective: Move around", 10, 710);
 		uiBatch.end();
 	}
 

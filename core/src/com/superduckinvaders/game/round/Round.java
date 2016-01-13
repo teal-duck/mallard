@@ -9,7 +9,6 @@ import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.entity.Projectile;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public final class Round {

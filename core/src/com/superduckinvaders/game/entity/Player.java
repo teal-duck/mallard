@@ -3,6 +3,8 @@ package com.superduckinvaders.game.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.superduckinvaders.game.graphics.Assets;
+import com.superduckinvaders.game.graphics.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
 public class Player extends Character {
@@ -20,7 +22,7 @@ public class Player extends Character {
     /**
      * How much the Player's speed should be multiplied by if they have POWERUP_SUPER_SPEED;
      */
-    public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 1.5;
+    public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 1;
 
     /**
      * No powerup.
@@ -65,7 +67,7 @@ public class Player extends Character {
      * @param y      the initial y coordinate
      */
     public Player(Round parent, double x, double y) {
-        super(parent, x, y, PLAYER_HEALTH);
+        super(parent, 66, 66, PLAYER_HEALTH);
     }
 
 	/**
@@ -125,11 +127,13 @@ public class Player extends Character {
 
     @Override
     public int getWidth() {
+    	return 32;
         // TODO: implement me
     }
 
     @Override
     public int getHeight() {
+    	return 32;
         // TODO: implement me
     }
 
@@ -150,13 +154,17 @@ public class Player extends Character {
             velocityX = -speed;
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             velocityX = speed;
+        } else {
+        	velocityX = 0;
         }
-
+        
         // Left/right movement.
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             velocityY = speed;
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             velocityY = -speed;
+        } else {
+        	velocityY = 0;
         }
 
         // Update movement.
@@ -165,6 +173,6 @@ public class Player extends Character {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        // TODO: rendering code for Player
+        spriteBatch.draw(Assets.playerNormal.getTexture(TextureSet.FACING_FRONT, 0), (int) x, (int) y);
     }
 }

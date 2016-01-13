@@ -48,7 +48,7 @@ public final class Round {
         this.parent = parent;
         this.map = map;
 
-        player = new Player(this, 0, 0, 100);
+        player = new Player(this, 0, 0);
 
         entities = new Array<Entity>();
         entities.add(player);
@@ -67,7 +67,7 @@ public final class Round {
      * @return this Level's collision map layer
      */
     public TiledMapTileLayer getCollisionLayer() {
-        return (TiledMapTileLayer) getMap().getLayers().get(1);
+        return (TiledMapTileLayer) getMap().getLayers().get(0);
     }
 
     /**

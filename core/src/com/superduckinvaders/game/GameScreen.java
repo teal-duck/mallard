@@ -69,7 +69,7 @@ public class GameScreen implements Screen {
 		// Centre the camera on the player.
 		camera.position.set((int) round.getPlayer().getX() + round.getPlayer().getWidth() / 2, (int) round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
 		camera.update();
-
+		
 		mapRenderer.setView(camera);
 		mapRenderer.render();
 

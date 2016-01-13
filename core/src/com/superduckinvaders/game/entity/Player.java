@@ -46,6 +46,18 @@ public class Player extends Character {
      */
     private double powerupTimer = 0;
     /**
+     * Shows if a player is flying. If < 0, player is flying for -flyingTimer seconds. If < flyingCooldown, flying is on cooldown.
+     */
+    private float flyingTimer = 5;
+    /**
+     * Player's flying cooldown
+     */
+    private float flyingCooldown = 5;
+    /**
+     * Player's flying duration
+     */
+    private float flyingDuration = 1;
+    /**
      * Player's upgrade.
      */
     private Upgrade upgrade = Upgrade.NONE;
@@ -137,23 +149,30 @@ public class Player extends Character {
 
         // Calculate speed at which to move the player.
         double speed = PLAYER_SPEED * (powerup == Powerup.SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
-
-        // Left/right movement.
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            velocityX = -speed;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            velocityX = speed;
-        } else {
-            velocityX = 0;
+        flyingTimer += delta;
+        System.out.println(flyingTimer);
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && flyingTimer >= flyingCooldown && (velocityX != 0 || velocityX != 0)) {
+            flyingTimer = -flyingDuration;
         }
-
-        // Left/right movement.
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            velocityY = speed;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            velocityY = -speed;
-        } else {
-            velocityY = 0;
+        
+        if(flyingTimer > 0) {
+	        // Left/right movement.
+	        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+	            velocityX = -speed;
+	        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+	            velocityX = speed;
+	        } else {
+	            velocityX = 0;
+	        }
+	
+	        // Left/right movement.
+	        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+	            velocityY = speed;
+	        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+	            velocityY = -speed;
+	        } else {
+	            velocityY = 0;
+	        }
         }
 
         // If moving diagonally, move slower.
@@ -163,7 +182,6 @@ public class Player extends Character {
         }
 
         PLAYER_FIRE_DELTA += delta;
-        System.out.println(PLAYER_FIRE_DELTA);
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (PLAYER_FIRE_DELTA >= PLAYER_RATE_OF_FIRE * (1 / PLAYER_ROF_MULTIPLIER)) {
                 PLAYER_FIRE_DELTA = 0;

@@ -1,4 +1,4 @@
-/*
+
 package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.entity.Mob;

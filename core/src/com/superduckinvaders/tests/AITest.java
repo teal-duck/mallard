@@ -1,4 +1,4 @@
-package com.superduckinvaders.tests;
+/*package com.superduckinvaders.tests;
 
 import static org.junit.Assert.*;
 
@@ -82,3 +82,4 @@ public class AITest {
 	}
 
 }
+*/

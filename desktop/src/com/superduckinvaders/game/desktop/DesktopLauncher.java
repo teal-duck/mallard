@@ -9,6 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
+		config.resizable = false;
 		config.title = "SUPER DUCK INVADERS! - v0.01";
 		new LwjglApplication(new DuckGame(), config);
 	}

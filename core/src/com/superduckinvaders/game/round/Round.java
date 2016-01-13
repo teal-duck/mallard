@@ -153,17 +153,13 @@ public final class Round {
      * @param delta the time elapsed since the last update
      */
     public void update(float delta) {
-        Iterator<Entity> entityIterator = entities.iterator();
-
-        // Update or remove all entities.
-        while(entityIterator.hasNext()) {
-            Entity entity = entityIterator.next();
-
-            if(entity.isRemoved()) {
-                entityIterator.remove();
-            } else {
-                entity.update(delta);
-            }
-        }
+		for(int i = 0; i < entities.size(); i++) {
+			if(entities.get(i).isRemoved()) {
+				entities.remove(i);
+			} else {
+				entities.get(i).update(delta);
+				System.out.println(entities.size());
+			}
+		}
     }
 }

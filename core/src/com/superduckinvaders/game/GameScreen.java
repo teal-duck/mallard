@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.entity.Entity;
-import com.superduckinvaders.game.entity.Projectile;
 import com.superduckinvaders.game.round.Round;
 
 public class GameScreen implements Screen {
@@ -79,10 +78,6 @@ public class GameScreen implements Screen {
 		// Draw all entities.
 		for (Entity entity : round.getEntities()) {
 			entity.render(spriteBatch);
-		}
-
-		for (Projectile projectile : round.getProjectiles()) {
-			projectile.render(spriteBatch);
 		}
 
 		spriteBatch.end();

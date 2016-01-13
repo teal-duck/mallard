@@ -3,8 +3,8 @@ package com.superduckinvaders.game.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.graphics.Assets;
-import com.superduckinvaders.game.graphics.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
 public class Player extends Character {
@@ -12,52 +12,31 @@ public class Player extends Character {
     /**
      * Player's maximum health.
      */
-    public static final int PLAYER_HEALTH = 100;
-
+    public static final int PLAYER_HEALTH = 6;
     /**
      * Player's standard movement speed in pixels per second.
      */
     public static final int PLAYER_SPEED = 200;
-
     /**
      * How much the Player's speed should be multiplied by if they have POWERUP_SUPER_SPEED;
      */
     public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 1;
-
-    /**
-     * No powerup.
-     */
-    public static final int POWERUP_NONE = 0;
-
-    /**
-     * Super speed powerup.
-     */
-    public static final int POWERUP_SUPER_SPEED = 1;
-
-    /**
-     * Flight powerup (enables player to go over obstacles).
-     */
-    public static final int POWERUP_FLIGHT = 2;
-
-    /**
-     * Invulnerability powerup.
-     */
-    public static final int POWERUP_INVULNERABLE = 3;
-
-    /**
-     * Player's current powerup.
-     */
-    private int powerup = POWERUP_NONE;
-
-    /**
-     * How much time is remaining on the Player's powerup.
-     */
-    private double powerupTimer = 0;
-
     /**
      * Player's current score.
      */
     private int points = 0;
+    /**
+     * Player's current powerup.
+     */
+    private Powerup powerup = Powerup.NONE;
+    /**
+     * How much time is remaining on the Player's powerup.
+     */
+    private double powerupTimer = 0;
+    /**
+     * Player's upgrade.
+     */
+    private Upgrade upgrade = Upgrade.NONE;
 
     /**
      * Initialises this Player at the specified coordinates and with the specified initial health.
@@ -89,11 +68,11 @@ public class Player extends Character {
     }
 
     /**
-     * Gets the Player's current powerup (one of the POWERUP_ constants).
+     * Gets the Player's current powerup (in the Powerup enum).
      *
      * @return the current powerup
      */
-    public int getPowerup() {
+    public Powerup getPowerup() {
         return powerup;
     }
 
@@ -110,31 +89,29 @@ public class Player extends Character {
      * Clears the Player's current powerup.
      */
     public void clearPowerup() {
-        powerup = POWERUP_NONE;
+        powerup = Powerup.NONE;
         powerupTimer = 0;
     }
 
     /**
-     * Sets the Player's current powerup and how long it should last. Use -1 for time for an infinite powerup.
+     * Sets the Player's current powerup and how long it should last.
      *
-     * @param powerup the powerup to set (one of the POWERUP_ constants)
+     * @param powerup the powerup to set (in the Powerup enum)
      * @param time    how long the powerup should last, in seconds
      */
-    public void setPowerup(int powerup, double time) {
+    public void setPowerup(Powerup powerup, double time) {
         this.powerup = powerup;
         this.powerupTimer = time;
     }
 
     @Override
     public int getWidth() {
-    	return 32;
-        // TODO: implement me
+        return Assets.playerFront.getRegionWidth();
     }
 
     @Override
     public int getHeight() {
-    	return 32;
-        // TODO: implement me
+        return Assets.playerFront.getRegionHeight();
     }
 
     @Override
@@ -147,7 +124,7 @@ public class Player extends Character {
         }
 
         // Calculate speed at which to move the player.
-        double speed = PLAYER_SPEED * (powerup == POWERUP_SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
+        double speed = PLAYER_SPEED * (powerup == Powerup.SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
 
         // Left/right movement.
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -155,16 +132,28 @@ public class Player extends Character {
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             velocityX = speed;
         } else {
-        	velocityX = 0;
+            velocityX = 0;
         }
-        
+
         // Left/right movement.
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             velocityY = speed;
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             velocityY = -speed;
         } else {
-        	velocityY = 0;
+            velocityY = 0;
+        }
+
+        // If moving diagonally, move slower.
+        if (velocityX != 0 && velocityY != 0) {
+            velocityX *= 1 / Math.sqrt(2);
+            velocityY *= 1 / Math.sqrt(2);
+        }
+
+        if (Gdx.input.justTouched()) {
+            Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
+
+            parent.createProjectile(x + getWidth() / 2, y + getHeight() / 2, target.x, target.y, 300, 100, this);
         }
 
         // Update movement.
@@ -173,6 +162,24 @@ public class Player extends Character {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(Assets.playerNormal.getTexture(TextureSet.FACING_FRONT, 0), (int) x, (int) y);
+        spriteBatch.draw(Assets.playerNormal.getTexture(facing, stateTime), (int) x, (int) y);
+    }
+
+    /**
+     * Available powerups (only lst for
+     */
+    public enum Powerup {
+        NONE,
+        SUPER_SPEED,
+        FLIGHT,
+        INVULNERABLE
+    }
+
+    /**
+     * Available upgrades (upgrades are persistent).
+     */
+    public enum Upgrade {
+        NONE,
+        GUN
     }
 }

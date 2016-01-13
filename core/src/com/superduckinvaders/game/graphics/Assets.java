@@ -3,6 +3,7 @@ package com.superduckinvaders.game.graphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -33,6 +34,8 @@ public class Assets {
 
     // Tile map for level one.
     public static TiledMap levelOneMap;
+    
+    public static BitmapFont font;
 
     /**
      * Responsible for loading maps.
@@ -57,6 +60,8 @@ public class Assets {
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
 
         levelOneMap = loadTiledMap("maps/map_test.tmx");
+        
+        font = new BitmapFont(Gdx.files.internal("font/gamefont.fnt"), Gdx.files.internal("font/gamefont.png"), false);
     }
 
     public static Texture loadTexture(String file) {

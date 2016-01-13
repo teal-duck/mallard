@@ -2,7 +2,7 @@ package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.entity.Player;
-import com.superduckinvaders.game.round.Tile;
+import com.superduckinvaders.game.round.Round;
 
 import java.util.ArrayList;
 
@@ -10,15 +10,9 @@ public class ZombieAI extends AI {
 	
 	public final static int PATHFINDING_ITERATION_LIMIT = 20;
 	
-	public ZombieAI(Tile[][] tiles, Player playerPointer)
-	{
-		super(tiles, playerPointer);
-	}
-	
-	
 	@Override
-	public void execute(Mob mob) {
-		int[] coord = FindPath(mob.x, mob.y, playerPointer.x, playerPointer.y);
+	public void update(Mob mob) {
+		int[] coord = FindPath(mob.getX(), mob.getY(), roundPointer.getPlayer().getX(), roundPointer.getPlayer().getY());
 		mob.move(coord[0], coord[1]);
 	}
 	

@@ -3,23 +3,24 @@ package com.superduckinvaders.game.round;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.entity.Projectile;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public final class Round {
 
     /**
-     * The GameTest instance this Level belongs to.
+     * The GameTest instance this Round belongs to.
      */
     private DuckGame parent;
 
     /**
-     * The Level's map.
+     * The Round's map.
      */
     private TiledMap map;
 
@@ -29,16 +30,9 @@ public final class Round {
     private Player player;
 
     /**
-     * Array of all entities currently in the Level.
+     * Array of all entities currently in the Round.
      */
-    private Array<Entity> entities;
-
-    /**
-     * Array of all projectiles currently in the Level.
-     * This is to avoid a bug where you can't next iterators.
-     * This also prevents projectiles from having to check collisions with other projectiles, thus saving time.
-     */
-    private Array<Projectile> projectiles;
+    private List<Entity> entities;
 
     /**
      * Initialises a new Level with the specified map.
@@ -50,10 +44,8 @@ public final class Round {
 
         player = new Player(this, 0, 0);
 
-        entities = new Array<Entity>();
+        entities = new ArrayList<Entity>();
         entities.add(player);
-
-        projectiles = new Array<Projectile>();
     }
 
     /**
@@ -136,17 +128,10 @@ public final class Round {
     }
 
     /**
-     * @return the array of all entities currently in the Level
+     * @return the array of all entities currently in the Round
      */
-    public Array<Entity> getEntities() {
+    public List<Entity> getEntities() {
         return entities;
-    }
-
-    /**
-     * @return the array of all projectiles currently in the Level
-     */
-    public Array<Projectile> getProjectiles() {
-        return projectiles;
     }
 
     /**
@@ -160,7 +145,7 @@ public final class Round {
      * @param owner the owner of the projectile (i.e. the one who fired it)
      */
     public void createProjectile(double x, double y, double targetX, double targetY, double speed, int damage, Entity owner) {
-        projectiles.add(new Projectile(this, x, y, targetX, targetY, speed, damage, owner));
+        entities.add(new Projectile(this, x, y, targetX, targetY, speed, damage, owner));
     }
 
     /**
@@ -169,7 +154,6 @@ public final class Round {
      */
     public void update(float delta) {
         Iterator<Entity> entityIterator = entities.iterator();
-        Iterator<Projectile> projectileIterator = projectiles.iterator();
 
         // Update or remove all entities.
         while(entityIterator.hasNext()) {
@@ -179,17 +163,6 @@ public final class Round {
                 entityIterator.remove();
             } else {
                 entity.update(delta);
-            }
-        }
-
-        // Update or remove all projectiles.
-        while(projectileIterator.hasNext()) {
-            Projectile projectile = projectileIterator.next();
-
-            if(projectile.isRemoved()) {
-                projectileIterator.remove();
-            } else {
-                projectile.update(delta);
             }
         }
     }

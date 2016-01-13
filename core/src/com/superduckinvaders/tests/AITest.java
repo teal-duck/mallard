@@ -1,4 +1,4 @@
-package com.superduckinvaders.tests;
+/*package com.superduckinvaders.tests;
 
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.entity.Mob;
@@ -76,3 +76,4 @@ public class AITest {
 	}
 
 }
+*/

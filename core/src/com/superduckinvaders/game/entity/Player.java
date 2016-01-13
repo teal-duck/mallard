@@ -3,6 +3,7 @@ package com.superduckinvaders.game.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.graphics.Assets;
 import com.superduckinvaders.game.round.Round;
 
@@ -141,6 +142,12 @@ public class Player extends Character {
             velocityY = -speed;
         } else {
             velocityY = 0;
+        }
+
+        if (Gdx.input.justTouched()) {
+            Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
+
+            parent.createProjectile(x + getWidth() / 2, y + getHeight() / 2, target.x, target.y, 300, 100, this);
         }
 
         // Update movement.

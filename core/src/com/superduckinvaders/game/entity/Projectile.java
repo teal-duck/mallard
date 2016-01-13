@@ -58,8 +58,6 @@ public class Projectile extends Entity {
             return;
         }
 
-
-        /*
         // Otherwise check with collisions with every other entity.
         for (Entity entity : parent.getEntities()) {
             // Don't damage my owner.
@@ -73,7 +71,6 @@ public class Projectile extends Entity {
                 removed = true;
             }
         }
-        */
     }
 
     @Override

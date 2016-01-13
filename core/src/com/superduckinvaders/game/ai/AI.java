@@ -8,7 +8,14 @@ public abstract class AI {
 	public static enum type {
 		DUMMY, ZOMBIE
 	}
+	/**
+	 * pointer to the current round
+	 */
+	private Round roundPointer;
 	
+	public AI(Round currentRound){
+		roundPointer = currentRound;
+	}
 	
 	/**
 	 * checks whether the character is still active

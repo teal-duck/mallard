@@ -1,3 +1,4 @@
+/*
 package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.entity.Mob;
@@ -10,10 +11,14 @@ public class ZombieAI extends AI {
 	
 	public final static int PATHFINDING_ITERATION_LIMIT = 20;
 	
+	public ZombieAI(Round currentRound){
+		super(currentRound);
+	}
+	
 	@Override
 	public void update(Mob mob) {
-		int[] coord = FindPath(mob.getX(), mob.getY(), roundPointer.getPlayer().getX(), roundPointer.getPlayer().getY());
-		mob.move(coord[0], coord[1]);
+		int[] coord = FindPath(mob.getX(), mob.getY(), mob.parent.getPlayer().getX(), roundPointer.getPlayer().getY());
+		mob.setVelocity(coord[0], coord[1]);
 	}
 	
 	@Override
@@ -27,6 +32,7 @@ public class ZombieAI extends AI {
 	 * A variation of A* algorithm. Returns a meaningful target coordinate as a pair of integers.
 	 * Recalculated every tick as player might move and change pathfinding coordinates.
 	 */
+/*
 	private int[] FindPath(int sourceX, int sourceY, int targetX, int targetY){
 		ArrayList<int[]> queue = new ArrayList<int[]>();
 		queue.add(new int[]{sourceX, sourceY, 0});
@@ -93,6 +99,7 @@ public class ZombieAI extends AI {
 	 * Checks if some coordinate already exists in coordinate Queue
 	 * Used instead of 'contains' built-in method, as third item in coordinate is irrelevant 
 	 */
+/*
 	private boolean CoordInQueue(int[] coord, ArrayList<int[]> queue)
 	{
 		for (int[] queueCoord : queue)
@@ -104,3 +111,4 @@ public class ZombieAI extends AI {
 	}
 	
 }
+*/

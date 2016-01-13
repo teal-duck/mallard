@@ -27,10 +27,10 @@ public class Mob extends Character {
 	public void setAI(AI.type newAI){
 		switch (newAI){
 		case ZOMBIE:
-			this.ai = new ZombieAI();
+			//this.ai = new ZombieAI(this.parent);
 			break;
 		case DUMMY:
-			this.ai = new DummyAI();
+			//this.ai = new DummyAI(this.parent);
 			break;
 		}
 	}
@@ -62,6 +62,7 @@ public class Mob extends Character {
 		this.speed = speed;
 	}
 	//test
+	//test2
 	
 	
 

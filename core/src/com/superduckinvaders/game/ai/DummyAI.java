@@ -6,8 +6,13 @@ import com.superduckinvaders.game.round.Round;
 
 public class DummyAI extends AI {
 
+	public DummyAI(Round currentRound){
+		super(currentRound);
+	}
+	
 	@Override
-	public void execute(Mob mob) {
+	public void update(Mob mob) {
+		return;
 	}
 	
 	@Override

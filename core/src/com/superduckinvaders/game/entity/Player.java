@@ -134,12 +134,12 @@ public class Player extends Character {
 
     @Override
     public int getWidth() {
-        return Assets.playerFront.getRegionWidth();
+        return Assets.playerNormal.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return Assets.playerFront.getRegionHeight();
+        return Assets.playerNormal.getHeight();
     }
 
     @Override

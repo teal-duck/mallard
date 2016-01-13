@@ -41,11 +41,6 @@ public final class Round {
     private Objective objective;
 
     /**
-     * Stores whether each pixel in the map is blocked. Used for accurate collision detection.
-     */
-    private boolean[] blockedMap;
-
-    /**
      * Initialises a new Round with the specified map.
      * @param map the Round's map
      */
@@ -69,7 +64,7 @@ public final class Round {
     }
 
     /**
-     * @return this Round's base layer (used for calculating map width/height).
+     * @return this Round's base layer (used for calculating map width/height)
      */
     public TiledMapTileLayer getBaseLayer() {
         return (TiledMapTileLayer) getMap().getLayers().get("Base");
@@ -80,6 +75,13 @@ public final class Round {
      */
     public TiledMapTileLayer getCollisionLayer() {
         return (TiledMapTileLayer) getMap().getLayers().get("Collisions");
+    }
+
+    /**
+     * @return this Round's overhang map layer (rendered over entities)
+     */
+    public TiledMapTileLayer getOverhangLayer() {
+        return (TiledMapTileLayer) getMap().getLayers().get("Overhang");
     }
 
     /**
@@ -94,16 +96,6 @@ public final class Round {
      */
     public int getMapHeight() {
         return (int) (getBaseLayer().getHeight() * getBaseLayer().getTileHeight());
-    }
-
-    /**
-     * Gets the map tile at the specified coordinates on the map's collision layer.
-     * @param x the x coordinate of the map tile
-     * @param y the y coordinate of the map tile
-     * @return the map tile at the specified coordinates
-     */
-    public TiledMapTileLayer.Cell getTile(int x, int y) {
-        return getCollisionLayer().getCell(x / getTileWidth(), y / getTileHeight());
     }
 
     /**

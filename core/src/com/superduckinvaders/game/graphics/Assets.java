@@ -14,19 +14,7 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Assets {
 
-    // Player idle textures.
-    public static Texture playerIdle;
-    public static TextureRegion playerFront;
-    public static TextureRegion playerBack;
-    public static TextureRegion playerLeft;
-    public static TextureRegion playerRight;
-
-    // Player walking animations.
-    public static Animation playerWalkingFront;
-    public static Animation playerWalkingBack;
-    public static Animation playerWalkingLeft;
-    public static Animation playerWalkingRight;
-
+    // Player normal texture set (i.e. on land, no gun).
     public static TextureSet playerNormal;
 
     // Texture for Projectile.
@@ -43,25 +31,36 @@ public class Assets {
     private static TmxMapLoader mapLoader = new TmxMapLoader();
 
     public static void load() {
-        playerIdle = loadTexture("textures/player_idle.png");
-
-        playerFront = new TextureRegion(playerIdle, 0, 0, 43, 64);
-        playerBack = new TextureRegion(playerIdle, 43, 0, 43, 64);
-        playerLeft = new TextureRegion(playerIdle, 86, 0, 49, 64);
-        playerRight = new TextureRegion(playerIdle, 135, 0, 49, 64);
-
-        playerWalkingFront = loadAnimation("textures/player_walking_front.png", 2, 42, 0.2f);
-        playerWalkingBack = loadAnimation("textures/player_walking_back.png", 2, 42, 0.2f);
-        playerWalkingLeft = loadAnimation("textures/player_walking_left.png", 2, 50, 0.2f);
-        playerWalkingRight = loadAnimation("textures/player_walking_right.png", 2, 50, 0.2f);
-
-        playerNormal = new TextureSet(playerFront, playerBack, playerLeft, playerRight, playerWalkingFront, playerWalkingBack, playerWalkingLeft, playerWalkingRight);
+        playerNormal = loadPlayerNormalTextureSet();
 
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
 
         levelOneMap = loadTiledMap("maps/map.tmx");
         
         font = new BitmapFont(Gdx.files.internal("font/gamefont.fnt"), Gdx.files.internal("font/gamefont.png"), false);
+    }
+
+    /**
+     * Loads assets relating to the player in the normal state.
+     * If you change the player texture size, be sure to change the values here.
+     */
+    private static TextureSet loadPlayerNormalTextureSet() {
+        // Load idle texture map.
+        Texture playerIdle = loadTexture("textures/player_idle.png");
+
+        // Cut idle textures from texture map.
+        TextureRegion front = new TextureRegion(playerIdle, 0, 0, 14, 18);
+        TextureRegion back = new TextureRegion(playerIdle, 14, 0, 14, 18);
+        TextureRegion left = new TextureRegion(playerIdle, 28, 0,14, 18);
+        TextureRegion right = new TextureRegion(playerIdle, 42, 0, 14, 18);
+
+        // Load walking animations.
+        Animation walkingFront = loadAnimation("textures/player_walking_front.png", 4, 12, 0.2f);
+        Animation walkingBack = loadAnimation("textures/player_walking_back.png", 4, 12, 0.2f);
+        Animation walkingLeft = loadAnimation("textures/player_walking_left.png", 4, 14, 0.2f);
+        Animation walkingRight = loadAnimation("textures/player_walking_right.png", 4, 14, 0.2f);
+
+        return new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
     }
 
     public static Texture loadTexture(String file) {

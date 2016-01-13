@@ -39,6 +39,14 @@ public final class TextureSet {
         movementAnimations[FACING_RIGHT] = movingRight;
     }
 
+    public int getWidth() {
+        return idleTextures[0].getRegionWidth();
+    }
+
+    public int getHeight() {
+        return idleTextures[0].getRegionHeight();
+    }
+
     public TextureRegion getTexture(int facing, float stateTime) {
         if (stateTime > 0) {
             return movementAnimations[facing].getKeyFrame(stateTime, true);
@@ -46,5 +54,4 @@ public final class TextureSet {
             return idleTextures[facing];
         }
     }
-
 }

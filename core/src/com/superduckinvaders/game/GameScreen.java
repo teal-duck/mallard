@@ -28,10 +28,9 @@ public class GameScreen implements Screen {
 	private OrthogonalTiledMapRenderer mapRenderer;
 
 	/**
-	 * The sprite batch for texture rendering.
+	 * The sprite batches for rendering.
 	 */
-	private SpriteBatch spriteBatch;
-	private SpriteBatch uiBatch;
+	private SpriteBatch spriteBatch, uiBatch;
 
 	/**
 	 * The Round this GameScreen renders.
@@ -57,9 +56,10 @@ public class GameScreen implements Screen {
 	public void show() {
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 
-		mapRenderer = new OrthogonalTiledMapRenderer(round.getMap());
 		spriteBatch = new SpriteBatch();
 		uiBatch = new SpriteBatch();
+
+		mapRenderer = new OrthogonalTiledMapRenderer(round.getMap(), spriteBatch);
 	}
 
 	@Override
@@ -72,15 +72,14 @@ public class GameScreen implements Screen {
 		// Centre the camera on the player.
 		camera.position.set((int) round.getPlayer().getX() + round.getPlayer().getWidth() / 2, (int) round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
 		camera.update();
-		
-		mapRenderer.setView(camera);
-
-		// Render base and collision layers.
-		mapRenderer.renderTileLayer(round.getBaseLayer());
-		mapRenderer.renderTileLayer(round.getCollisionLayer());
 
 		spriteBatch.setProjectionMatrix(camera.combined);
 		spriteBatch.begin();
+
+		// Render base and collision layers.
+		mapRenderer.setView(camera);
+		mapRenderer.renderTileLayer(round.getBaseLayer());
+		mapRenderer.renderTileLayer(round.getCollisionLayer());
 
 		// Draw all entities.
 		for (Entity entity : round.getEntities()) {
@@ -90,9 +89,12 @@ public class GameScreen implements Screen {
 		spriteBatch.end();
 
 		// Render overhang layer (draws over the player).
-		mapRenderer.renderTileLayer((TiledMapTileLayer) round.getMap().getLayers().get("Overhang"));
+		if(round.getOverhangLayer() != null) {
+			mapRenderer.renderTileLayer(round.getOverhangLayer());
+		}
 		
 		uiBatch.begin();
+		// TODO something meaningful here
 		Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		Assets.font.draw(uiBatch, "Objective: Move around", 10, 710);
 		uiBatch.end();

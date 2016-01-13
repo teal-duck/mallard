@@ -18,9 +18,21 @@ public class Player extends Character {
      */
     public static final int PLAYER_SPEED = 200;
     /**
+     * Player's standard rate of fire
+     */
+    public static final int PLAYER_RATE_OF_FIRE = 1;
+    /**
      * How much the Player's speed should be multiplied by if they have POWERUP_SUPER_SPEED;
      */
     public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 1;
+    /**
+     * How much the Player's rate of fire should be multiplied by if they have RATE_OF_FIRE;
+     */
+    public static final double PLAYER_ROF_MULTIPLIER = 5;
+    /**
+     * How long it has been since the Player last attacked
+     */
+    private float PLAYER_FIRE_DELTA = 0;
     /**
      * Player's current score.
      */
@@ -49,7 +61,7 @@ public class Player extends Character {
         super(parent, 66, 66, PLAYER_HEALTH);
     }
 
-	/**
+    /**
      * Increases the Player's score by the specified amount.
      *
      * @param amount the amount to increase the score by
@@ -150,10 +162,14 @@ public class Player extends Character {
             velocityY *= 1 / Math.sqrt(2);
         }
 
-        if (Gdx.input.justTouched()) {
-            Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
-
-            parent.createProjectile(x + getWidth() / 2, y + getHeight() / 2, target.x, target.y, 300, 100, this);
+        PLAYER_FIRE_DELTA += delta;
+        System.out.println(PLAYER_FIRE_DELTA);
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (PLAYER_FIRE_DELTA >= PLAYER_RATE_OF_FIRE * (1 / PLAYER_ROF_MULTIPLIER)) {
+                PLAYER_FIRE_DELTA = 0;
+                Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
+                parent.createProjectile(x + getWidth() / 2, y + getHeight() / 2, target.x, target.y, 300, 100, this);
+            }
         }
 
         // Update movement.
@@ -171,6 +187,7 @@ public class Player extends Character {
     public enum Powerup {
         NONE,
         SUPER_SPEED,
+        RATE_OF_FIRE,
         INVULNERABLE
     }
 

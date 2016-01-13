@@ -7,6 +7,8 @@ import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.entity.Projectile;
+import com.superduckinvaders.game.objective.Objective;
+import javafx.beans.binding.ObjectExpression;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,11 @@ public final class Round {
      * Array of all entities currently in the Round.
      */
     private List<Entity> entities;
+
+    /**
+     * The current objective.
+     */
+    private Objective objective;
 
     /**
      * Initialises a new Level with the specified map.
@@ -134,6 +141,22 @@ public final class Round {
     }
 
     /**
+     * Gets the current objective of this Round.
+     * @return the current objective
+     */
+    public Objective getObjective() {
+        return objective;
+    }
+
+    /**
+     * Sets the current objective of this Round.
+     * @param objective the new objective
+     */
+    public void setObjective(Objective objective) {
+        this.objective = objective;
+    }
+
+    /**
      * Creates a new projectile and adds it to the list of entities.
      * @param x the initial x coordinate
      * @param y the initial y coordinate
@@ -152,12 +175,17 @@ public final class Round {
      * @param delta the time elapsed since the last update
      */
     public void update(float delta) {
+        if(objective != null) {
+            objective.update(delta);
+
+            // TODO: code for winning/losing goes here.
+        }
+
 		for(int i = 0; i < entities.size(); i++) {
 			if(entities.get(i).isRemoved()) {
 				entities.remove(i);
 			} else {
 				entities.get(i).update(delta);
-				System.out.println(entities.size());
 			}
 		}
     }

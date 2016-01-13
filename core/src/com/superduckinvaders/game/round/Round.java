@@ -166,8 +166,8 @@ public final class Round {
      * @param damage how much damage the projectile deals
      * @param owner the owner of the projectile (i.e. the one who fired it)
      */
-    public void createProjectile(double x, double y, double targetX, double targetY, double speed, int damage, Entity owner) {
-        entities.add(new Projectile(this, x, y, targetX, targetY, speed, damage, owner));
+    public void createProjectile(double x, double y, double targetX, double targetY, double speed, double velocityXOffset, double velocityYOffset, int damage, Entity owner) {
+        entities.add(new Projectile(this, x, y, targetX, targetY, speed, velocityXOffset, velocityYOffset, damage, owner));
     }
 
     /**

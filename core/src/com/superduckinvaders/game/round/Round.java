@@ -41,8 +41,8 @@ public final class Round {
     private Objective objective;
 
     /**
-     * Initialises a new Level with the specified map.
-     * @param map the Level's map
+     * Initialises a new Round with the specified map.
+     * @param map the Round's map
      */
     public Round(DuckGame parent, TiledMap map) {
         this.parent = parent;
@@ -57,31 +57,38 @@ public final class Round {
     }
 
     /**
-     * @return this Level's map
+     * @return this Round's map
      */
     public TiledMap getMap() {
         return map;
     }
 
     /**
-     * @return this Level's collision map layer
+     * @return this Round's base layer (used for calculating map width/height).
      */
-    public TiledMapTileLayer getCollisionLayer() {
-        return (TiledMapTileLayer) getMap().getLayers().get(0);
+    private TiledMapTileLayer getBaseLayer() {
+        return (TiledMapTileLayer) getMap().getLayers().get("Base");
     }
 
     /**
-     * @return the width of this Level's map in pixels
+     * @return this Round's collision map layer
+     */
+    private TiledMapTileLayer getCollisionLayer() {
+        return (TiledMapTileLayer) getMap().getLayers().get("Collisions");
+    }
+
+    /**
+     * @return the width of this Round's map in pixels
      */
     public int getMapWidth() {
-        return (int) (getCollisionLayer().getWidth() * getCollisionLayer().getTileWidth());
+        return (int) (getBaseLayer().getWidth() * getBaseLayer().getTileWidth());
     }
 
     /**
-     * @return the height of this Level's map in pixels
+     * @return the height of this Round's map in pixels
      */
     public int getMapHeight() {
-        return (int) (getCollisionLayer().getHeight() * getCollisionLayer().getTileHeight());
+        return (int) (getBaseLayer().getHeight() * getBaseLayer().getTileHeight());
     }
 
     /**
@@ -95,17 +102,17 @@ public final class Round {
     }
 
     /**
-     * @return the width of one tile in this Level's map
+     * @return the width of one tile in this Round's map
      */
     public int getTileWidth() {
-        return (int) getCollisionLayer().getTileWidth();
+        return (int) getBaseLayer().getTileWidth();
     }
 
     /**
-     * @return the height of one tile in this Level's map
+     * @return the height of one tile in this Round's map
      */
     public int getTileHeight() {
-        return (int) getCollisionLayer().getTileHeight();
+        return (int) getBaseLayer().getTileHeight();
     }
 
     /**
@@ -115,7 +122,10 @@ public final class Round {
      * @return whether or not the map tile is blocked
      */
     public boolean isTileBlocked(int x, int y) {
-        return getTile(x, y) != null && getTile(x, y).getTile().getProperties().containsKey("blocked");
+        int tileX = x / getTileWidth();
+        int tileY = y / getTileHeight();
+
+        return getCollisionLayer().getCell(tileX, tileY) != null;
     }
 
     /**
@@ -129,14 +139,14 @@ public final class Round {
     }
 
     /**
-     * @return this Level's player
+     * @return this Round's player
      */
     public Player getPlayer() {
         return player;
     }
 
     /**
-     * @return the array of all entities currently in the Round
+     * @return the list of all entities currently in the Round
      */
     public List<Entity> getEntities() {
         return entities;
@@ -169,12 +179,12 @@ public final class Round {
      * @param damage how much damage the projectile deals
      * @param owner the owner of the projectile (i.e. the one who fired it)
      */
-    public void createProjectile(double x, double y, double targetX, double targetY, double speed, int damage, Entity owner) {
-        entities.add(new Projectile(this, x, y, targetX, targetY, speed, damage, owner));
+    public void createProjectile(double x, double y, double targetX, double targetY, double speed, double velocityXOffset, double velocityYOffset, int damage, Entity owner) {
+        entities.add(new Projectile(this, x, y, targetX, targetY, speed, velocityXOffset, velocityYOffset, damage, owner));
     }
 
     /**
-     * Updates all entities in this level.
+     * Updates all entities in this round.
      * @param delta the time elapsed since the last update
      */
     public void update(float delta) {

@@ -22,17 +22,25 @@ public class Player extends Character {
      */
     public static final int PLAYER_RATE_OF_FIRE = 1;
     /**
-     * How much the Player's speed should be multiplied by if they have POWERUP_SUPER_SPEED;
+     * How much the Player's speed should be multiplied by if they have the super speed powerup.
      */
-    public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 1;
+    public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 3;
     /**
-     * How much the Player's rate of fire should be multiplied by if they have RATE_OF_FIRE;
+     * How much the Player's speed should me multiplied by if they are flying.
+     */
+    public static final double PLAYER_FLIGHT_SPEED_MULTIPLIER = 2;
+    /**
+     * How much the Player's rate of fire should be multiplied by if they have the rate of fire powerup.
      */
     public static final double PLAYER_ROF_MULTIPLIER = 5;
     /**
-     * How long it has been since the Player last attacked
+     * How long the Player can fly for, in seconds.
      */
-    private float PLAYER_FIRE_DELTA = 0;
+    public static final double PLAYER_FLIGHT_TIME = 1;
+    /**
+     * How long after flying before the Player can fly again, in seconds.
+     */
+    public static final double PLAYER_FLIGHT_COOLDOWN = 5;
     /**
      * Player's current score.
      */
@@ -42,25 +50,21 @@ public class Player extends Character {
      */
     private Powerup powerup = Powerup.NONE;
     /**
+     * Player's upgrade.
+     */
+    private Upgrade upgrade = Upgrade.NONE;
+    /**
      * How much time is remaining on the Player's powerup.
      */
     private double powerupTimer = 0;
     /**
-     * Shows if a player is flying. If < 0, player is flying for -flyingTimer seconds. If < flyingCooldown, flying is on cooldown.
+     * Shows if a player is flying. If < 0, player is flying for -flyingTimer seconds. If < PLAYER_FLIGHT_COOLDOWN, flying is on cooldown.
      */
-    private float flyingTimer = 5;
+    private double flyingTimer = 5;
     /**
-     * Player's flying cooldown
+     * How long it has been since the Player last fired the gun.
      */
-    private float flyingCooldown = 5;
-    /**
-     * Player's flying duration
-     */
-    private float flyingDuration = 1;
-    /**
-     * Player's upgrade.
-     */
-    private Upgrade upgrade = Upgrade.NONE;
+    private double fireTimer = 0;
 
     /**
      * Initialises this Player at the specified coordinates and with the specified initial health.
@@ -147,15 +151,35 @@ public class Player extends Character {
             clearPowerup();
         }
 
-        // Calculate speed at which to move the player.
-        double speed = PLAYER_SPEED * (powerup == Powerup.SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
-        flyingTimer += delta;
-        System.out.println(flyingTimer);
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && flyingTimer >= flyingCooldown && (velocityX != 0 || velocityX != 0)) {
-            flyingTimer = -flyingDuration;
+        // Update flying timer.
+        if (flyingTimer < PLAYER_FLIGHT_COOLDOWN) {
+            flyingTimer += delta;
         }
-        
-        if(flyingTimer > 0) {
+
+        // Update firing timer.
+        fireTimer += delta;
+
+        // Left mouse to fire.
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (fireTimer >= PLAYER_RATE_OF_FIRE * (1 / PLAYER_ROF_MULTIPLIER)) {
+                fireTimer = 0;
+                Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
+                parent.createProjectile(x + getWidth() / 2, y + getHeight() / 2, target.x, target.y, 300, velocityX, velocityY, 100, this);
+            }
+        }
+
+        // Press space to start flying, but only if flying isn't cooling down and we're moving.
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && flyingTimer >= PLAYER_FLIGHT_COOLDOWN && (velocityX != 0 || velocityY != 0)) {
+            flyingTimer = -PLAYER_FLIGHT_TIME;
+            velocityX *= PLAYER_FLIGHT_SPEED_MULTIPLIER;
+            velocityY *= PLAYER_FLIGHT_SPEED_MULTIPLIER;
+        }
+
+        // Only allow movement via keys if not flying.
+        if (!isFlying()) {
+            // Calculate speed at which to move the player.
+            double speed = PLAYER_SPEED * (powerup == Powerup.SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
+
 	        // Left/right movement.
 	        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
 	            velocityX = -speed;
@@ -181,22 +205,25 @@ public class Player extends Character {
             velocityY *= 1 / Math.sqrt(2);
         }
 
-        PLAYER_FIRE_DELTA += delta;
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (PLAYER_FIRE_DELTA >= PLAYER_RATE_OF_FIRE * (1 / PLAYER_ROF_MULTIPLIER)) {
-                PLAYER_FIRE_DELTA = 0;
-                Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
-                parent.createProjectile(x + getWidth() / 2, y + getHeight() / 2, target.x, target.y, 300, 100, this);
-            }
-        }
-
         // Update movement.
         super.update(delta);
+    }
+
+    public boolean isFlying() {
+        return flyingTimer <= 0;
     }
 
     @Override
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(Assets.playerNormal.getTexture(facing, stateTime), (int) x, (int) y);
+    }
+
+    @Override
+    public void damage(int health) {
+        // Only apply damage if we don't have the invulnerability powerup.
+        if (powerup != Powerup.INVULNERABLE) {
+            super.damage(health);
+        }
     }
 
     /**

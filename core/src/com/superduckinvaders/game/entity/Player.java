@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.graphics.Assets;
+import com.superduckinvaders.game.graphics.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
 public class Player extends Character {
@@ -197,12 +198,13 @@ public class Player extends Character {
 	        } else {
 	            velocityY = 0;
 	        }
-        }
 
-        // If moving diagonally, move slower.
-        if (velocityX != 0 && velocityY != 0) {
-            velocityX *= 1 / Math.sqrt(2);
-            velocityY *= 1 / Math.sqrt(2);
+            // If moving diagonally, move slower.
+            // This must not be done while flying otherwise the player will slow down and stop.
+            if (velocityX != 0 && velocityY != 0) {
+                velocityX /= Math.sqrt(2);
+                velocityY /= Math.sqrt(2);
+            }
         }
 
         // Update movement.
@@ -215,7 +217,10 @@ public class Player extends Character {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(Assets.playerNormal.getTexture(facing, stateTime), (int) x, (int) y);
+        // Use the right texture set.
+        TextureSet textureSet = isFlying() ? Assets.playerFlying : Assets.playerNormal;
+
+        spriteBatch.draw(textureSet.getTexture(facing, stateTime), (int) x, (int) y);
     }
 
     @Override

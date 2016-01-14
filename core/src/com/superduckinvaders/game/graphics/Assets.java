@@ -14,8 +14,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Assets {
 
-    // Player normal texture set (i.e. on land, no gun).
-    public static TextureSet playerNormal;
+    // Player texture sets for normal and flying.
+    public static TextureSet playerNormal, playerFlying;
 
     // Texture for Projectile.
     public static TextureRegion projectile;
@@ -31,7 +31,7 @@ public class Assets {
     private static TmxMapLoader mapLoader = new TmxMapLoader();
 
     public static void load() {
-        playerNormal = loadPlayerNormalTextureSet();
+        loadPlayerTextureSets();
 
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
 
@@ -44,7 +44,7 @@ public class Assets {
      * Loads assets relating to the player in the normal state.
      * If you change the player texture size, be sure to change the values here.
      */
-    private static TextureSet loadPlayerNormalTextureSet() {
+    private static void loadPlayerTextureSets() {
         // Load idle texture map.
         Texture playerIdle = loadTexture("textures/player_idle.png");
 
@@ -60,7 +60,14 @@ public class Assets {
         Animation walkingLeft = loadAnimation("textures/player_walking_left.png", 4, 14, 0.2f);
         Animation walkingRight = loadAnimation("textures/player_walking_right.png", 4, 14, 0.2f);
 
-        return new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
+        // Load flying animations.
+        Animation flyingFront = loadAnimation("textures/player_flying_front.png", 2, 18, 0.2f);
+        Animation flyingBack = loadAnimation("textures/player_flying_back.png", 2, 18, 0.2f);
+        Animation flyingLeft = loadAnimation("textures/player_flying_left.png", 2, 21, 0.2f);
+        Animation flyingRight = loadAnimation("textures/player_flying_right.png", 2, 21, 0.2f);
+
+        playerNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
+        playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
     }
 
     public static Texture loadTexture(String file) {

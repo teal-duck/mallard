@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.graphics.Assets;
+import com.superduckinvaders.game.graphics.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
 public class Player extends Character {
@@ -215,7 +216,10 @@ public class Player extends Character {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(Assets.playerNormal.getTexture(facing, stateTime), (int) x, (int) y);
+        // Use the right texture set.
+        TextureSet textureSet = isFlying() ? Assets.playerFlying : Assets.playerNormal;
+
+        spriteBatch.draw(textureSet.getTexture(facing, stateTime), (int) x, (int) y);
     }
 
     @Override

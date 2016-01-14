@@ -14,9 +14,9 @@ public class CharacterTest {
 	public void test1() {
 		Mob testSubject = new Mob(null, 120, 130, 5, null, 10);
 		int[] expected = {120, 130, 5};
-		int[] actual = {(int)testSubject.getX(), (int)testSubject.getY(), testSubject.getBaseHealth()};
+		int[] actual = {(int)testSubject.getX(), (int)testSubject.getY(), testSubject.getMaximumHealth()};
 		assertArrayEquals(expected, actual);
-		assertEquals(testSubject.getBaseHealth(), testSubject.getCurrentHealth());
+		assertEquals(testSubject.getMaximumHealth(), testSubject.getCurrentHealth());
 		testSubject.damage(3);
 		assertEquals(2, testSubject.getCurrentHealth());
 		testSubject.heal(1);

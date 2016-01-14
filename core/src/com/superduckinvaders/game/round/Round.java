@@ -148,6 +148,15 @@ public final class Round {
     public List<Entity> getEntities() {
         return entities;
     }
+    /**
+     * add an entity to the entity list
+     * @param newEntity - new entity of any type
+     */
+    //if this is a duplicate, feel free to delete it and I'll adjust the tests accordingly
+    public void addEntity(Entity newEntity){
+    	entities.add(newEntity);
+    }
+    
 
     /**
      * Gets the current objective of this Round.

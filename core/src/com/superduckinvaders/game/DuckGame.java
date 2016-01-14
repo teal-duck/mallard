@@ -18,7 +18,7 @@ public class DuckGame extends Game {
 	public void create() {
 		Assets.load();
 
-		round = new Round(this, Assets.levelOneMap);
+		round = new Round(this, Assets.levelOneMap);//<--- extension point (choose from different maps)
 
 		setScreen(gameScreen = new GameScreen(round));
 	}

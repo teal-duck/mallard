@@ -10,14 +10,31 @@ public class ZombieAI extends AI {
 	
 	public final static int PATHFINDING_ITERATION_LIMIT = 20;
 	
-	public ZombieAI(Round currentRound){
+	/**
+	 * range of zombie melee attacks in pixels
+	 */
+	private int attackRange;
+	
+	/**
+	 * constructor for zombie AI
+	 * @param currentRound round pointer
+	 * @param range range of zombie attacks
+	 */
+	public ZombieAI(Round currentRound, int range){
 		super(currentRound);
+		attackRange = range;
 	}
 	
 	@Override
 	public void update(Mob mob) {
 		int[] coord = FindPath(mob);
 		mob.setVelocity(coord[0], coord[1]);
+		double distanceX = mob.getX() - roundPointer.getPlayer().getX();
+		double distanceY = mob.getY() - roundPointer.getPlayer().getY();
+		double distanceFromPlayer = Math.sqrt( Math.pow(distanceX, 2) + Math.pow(distanceY,2));
+		if ((int)distanceFromPlayer < attackRange)
+			//include an attack animation here <---------------
+			roundPointer.getPlayer().damage(1);
 	}
 	
 	@Override

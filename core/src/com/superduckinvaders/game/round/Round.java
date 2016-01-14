@@ -88,7 +88,7 @@ public final class Round {
         if(count == 0) {
             return null;
         } else {
-            return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count + 1)));
+            return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count - 1)));
         }
     }
 

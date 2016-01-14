@@ -202,8 +202,8 @@ public class Player extends Character {
             // If moving diagonally, move slower.
             // This must not be done while flying otherwise the player will slow down and stop.
             if (velocityX != 0 && velocityY != 0) {
-                velocityX *= 1 / Math.sqrt(2);
-                velocityY *= 1 / Math.sqrt(2);
+                velocityX /= Math.sqrt(2);
+                velocityY /= Math.sqrt(2);
             }
         }
 

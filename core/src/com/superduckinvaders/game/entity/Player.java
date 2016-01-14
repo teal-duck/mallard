@@ -75,7 +75,7 @@ public class Player extends Character {
      * @param y      the initial y coordinate
      */
     public Player(Round parent, double x, double y) {
-        super(parent, 66, 66, PLAYER_HEALTH);
+        super(parent, x, y, PLAYER_HEALTH);
     }
 
     /**

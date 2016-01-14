@@ -81,6 +81,11 @@ public class GameScreen implements Screen {
 		mapRenderer.renderTileLayer(round.getBaseLayer());
 		mapRenderer.renderTileLayer(round.getCollisionLayer());
 
+		// Render randomly-chosen obstacles layer.
+		if (round.getObstaclesLayer() != null) {
+			mapRenderer.renderTileLayer(round.getObstaclesLayer());
+		}
+
 		// Draw all entities.
 		for (Entity entity : round.getEntities()) {
 			entity.render(spriteBatch);

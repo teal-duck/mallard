@@ -2,12 +2,14 @@ package com.superduckinvaders.game.round;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.Item;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.entity.Projectile;
+import com.superduckinvaders.game.objective.CollectObjective;
 import com.superduckinvaders.game.objective.Objective;
 
 import java.util.ArrayList;
@@ -24,6 +26,11 @@ public final class Round {
      * The Round's map.
      */
     private TiledMap map;
+
+    /**
+     * Map layer containing randomly-chosen layer of predefined obstacles.
+     */
+    private TiledMapTileLayer obstaclesLayer;
 
     /**
      * The player.
@@ -48,12 +55,41 @@ public final class Round {
         this.parent = parent;
         this.map = map;
 
-        player = new Player(this, 0, 0);
+        // Choose which obstacles to use.
+        obstaclesLayer = chooseObstacles();
+
+        // Determine starting coordinates for player (0, 0 default).
+        int startX = Integer.parseInt(map.getProperties().get("StartX", "0", String.class)) * getTileWidth();
+        int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
+
+        player = new Player(this, startX, startY);
         Item item = new Item(this, 100, 100, 1);
+
+        setObjective(new CollectObjective(this, item));
 
         entities = new ArrayList<Entity>();
         entities.add(player);
         entities.add(item);
+    }
+
+    /**
+     * Randomly selects and returns a set of predefined obstacles from the map.
+     * @return the map layer containing the obstacles
+     */
+    private TiledMapTileLayer chooseObstacles() {
+        int count = 0;
+
+        // First count how many obstacle layers we have.
+        while (map.getLayers().get(String.format("Obstacles%d", count)) != null) {
+            count++;
+        }
+
+        // Choose a random layer or return null if there are no layers.
+        if(count == 0) {
+            return null;
+        } else {
+            return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count + 1)));
+        }
     }
 
     /**
@@ -75,6 +111,13 @@ public final class Round {
      */
     public TiledMapTileLayer getCollisionLayer() {
         return (TiledMapTileLayer) getMap().getLayers().get("Collisions");
+    }
+
+    /**
+     * @return this Round's obstacles map layer or null if there isn't one
+     */
+    public TiledMapTileLayer getObstaclesLayer() {
+        return obstaclesLayer;
     }
 
     /**
@@ -122,7 +165,7 @@ public final class Round {
         int tileX = x / getTileWidth();
         int tileY = y / getTileHeight();
 
-        return getCollisionLayer().getCell(tileX, tileY) != null;
+        return getCollisionLayer().getCell(tileX, tileY) != null || (getObstaclesLayer() != null && getObstaclesLayer().getCell(tileX, tileY) != null);
     }
 
     /**
@@ -189,6 +232,9 @@ public final class Round {
             objective.update(delta);
 
             // TODO: code for winning/losing goes here.
+            if (objective.getStatus() == Objective.OBJECTIVE_COMPLETED) {
+                System.out.println("gz you won");
+            }
         }
 
 		for(int i = 0; i < entities.size(); i++) {

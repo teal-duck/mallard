@@ -8,6 +8,9 @@ import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
+/**
+ * Represents the player of the game.
+ */
 public class Player extends Character {
 
     /**
@@ -42,6 +45,7 @@ public class Player extends Character {
      * How long after flying before the Player can fly again, in seconds.
      */
     public static final double PLAYER_FLIGHT_COOLDOWN = 5;
+
     /**
      * Player's current score.
      */
@@ -133,16 +137,48 @@ public class Player extends Character {
         this.powerupTimer = time;
     }
 
+    /**
+     * @return true if the Player is currently flying, false if not
+     */
+    public boolean isFlying() {
+        return flyingTimer <= 0;
+    }
+
+
+    /**
+     * @return the width of this Player
+     */
     @Override
     public int getWidth() {
         return Assets.playerNormal.getWidth();
     }
 
+    /**
+     * @return the height of this Player
+     */
     @Override
     public int getHeight() {
         return Assets.playerNormal.getHeight();
     }
 
+    /**
+     * Damages the Player, taking into account the possibility of invulnerability.
+     *
+     * @param health the number of points to damage
+     */
+    @Override
+    public void damage(int health) {
+        // Only apply damage if we don't have the invulnerability powerup.
+        if (powerup != Powerup.INVULNERABLE) {
+            super.damage(health);
+        }
+    }
+
+    /**
+     * Updates the state of this Player.
+     *
+     * @param delta how much time has passed since the last update
+     */
     @Override
     public void update(float delta) {
         // Decrement powerup timer.
@@ -181,23 +217,23 @@ public class Player extends Character {
             // Calculate speed at which to move the player.
             double speed = PLAYER_SPEED * (powerup == Powerup.SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
 
-	        // Left/right movement.
-	        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-	            velocityX = -speed;
-	        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-	            velocityX = speed;
-	        } else {
-	            velocityX = 0;
-	        }
-	
-	        // Left/right movement.
-	        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-	            velocityY = speed;
-	        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-	            velocityY = -speed;
-	        } else {
-	            velocityY = 0;
-	        }
+            // Left/right movement.
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                velocityX = -speed;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                velocityX = speed;
+            } else {
+                velocityX = 0;
+            }
+
+            // Left/right movement.
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                velocityY = speed;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                velocityY = -speed;
+            } else {
+                velocityY = 0;
+            }
 
             // If moving diagonally, move slower.
             // This must not be done while flying otherwise the player will slow down and stop.
@@ -211,24 +247,17 @@ public class Player extends Character {
         super.update(delta);
     }
 
-    public boolean isFlying() {
-        return flyingTimer <= 0;
-    }
-
+    /**
+     * Renders this Player.
+     *
+     * @param spriteBatch the sprite batch on which to render
+     */
     @Override
     public void render(SpriteBatch spriteBatch) {
         // Use the right texture set.
         TextureSet textureSet = isFlying() ? Assets.playerFlying : Assets.playerNormal;
 
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), (int) x, (int) y);
-    }
-
-    @Override
-    public void damage(int health) {
-        // Only apply damage if we don't have the invulnerability powerup.
-        if (powerup != Powerup.INVULNERABLE) {
-            super.damage(health);
-        }
     }
 
     /**

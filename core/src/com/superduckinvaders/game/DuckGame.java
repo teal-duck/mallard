@@ -8,32 +8,32 @@ import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
 public class DuckGame extends Game {
-	GameScreen gameScreen;
-	private Round round;
-	
-	@Override
-	public void create() {
-		Assets.load();
+    GameScreen gameScreen;
+    private Round round;
+    
+    @Override
+    public void create() {
+        Assets.load();
 
-		round = new Round(this, Assets.levelOneMap);//<--- extension point (choose from different maps)
+        round = new Round(this, Assets.levelOneMap);//<--- extension point (choose from different maps)
 
-		setScreen(gameScreen = new GameScreen(round));
-	}
-	
-	/**
-	 * testing purposes, do not touch
-	 */
-	public Round getRound(){
-		return round;
-	}
+        setScreen(gameScreen = new GameScreen(round));
+    }
+    
+    /**
+     * testing purposes, do not touch
+     */
+    public Round getRound(){
+        return round;
+    }
 
-	@Override
-	public void render() {
-		super.render();
-	}
+    @Override
+    public void render() {
+        super.render();
+    }
 
-	public GameScreen getGameScreen() {
-		return gameScreen;
-	}
-	
+    public GameScreen getGameScreen() {
+        return gameScreen;
+    }
+    
 }

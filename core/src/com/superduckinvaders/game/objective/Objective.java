@@ -3,7 +3,7 @@ package com.superduckinvaders.game.objective;
 import com.superduckinvaders.game.round.Round;
 
 /**
- * Created by olivermcclellan on 13/01/2016.
+ * Represents an objective that needs to be completed in order to advance.
  */
 public abstract class Objective {
 
@@ -60,7 +60,7 @@ public abstract class Objective {
     /**
      * Updates the status towards this Objective.
      *
-     * @param delta the time since the last tick
+     * @param delta how much time has passed since the last update
      */
     public abstract void update(float delta);
 }

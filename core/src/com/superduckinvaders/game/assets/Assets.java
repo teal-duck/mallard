@@ -25,7 +25,8 @@ public class Assets {
 
     // Tile map for level one.
     public static TiledMap levelOneMap;
-    
+
+    // The font for the UI.
     public static BitmapFont font;
 
     /**
@@ -33,6 +34,9 @@ public class Assets {
      */
     private static TmxMapLoader mapLoader = new TmxMapLoader();
 
+    /**
+     * Loads all assets.
+     */
     public static void load() {
         loadPlayerTextureSets();
 
@@ -41,8 +45,8 @@ public class Assets {
         explosionAnimation = loadAnimation("textures/explosion.png", 2, 32, 0.3f);
 
         levelOneMap = loadTiledMap("maps/map.tmx");
-        
-        font = new BitmapFont(Gdx.files.internal("font/gamefont.fnt"), Gdx.files.internal("font/gamefont.png"), false);
+
+        font = loadFont("font/gamefont.fnt", "font/gamefont.png");
     }
 
     /**
@@ -56,7 +60,7 @@ public class Assets {
         // Cut idle textures from texture map.
         TextureRegion front = new TextureRegion(playerIdle, 0, 0, 14, 18);
         TextureRegion back = new TextureRegion(playerIdle, 14, 0, 14, 18);
-        TextureRegion left = new TextureRegion(playerIdle, 28, 0,14, 18);
+        TextureRegion left = new TextureRegion(playerIdle, 28, 0, 14, 18);
         TextureRegion right = new TextureRegion(playerIdle, 42, 0, 14, 18);
 
         // Load walking animations.
@@ -77,6 +81,7 @@ public class Assets {
 
     /**
      * Loads the texture from the specified file.
+     *
      * @param file the file to load from
      * @return the texture
      */
@@ -86,6 +91,7 @@ public class Assets {
 
     /**
      * Loads the tile map from the specifed file.
+     *
      * @param file the file to load from
      * @return the tile map
      */
@@ -95,9 +101,10 @@ public class Assets {
 
     /**
      * Loads the animation from the specified file.
-     * @param file the file to load from
-     * @param count how many frames are in the file
-     * @param frameWidth how wide each frame is in the file
+     *
+     * @param file          the file to load from
+     * @param count         how many frames are in the file
+     * @param frameWidth    how wide each frame is in the file
      * @param frameDuration how long each frame should be shown for in seconds
      * @return the animation
      */
@@ -110,5 +117,16 @@ public class Assets {
         }
 
         return new Animation(frameDuration, keyFrames);
+    }
+
+    /**
+     * Loads the bitmap font from the specified files.
+     *
+     * @param fontFile  the file containing information about the glyphs stored on the image file
+     * @param imageFile the file containing the actual glyphs
+     * @return the bitmap font
+     */
+    public static BitmapFont loadFont(String fontFile, String imageFile) {
+        return new BitmapFont(Gdx.files.internal(fontFile), Gdx.files.internal(imageFile), false);
     }
 }

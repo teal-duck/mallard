@@ -5,26 +5,27 @@ import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
 public class Item extends Entity {
-	
-    public Item(Round parent, double x, double y, int ID) {
+
+    // TODO: finish me
+    public Item(Round parent, double x, double y) {
         super(parent, x, y);
     }
 
     @Override
     public int getWidth() {
-		return Assets.projectile.getRegionWidth();
+        return Assets.projectile.getRegionWidth();
     }
 
     @Override
     public int getHeight() {
-		return Assets.projectile.getRegionHeight();
+        return Assets.projectile.getRegionHeight();
     }
 
     @Override
     public void update(float delta) {
-        if(parent.getPlayer().intersects(x, y, this.getWidth(), this.getHeight())) {
-        	parent.getPlayer().setPowerup(Player.Powerup.SUPER_SPEED, 5);
-        	removed = true;
+        if (parent.getPlayer().intersects(x, y, this.getWidth(), this.getHeight())) {
+            parent.getPlayer().setPowerup(Player.Powerup.SUPER_SPEED, 5);
+            removed = true;
         }
     }
 
@@ -32,5 +33,5 @@ public class Item extends Entity {
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(Assets.projectile, (int) x, (int) y);
     }
-	
+
 }

@@ -11,131 +11,155 @@ import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
+/**
+ * Screen for interaction with the game.
+ */
 public class GameScreen implements Screen {
 
-	public static int WIDTH = 1280; // 640
-	public static int HEIGHT = 720; // 448
+    /**
+     * The dimensions of the game screen.
+     */
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
 
-	/**
-	 * The game camera.
-	 */
-	private OrthographicCamera camera;
+    /**
+     * The game camera.
+     */
+    private OrthographicCamera camera;
 
-	/**
-	 * The renderer for the tile map.
-	 */
-	private OrthogonalTiledMapRenderer mapRenderer;
+    /**
+     * The renderer for the tile map.
+     */
+    private OrthogonalTiledMapRenderer mapRenderer;
 
-	/**
-	 * The sprite batches for rendering.
-	 */
-	private SpriteBatch spriteBatch, uiBatch;
+    /**
+     * The sprite batches for rendering.
+     */
+    private SpriteBatch spriteBatch, uiBatch;
 
-	/**
-	 * The Round this GameScreen renders.
-	 */
-	private Round round;
+    /**
+     * The Round this GameScreen renders.
+     */
+    private Round round;
 
-	public GameScreen(Round round) {
-		this.round = round;
-	}
+    /**
+     * Initialises this GameScreen for the specified round.
+     *
+     * @param round the round to be displayed
+     */
+    public GameScreen(Round round) {
+        this.round = round;
+    }
 
-	/**
-	 * Converts screen coordinates to world coordinates.
-	 *
-	 * @param x the x coordinate on screen
-	 * @param y the y coordinate on screen
-	 * @return a Vector3 containing the world coordinates (x and y)
-	 */
-	public Vector3 unproject(int x, int y) {
-		return camera.unproject(new Vector3(x, y, 0));
-	}
+    /**
+     * Converts screen coordinates to world coordinates.
+     *
+     * @param x the x coordinate on screen
+     * @param y the y coordinate on screen
+     * @return a Vector3 containing the world coordinates (x and y)
+     */
+    public Vector3 unproject(int x, int y) {
+        return camera.unproject(new Vector3(x, y, 0));
+    }
 
-	@Override
-	public void show() {
-		camera = new OrthographicCamera(WIDTH, HEIGHT);
+    /**
+     * Shows this GameScreen. Called by libGDX to set up the graphics.
+     */
+    @Override
+    public void show() {
+        camera = new OrthographicCamera(WIDTH, HEIGHT);
 
-		spriteBatch = new SpriteBatch();
-		uiBatch = new SpriteBatch();
+        spriteBatch = new SpriteBatch();
+        uiBatch = new SpriteBatch();
 
-		mapRenderer = new OrthogonalTiledMapRenderer(round.getMap(), spriteBatch);
-	}
+        mapRenderer = new OrthogonalTiledMapRenderer(round.getMap(), spriteBatch);
+    }
 
-	@Override
-	public void render(float delta) {
-		round.update(delta);
+    /**
+     * Main game loop.
+     *
+     * @param delta how much time has passed since the last update
+     */
+    @Override
+    public void render(float delta) {
+        round.update(delta);
 
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		// Centre the camera on the player.
-		camera.position.set((int) round.getPlayer().getX() + round.getPlayer().getWidth() / 2, (int) round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
-		camera.update();
+        // Centre the camera on the player.
+        camera.position.set((int) round.getPlayer().getX() + round.getPlayer().getWidth() / 2, (int) round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
+        camera.update();
 
-		spriteBatch.setProjectionMatrix(camera.combined);
-		spriteBatch.begin();
+        spriteBatch.setProjectionMatrix(camera.combined);
+        spriteBatch.begin();
 
-		// Render base and collision layers.
-		mapRenderer.setView(camera);
-		mapRenderer.renderTileLayer(round.getBaseLayer());
-		mapRenderer.renderTileLayer(round.getCollisionLayer());
+        // Render base and collision layers.
+        mapRenderer.setView(camera);
+        mapRenderer.renderTileLayer(round.getBaseLayer());
+        mapRenderer.renderTileLayer(round.getCollisionLayer());
 
-		// Render randomly-chosen obstacles layer.
-		if (round.getObstaclesLayer() != null) {
-			mapRenderer.renderTileLayer(round.getObstaclesLayer());
-		}
+        // Render randomly-chosen obstacles layer.
+        if (round.getObstaclesLayer() != null) {
+            mapRenderer.renderTileLayer(round.getObstaclesLayer());
+        }
 
-		// Draw all entities.
-		for (Entity entity : round.getEntities()) {
-			entity.render(spriteBatch);
-		}
+        // Draw all entities.
+        for (Entity entity : round.getEntities()) {
+            entity.render(spriteBatch);
+        }
 
-		// Render overhang layer (draws over the player).
-		if(round.getOverhangLayer() != null) {
-			mapRenderer.renderTileLayer(round.getOverhangLayer());
-		}
+        // Render overhang layer (draws over the player).
+        if (round.getOverhangLayer() != null) {
+            mapRenderer.renderTileLayer(round.getOverhangLayer());
+        }
 
-		spriteBatch.end();
-		
-		uiBatch.begin();
-		// TODO something meaningful here
-		Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-		Assets.font.draw(uiBatch, "Objective: Move around", 10, 710);
-		uiBatch.end();
-	}
+        spriteBatch.end();
 
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
+        uiBatch.begin();
+        // TODO: finish UI
+        Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        Assets.font.draw(uiBatch, "Objective: Move around", 10, 710);
+        uiBatch.end();
+    }
 
-	}
+    /**
+     * Not used since the game window cannot be resized.
+     */
+    @Override
+    public void resize(int width, int height) {
+    }
+
+    /**
+     * Not used.
+     */
+    @Override
+    public void pause() {
+    }
+
+    /**
+     * Not used.
+     */
+    @Override
+    public void resume() {
+    }
+
+    /**
+     * Not used.
+     */
+    @Override
+    public void hide() {
+    }
 
 
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
-	}
+    /**
+     * Called by libGDX when the GameScreen is disposed.
+     */
+    @Override
+    public void dispose() {
+        mapRenderer.dispose();
+        spriteBatch.dispose();
+        uiBatch.dispose();
+    }
 
 }

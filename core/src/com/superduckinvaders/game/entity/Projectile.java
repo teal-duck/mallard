@@ -5,7 +5,7 @@ import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
 /**
- * Created by Oliver on 11/01/2016.
+ * Represents a projectile.
  */
 public class Projectile extends Entity {
 
@@ -19,10 +19,36 @@ public class Projectile extends Entity {
      */
     private int damage;
 
+    /**
+     * Initialises this Projectile.
+     *
+     * @param parent  the round this Projectile belongs to
+     * @param x       the initial x coordinate
+     * @param y       the initial y coordinate
+     * @param targetX the target x coordinate
+     * @param targetY the target y coordinate
+     * @param speed   how fast the projectile moves
+     * @param damage  how much damage the projectile deals
+     * @param owner   the owner of the projectile (i.e. the one who fired it)
+     */
     public Projectile(Round parent, double x, double y, double targetX, double targetY, double speed, int damage, Entity owner) {
         this(parent, x, y, targetX, targetY, speed, 0, 0, damage, owner);
     }
 
+    /**
+     * Initialises this Projectile.
+     *
+     * @param parent          the round this Projectile belongs to
+     * @param x               the initial x coordinate
+     * @param y               the initial y coordinate
+     * @param targetX         the target x coordinate
+     * @param targetY         the target y coordinate
+     * @param speed           how fast the projectile moves
+     * @param velocityXOffset the offset to the initial X velocity
+     * @param velocityYOffset the offset to the initial Y velocity
+     * @param damage          how much damage the projectile deals
+     * @param owner           the owner of the projectile (i.e. the one who fired it)
+     */
     public Projectile(Round parent, double x, double y, double targetX, double targetY, double speed, double velocityXOffset, double velocityYOffset, int damage, Entity owner) {
         super(parent, x, y);
 
@@ -40,16 +66,27 @@ public class Projectile extends Entity {
         this.owner = owner;
     }
 
+    /**
+     * @return the width of this Projectile
+     */
     @Override
     public int getWidth() {
-		return Assets.projectile.getRegionWidth();
+        return Assets.projectile.getRegionWidth();
     }
 
+    /**
+     * @return the height of this Projectile
+     */
     @Override
     public int getHeight() {
-		return Assets.projectile.getRegionHeight();
+        return Assets.projectile.getRegionHeight();
     }
 
+    /**
+     * Updates the state of this Projectile.
+     *
+     * @param delta how much time has passed since the last update
+     */
     @Override
     public void update(float delta) {
         super.update(delta);
@@ -82,6 +119,11 @@ public class Projectile extends Entity {
         }
     }
 
+    /**
+     * Renders this Projectile.
+     *
+     * @param spriteBatch the sprite batch on which to render
+     */
     @Override
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(Assets.projectile, (int) x, (int) y);

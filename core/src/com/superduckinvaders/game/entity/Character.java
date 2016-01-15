@@ -3,6 +3,9 @@ package com.superduckinvaders.game.entity;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
+/**
+ * Represents a character in the game.
+ */
 public abstract class Character extends Entity {
 
     /**
@@ -20,6 +23,14 @@ public abstract class Character extends Entity {
      */
     protected int maximumHealth, currentHealth;
 
+    /**
+     * Initialises this Character.
+     *
+     * @param parent        the round this Character belongs to
+     * @param x             the initial x coordinate
+     * @param y             the initial y coordinate
+     * @param maximumHealth the maximum (and initial) health of this Character
+     */
     public Character(Round parent, double x, double y, int maximumHealth) {
         super(parent, x, y);
 
@@ -35,6 +46,7 @@ public abstract class Character extends Entity {
 
     /**
      * Gets the current health of this Character.
+     *
      * @return the current health of this Character
      */
     public int getCurrentHealth() {
@@ -52,6 +64,7 @@ public abstract class Character extends Entity {
 
     /**
      * Heals this Character's current health by the specified number of points.
+     *
      * @param health the number of health points to heal
      */
     public void heal(int health) {
@@ -78,6 +91,11 @@ public abstract class Character extends Entity {
         return currentHealth <= 0;
     }
 
+    /**
+     * Updates the state of this Character.
+     *
+     * @param delta how much time has passed since the last update
+     */
     @Override
     public void update(float delta) {
         // Update Character facing.

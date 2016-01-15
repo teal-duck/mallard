@@ -13,6 +13,9 @@ import com.superduckinvaders.game.objective.Objective;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a round of the game played on one level with a single objective.
+ */
 public final class Round {
 
     /**
@@ -47,6 +50,7 @@ public final class Round {
 
     /**
      * Initialises a new Round with the specified map.
+     *
      * @param map the Round's map
      */
     public Round(DuckGame parent, TiledMap map) {
@@ -61,7 +65,7 @@ public final class Round {
         int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
-        Item item = new Item(this, 100, 100, 1);
+        Item item = new Item(this, 100, 100);
 
         setObjective(new CollectObjective(this, item));
 
@@ -72,6 +76,7 @@ public final class Round {
 
     /**
      * Randomly selects and returns a set of predefined obstacles from the map.
+     *
      * @return the map layer containing the obstacles
      */
     private TiledMapTileLayer chooseObstacles() {
@@ -83,7 +88,7 @@ public final class Round {
         }
 
         // Choose a random layer or return null if there are no layers.
-        if(count == 0) {
+        if (count == 0) {
             return null;
         } else {
             return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count - 1)));
@@ -155,6 +160,7 @@ public final class Round {
 
     /**
      * Gets whether the map tile at the specified coordinates is blocked or not.
+     *
      * @param x the x coordinate of the map tile
      * @param y the y coordinate of the map tile
      * @return whether or not the map tile is blocked
@@ -168,6 +174,7 @@ public final class Round {
 
     /**
      * Converts screen coordinates to world coordinates.
+     *
      * @param x the x coordinate on screen
      * @param y the y coordinate on screen
      * @return a Vector3 containing the world coordinates (x and y)
@@ -189,18 +196,20 @@ public final class Round {
     public List<Entity> getEntities() {
         return entities;
     }
+
     /**
-     * add an entity to the entity list
-     * @param newEntity - new entity of any type
+     * Adds an entity to the entity list.
+     *
+     * @param newEntity new entity of any type
      */
-    //if this is a duplicate, feel free to delete it and I'll adjust the tests accordingly
-    public void addEntity(Entity newEntity){
-    	entities.add(newEntity);
+    // TODO: remove this once tests are complete
+    public void addEntity(Entity newEntity) {
+        entities.add(newEntity);
     }
-    
 
     /**
      * Gets the current objective of this Round.
+     *
      * @return the current objective
      */
     public Objective getObjective() {
@@ -218,24 +227,36 @@ public final class Round {
 
     /**
      * Creates a new projectile and adds it to the list of entities.
-     * @param x the initial x coordinate
-     * @param y the initial y coordinate
-     * @param targetX the target x coordinate
-     * @param targetY the target y coordinate
-     * @param speed how fast the projectile moves
-     * @param damage how much damage the projectile deals
-     * @param owner the owner of the projectile (i.e. the one who fired it)
+     *
+     * @param x               the initial x coordinate
+     * @param y               the initial y coordinate
+     * @param targetX         the target x coordinate
+     * @param targetY         the target y coordinate
+     * @param speed           how fast the projectile moves
+     * @param velocityXOffset the offset to the initial X velocity
+     * @param velocityYOffset the offset to the initial Y velocity
+     * @param damage          how much damage the projectile deals
+     * @param owner           the owner of the projectile (i.e. the one who fired it)
      */
     public void createProjectile(double x, double y, double targetX, double targetY, double speed, double velocityXOffset, double velocityYOffset, int damage, Entity owner) {
         entities.add(new Projectile(this, x, y, targetX, targetY, speed, velocityXOffset, velocityYOffset, damage, owner));
     }
 
+    /**
+     * Creates a new particle effect and adds it to the list of entities.
+     *
+     * @param x         the x coordinate of the center of the particle effect
+     * @param y         the y coordinate of the center of the particle effect
+     * @param duration  how long the particle effect should last for
+     * @param animation the animation to use for the particle effect
+     */
     public void createParticle(double x, double y, double duration, Animation animation) {
-        entities.add(new Particle(this, x, y, duration, animation));
+        entities.add(new Particle(this, x - animation.getKeyFrame(0).getRegionWidth() / 2, y - animation.getKeyFrame(0).getRegionHeight() / 2, duration, animation));
     }
 
     /**
-     * Updates all entities in this round.
+     * Updates all entities in this Round.
+     *
      * @param delta the time elapsed since the last update
      */
     public void update(float delta) {
@@ -248,12 +269,12 @@ public final class Round {
             }
         }
 
-		for(int i = 0; i < entities.size(); i++) {
-			if(entities.get(i).isRemoved()) {
-				entities.remove(i);
-			} else {
-				entities.get(i).update(delta);
-			}
-		}
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities.get(i).isRemoved()) {
+                entities.remove(i);
+            } else {
+                entities.get(i).update(delta);
+            }
+        }
     }
 }

@@ -17,6 +17,9 @@ public class Assets {
     // Player texture sets for normal and flying.
     public static TextureSet playerNormal, playerFlying;
 
+    // Bad guy texture set.
+    public static TextureSet badGuyNormal;
+
     // Texture for Projectile.
     public static TextureRegion projectile;
     
@@ -44,6 +47,7 @@ public class Assets {
      */
     public static void load() {
         loadPlayerTextureSets();
+        loadBadGuyTextureSet();
 
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
 
@@ -87,6 +91,25 @@ public class Assets {
 
         playerNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
         playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
+    }
+
+    private static void loadBadGuyTextureSet() {
+        // Load idle texture map.
+        Texture badGuyIdle = loadTexture("textures/badguy_idle.png");
+
+        // Cut idle textures from texture map.
+        TextureRegion front = new TextureRegion(badGuyIdle, 0, 0, 54, 61);
+        TextureRegion back = new TextureRegion(badGuyIdle, 54, 0, 54, 61);
+        TextureRegion left = new TextureRegion(badGuyIdle, 108, 0, 33, 61);
+        TextureRegion right = new TextureRegion(badGuyIdle, 141, 0, 33, 61);
+
+        // Load walking animations.
+        Animation walkingFront = loadAnimation("textures/badguy_walking_front.png", 4, 54, 0.2f);
+        Animation walkingBack = loadAnimation("textures/badguy_walking_back.png", 4, 54, 0.2f);
+        Animation walkingLeft = loadAnimation("textures/badguy_walking_left.png", 4, 41, 0.2f);
+        Animation walkingRight = loadAnimation("textures/badguy_walking_right.png", 4, 41, 0.2f);
+
+        badGuyNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
     }
 
     /**

@@ -92,6 +92,17 @@ public abstract class Entity {
     }
 
     /**
+     * Returns the distance between this Entity and the specified coordinates.
+     *
+     * @param x the x coordinate to compare with
+     * @param y the y coordinate to compare with
+     * @return the distance between this Entity and the coordinates
+     */
+    public double distance(double x, double y) {
+        return Math.sqrt(Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2));
+    }
+
+    /**
      * @return the width of this Entity
      */
     public abstract int getWidth();

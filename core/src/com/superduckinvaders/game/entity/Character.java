@@ -92,6 +92,18 @@ public abstract class Character extends Entity {
     }
 
     /**
+     * Causes this Character to fire a projectile at the specified coordinates.
+     *
+     * @param x      the target x coordinate
+     * @param y      the target y coordinate
+     * @param speed  how fast the projectile moves
+     * @param damage how much damage the projectile deals
+     */
+    protected void fireAt(double x, double y, int speed, int damage) {
+        parent.createProjectile(this.x + getWidth() / 2, this.y + getHeight() / 2, x, y, speed, velocityX, velocityY, damage, this);
+    }
+
+    /**
      * Updates the state of this Character.
      *
      * @param delta how much time has passed since the last update
@@ -118,7 +130,7 @@ public abstract class Character extends Entity {
             stateTime = 0;
         }
         
-        if(currentHealth <= 0) {
+        if(isDead()) {
         	removed = true;
         }
 

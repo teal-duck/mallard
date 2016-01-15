@@ -80,6 +80,7 @@ public class Player extends Character {
      */
     public Player(Round parent, double x, double y) {
         super(parent, x, y, PLAYER_HEALTH);
+    	this.upgrade = Upgrade.GUN;
     }
 
     /**

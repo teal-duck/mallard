@@ -119,7 +119,7 @@ public final class Round {
      * @return this Round's collision map layer
      */
     public TiledMapTileLayer getCollisionLayer() {
-        return (TiledMapTileLayer) getMap().getLayers().get("Collisions");
+        return (TiledMapTileLayer) getMap().getLayers().get("Collision");
     }
 
     /**
@@ -174,7 +174,7 @@ public final class Round {
     public boolean isTileBlocked(int x, int y) {
         int tileX = x / getTileWidth();
         int tileY = y / getTileHeight();
-
+        
         return getCollisionLayer().getCell(tileX, tileY) != null || (getObstaclesLayer() != null && getObstaclesLayer().getCell(tileX, tileY) != null);
     }
 

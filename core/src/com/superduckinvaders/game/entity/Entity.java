@@ -116,6 +116,7 @@ public abstract class Entity {
 
     /**
      * Returns the direction to the specified coordinates from this Entity (one of the FACING_ constants in TexutreSet).
+     *
      * @param x the x coordinate to compare with
      * @param y the y coordinate to compare with
      * @return the direction the coordinates are in relative to this Entity

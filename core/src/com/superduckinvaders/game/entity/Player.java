@@ -22,9 +22,9 @@ public class Player extends Character {
      */
     public static final int PLAYER_SPEED = 200;
     /**
-     * Player's standard rate of fire
+     * Player's standard attack rate (how many seconds between attacks).
      */
-    public static final int PLAYER_RATE_OF_FIRE = 1;
+    public static final int PLAYER_ATTACK_RATE = 1;
     /**
      * How much the Player's speed should be multiplied by if they have the super speed powerup.
      */
@@ -34,9 +34,9 @@ public class Player extends Character {
      */
     public static final double PLAYER_FLIGHT_SPEED_MULTIPLIER = 2;
     /**
-     * How much the Player's rate of fire should be multiplied by if they have the rate of fire powerup.
+     * How much the Player's attack rate should be divided by if they have the rate of fire powerup.
      */
-    public static final double PLAYER_ROF_MULTIPLIER = 5;
+    public static final double PLAYER_ATTACK_RATE_MULTIPLIER = 5;
     /**
      * How long the Player can fly for, in seconds.
      */
@@ -67,9 +67,9 @@ public class Player extends Character {
      */
     private double flyingTimer = 5;
     /**
-     * How long it has been since the Player last fired the gun.
+     * How long it has been since the Player last attacked.
      */
-    private double fireTimer = 0;
+    private double attackTimer = 0;
 
     /**
      * Initialises this Player at the specified coordinates and with the specified initial health.
@@ -99,16 +99,16 @@ public class Player extends Character {
     public int getScore() {
         return points;
     }
-    
+
     /**
      * Gets the Player's current flying timer.
      *
      * @return the current flying timer
      */
     public double getFlyingTimer() {
-    	return flyingTimer;
+        return flyingTimer;
     }
-    
+
     /**
      * Gets the Player's current powerup (in the Powerup enum).
      *
@@ -190,8 +190,8 @@ public class Player extends Character {
      */
     @Override
     public void update(float delta) {
-    	this.currentHealth = 3;
-    	
+        this.currentHealth = 3;
+
         // Decrement powerup timer.
         if (powerupTimer > 0) {
             powerupTimer -= delta;
@@ -202,19 +202,24 @@ public class Player extends Character {
         // Update flying timer.
         flyingTimer += delta;
 
-        // Update firing timer.
-        fireTimer += delta;
+        // Update attack timer.
+        attackTimer += delta;
 
-        // Left mouse to fire.
+        // Left mouse to attack.
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (fireTimer >= PLAYER_RATE_OF_FIRE * (1 / PLAYER_ROF_MULTIPLIER)) {
-                fireTimer = 0;
+            if (attackTimer >= PLAYER_ATTACK_RATE * (1 / PLAYER_ATTACK_RATE_MULTIPLIER)) {
+                attackTimer = 0;
 
-                Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
+                if (upgrade == Upgrade.GUN) {
+                    Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
 
-                // Turn player to face target.
-                facing = directionTo(target.x, target.y);
-                fireAt(target.x, target.y, 300, 100);
+                    // Face target when firing gun.
+                    facing = directionTo(target.x, target.y);
+                    fireAt(target.x, target.y, 300, 100);
+                } else {
+                    // TODO: tweak melee range
+                    melee(100, 100);
+                }
             }
         }
 

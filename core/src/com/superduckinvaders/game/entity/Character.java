@@ -105,7 +105,8 @@ public abstract class Character extends Entity {
 
     /**
      * Causes this Character to use a melee attack.
-     * @param range how far the attack reaches in pixels
+     *
+     * @param range  how far the attack reaches in pixels
      * @param damage how much damage the attack deals
      */
     protected void melee(double range, int damage) {
@@ -113,7 +114,7 @@ public abstract class Character extends Entity {
         if (this instanceof Mob) {
             Player player = parent.getPlayer();
 
-            if(distanceTo(player.getX(), player.getY()) <= range && directionTo(player.getX(), player.getY()) == facing) {
+            if (distanceTo(player.getX(), player.getY()) <= range && directionTo(player.getX(), player.getY()) == facing) {
                 player.damage(damage);
             }
         } else {
@@ -121,7 +122,7 @@ public abstract class Character extends Entity {
             Character closest = null;
 
             for (Entity entity : parent.getEntities()) {
-                // Disregard myself if I'm a player and anything that isn't a Character.
+                // Disregard entity if it's me or it isn't a Character.
                 if (this == entity || !(entity instanceof Character)) {
                     continue;
                 }
@@ -165,9 +166,9 @@ public abstract class Character extends Entity {
         } else {
             stateTime = 0;
         }
-        
-        if(isDead()) {
-        	removed = true;
+
+        if (isDead()) {
+            removed = true;
         }
 
         super.update(delta);

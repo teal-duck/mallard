@@ -200,8 +200,9 @@ public class Player extends Character {
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (fireTimer >= PLAYER_RATE_OF_FIRE * (1 / PLAYER_ROF_MULTIPLIER)) {
                 fireTimer = 0;
+
                 Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
-                parent.createProjectile(x + getWidth() / 2, y + getHeight() / 2, target.x, target.y, 300, velocityX, velocityY, 100, this);
+                fireAt(target.x, target.y, 300, 100);
             }
         }
 

@@ -1,6 +1,7 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
 /**
@@ -96,10 +97,41 @@ public abstract class Entity {
      *
      * @param x the x coordinate to compare with
      * @param y the y coordinate to compare with
-     * @return the distance between this Entity and the coordinates
+     * @return the distance between this Entity and the coordinates, in pixels
      */
-    public double distance(double x, double y) {
+    public double distanceTo(double x, double y) {
         return Math.sqrt(Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2));
+    }
+
+    /**
+     * Returns the angle between this Entity and the specified coordinates.
+     *
+     * @param x the x coordinate to compare with
+     * @param y the y coordinate to compare with
+     * @return the angle between this Entity and the coordinates, in radians
+     */
+    public double angleTo(double x, double y) {
+        return Math.atan2(y - this.y, x - this.x);
+    }
+
+    /**
+     * Returns the direction to the specified coordinates from this Entity (one of the FACING_ constants in TexutreSet).
+     * @param x the x coordinate to compare with
+     * @param y the y coordinate to compare with
+     * @return the direction the coordinates are in relative to this Entity
+     */
+    public int directionTo(double x, double y) {
+        double angle = angleTo(x, y);
+
+        if (angle < Math.PI * 3 / 4 && angle >= Math.PI / 4) {
+            return TextureSet.FACING_BACK;
+        } else if (angle < Math.PI / 4 && angle >= -Math.PI / 4) {
+            return TextureSet.FACING_RIGHT;
+        } else if (angle < -Math.PI / 4 && angle >= -Math.PI * 3 / 4) {
+            return TextureSet.FACING_FRONT;
+        } else {
+            return TextureSet.FACING_LEFT;
+        }
     }
 
     /**
@@ -176,7 +208,7 @@ public abstract class Entity {
 
             // If entity is character and we have hit it, damage it and then delete myself.
             if (entity instanceof Character && entity.intersects(x + deltaX, y, getWidth(), getHeight())) {
-            	return true;
+                return true;
             }
         }
 
@@ -219,7 +251,7 @@ public abstract class Entity {
 
             // If entity is character and we have hit it, damage it and then delete myself.
             if (entity instanceof Character && entity.intersects(x, y + deltaY, getWidth(), getHeight())) {
-            	return true;
+                return true;
             }
         }
 

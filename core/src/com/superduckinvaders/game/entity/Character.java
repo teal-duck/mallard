@@ -130,7 +130,7 @@ public abstract class Character extends Entity {
             stateTime = 0;
         }
         
-        if(currentHealth <= 0) {
+        if(isDead()) {
         	removed = true;
         }
 

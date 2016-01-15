@@ -19,6 +19,11 @@ public class Assets {
 
     // Texture for Projectile.
     public static TextureRegion projectile;
+    
+    // Textures for Hearts
+    public static TextureRegion heartFull;
+    public static TextureRegion heartHalf;
+    public static TextureRegion heartEmpty;
 
     // Animation for explosion.
     public static Animation explosionAnimation;
@@ -47,6 +52,11 @@ public class Assets {
         levelOneMap = loadTiledMap("maps/map.tmx");
 
         font = loadFont("font/gamefont.fnt", "font/gamefont.png");
+
+        Texture hearts = loadTexture("textures/hearts.png");
+        heartFull = new TextureRegion(hearts, 0, 0, 32, 28);
+        heartHalf = new TextureRegion(hearts, 32, 0, 32, 28);
+        heartEmpty = new TextureRegion(hearts, 64, 0, 32, 28);
     }
 
     /**

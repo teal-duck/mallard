@@ -181,6 +181,8 @@ public class Player extends Character {
      */
     @Override
     public void update(float delta) {
+    	this.currentHealth = 3;
+    	
         // Decrement powerup timer.
         if (powerupTimer > 0) {
             powerupTimer -= delta;

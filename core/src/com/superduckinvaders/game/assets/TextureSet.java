@@ -1,4 +1,4 @@
-package com.superduckinvaders.game.graphics;
+package com.superduckinvaders.game.assets;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

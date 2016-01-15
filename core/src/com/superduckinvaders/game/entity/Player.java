@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.superduckinvaders.game.graphics.Assets;
-import com.superduckinvaders.game.graphics.TextureSet;
+import com.superduckinvaders.game.assets.Assets;
+import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
 public class Player extends Character {

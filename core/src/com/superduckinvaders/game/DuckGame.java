@@ -4,13 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.superduckinvaders.game.graphics.Assets;
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
 public class DuckGame extends Game {
-	SpriteBatch batch;
-	Texture tiles;
-	TextureRegion img;
 	GameScreen gameScreen;
 	private Round round;
 	

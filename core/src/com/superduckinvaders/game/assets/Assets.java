@@ -1,4 +1,4 @@
-package com.superduckinvaders.game.graphics;
+package com.superduckinvaders.game.assets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,6 +20,9 @@ public class Assets {
     // Texture for Projectile.
     public static TextureRegion projectile;
 
+    // Animation for explosion.
+    public static Animation explosionAnimation;
+
     // Tile map for level one.
     public static TiledMap levelOneMap;
     
@@ -34,6 +37,8 @@ public class Assets {
         loadPlayerTextureSets();
 
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
+
+        explosionAnimation = loadAnimation("textures/explosion.png", 2, 32, 0.3f);
 
         levelOneMap = loadTiledMap("maps/map.tmx");
         
@@ -70,14 +75,32 @@ public class Assets {
         playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
     }
 
+    /**
+     * Loads the texture from the specified file.
+     * @param file the file to load from
+     * @return the texture
+     */
     public static Texture loadTexture(String file) {
         return new Texture(Gdx.files.internal(file));
     }
 
+    /**
+     * Loads the tile map from the specifed file.
+     * @param file the file to load from
+     * @return the tile map
+     */
     public static TiledMap loadTiledMap(String file) {
         return mapLoader.load(file);
     }
 
+    /**
+     * Loads the animation from the specified file.
+     * @param file the file to load from
+     * @param count how many frames are in the file
+     * @param frameWidth how wide each frame is in the file
+     * @param frameDuration how long each frame should be shown for in seconds
+     * @return the animation
+     */
     public static Animation loadAnimation(String file, int count, int frameWidth, float frameDuration) {
         Texture texture = loadTexture(file);
         Array<TextureRegion> keyFrames = new Array<TextureRegion>();

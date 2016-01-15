@@ -1,6 +1,6 @@
 package com.superduckinvaders.game.entity;
 
-import com.superduckinvaders.game.graphics.TextureSet;
+import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.round.Round;
 
 public abstract class Character extends Entity {

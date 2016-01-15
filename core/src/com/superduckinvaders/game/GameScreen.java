@@ -5,11 +5,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.entity.Entity;
-import com.superduckinvaders.game.graphics.Assets;
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
 public class GameScreen implements Screen {

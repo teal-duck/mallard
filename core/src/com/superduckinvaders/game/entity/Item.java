@@ -1,7 +1,7 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.superduckinvaders.game.graphics.Assets;
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
 public class Item extends Entity {

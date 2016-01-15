@@ -1,15 +1,13 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.superduckinvaders.game.graphics.Assets;
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
 /**
  * Created by Oliver on 11/01/2016.
  */
 public class Projectile extends Entity {
-
-    // TODO: deal with rendering projectiles
 
     /**
      * The owner of this Projectile (i.e. the Entity that fired it).
@@ -62,6 +60,9 @@ public class Projectile extends Entity {
 
         // Check for collisions with blocked tiles and the map boundary.
         if (collidesX(deltaX) || collidesY(deltaY) || x + deltaX < 0 || x + getWidth() + deltaX > parent.getMapWidth() || y + deltaY < 0 || y + getHeight() + deltaY > parent.getMapHeight()) {
+            // Create explosion particle effect.
+            parent.createParticle(x, y, 0.6, Assets.explosionAnimation);
+
             removed = true;
             return;
         }

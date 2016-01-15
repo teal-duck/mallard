@@ -1,14 +1,12 @@
 package com.superduckinvaders.game.round;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.DuckGame;
-import com.superduckinvaders.game.entity.Entity;
-import com.superduckinvaders.game.entity.Item;
-import com.superduckinvaders.game.entity.Player;
-import com.superduckinvaders.game.entity.Projectile;
+import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.objective.CollectObjective;
 import com.superduckinvaders.game.objective.Objective;
 
@@ -230,6 +228,10 @@ public final class Round {
      */
     public void createProjectile(double x, double y, double targetX, double targetY, double speed, double velocityXOffset, double velocityYOffset, int damage, Entity owner) {
         entities.add(new Projectile(this, x, y, targetX, targetY, speed, velocityXOffset, velocityYOffset, damage, owner));
+    }
+
+    public void createParticle(double x, double y, double duration, Animation animation) {
+        entities.add(new Particle(this, x, y, duration, animation));
     }
 
     /**

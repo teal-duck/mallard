@@ -211,6 +211,9 @@ public class Player extends Character {
                 fireTimer = 0;
 
                 Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
+
+                // Turn player to face target.
+                facing = directionTo(target.x, target.y);
                 fireAt(target.x, target.y, 300, 100);
             }
         }

@@ -53,7 +53,7 @@ public class Projectile extends Entity {
         super(parent, x, y);
 
         // Angle between initial position and target.
-        double angle = Math.atan2(targetY - y, targetX - x);
+        double angle = angleTo(targetX, targetY);
 
         velocityX = Math.round(Math.cos(angle) * speed);
         velocityY = Math.round(Math.sin(angle) * speed);

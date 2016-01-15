@@ -27,6 +27,10 @@ public class Assets {
     public static TextureRegion heartFull;
     public static TextureRegion heartHalf;
     public static TextureRegion heartEmpty;
+    
+    // Textures for stamina
+    public static TextureRegion staminaFull;
+    public static TextureRegion staminaEmpty;
 
     // Animation for explosion.
     public static Animation explosionAnimation;
@@ -61,6 +65,10 @@ public class Assets {
         heartFull = new TextureRegion(hearts, 0, 0, 32, 28);
         heartHalf = new TextureRegion(hearts, 32, 0, 32, 28);
         heartEmpty = new TextureRegion(hearts, 64, 0, 32, 28);
+
+        Texture stamina = loadTexture("textures/stamina.png");
+        staminaFull = new TextureRegion(stamina, 0, 0, 192, 28);
+        staminaEmpty = new TextureRegion(stamina, 0, 28, 192, 28);
     }
 
     /**

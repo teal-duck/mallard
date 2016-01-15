@@ -99,7 +99,16 @@ public class Player extends Character {
     public int getScore() {
         return points;
     }
-
+    
+    /**
+     * Gets the Player's current flying timer.
+     *
+     * @return the current flying timer
+     */
+    public double getFlyingTimer() {
+    	return flyingTimer;
+    }
+    
     /**
      * Gets the Player's current powerup (in the Powerup enum).
      *
@@ -191,9 +200,7 @@ public class Player extends Character {
         }
 
         // Update flying timer.
-        if (flyingTimer < PLAYER_FLIGHT_COOLDOWN) {
-            flyingTimer += delta;
-        }
+        flyingTimer += delta;
 
         // Update firing timer.
         fireTimer += delta;

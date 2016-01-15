@@ -120,7 +120,17 @@ public class GameScreen implements Screen {
         uiBatch.begin();
         // TODO: finish UI
         Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        Assets.font.draw(uiBatch, "Objective: Move around", 10, 710);
+        Assets.font.draw(uiBatch, "Objective: Get to the bottom left", 10, 710);
+        
+
+		uiBatch.draw(Assets.staminaEmpty, 1080, 10);
+		if(round.getPlayer().getFlyingTimer()*38.4 > 192) {
+			Assets.staminaFull.setRegionWidth(192);
+		} else {
+			Assets.staminaFull.setRegionWidth((int) Math.max(0, round.getPlayer().getFlyingTimer()*38.4));
+		}
+		System.out.println(round.getPlayer().getFlyingTimer());
+		uiBatch.draw(Assets.staminaFull, 1080, 10);
 
         int x = 0;
         while(x < round.getPlayer().getMaximumHealth()) {

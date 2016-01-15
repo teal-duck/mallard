@@ -68,6 +68,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         camera = new OrthographicCamera(WIDTH, HEIGHT);
+        camera.zoom -= 0.5;
 
         spriteBatch = new SpriteBatch();
         uiBatch = new SpriteBatch();
@@ -120,6 +121,17 @@ public class GameScreen implements Screen {
         // TODO: finish UI
         Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         Assets.font.draw(uiBatch, "Objective: Move around", 10, 710);
+
+        int x = 0;
+        while(x < round.getPlayer().getMaximumHealth()) {
+        	if(x+2 <= round.getPlayer().getCurrentHealth())
+        		uiBatch.draw(Assets.heartFull, x * 18 + 10, 10);
+        	else if(x+1 <= round.getPlayer().getCurrentHealth())
+        		uiBatch.draw(Assets.heartHalf, x * 18 + 10, 10);
+        	else
+        		uiBatch.draw(Assets.heartEmpty, x * 18 + 10, 10);
+        	x += 2;
+        }
         uiBatch.end();
     }
 

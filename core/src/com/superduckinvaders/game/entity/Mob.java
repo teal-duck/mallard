@@ -1,6 +1,8 @@
 
 package com.superduckinvaders.game.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.round.Round;
@@ -49,9 +51,29 @@ public class Mob extends Character {
      * @param dirY y component of the direction vector
      */
     public void setVelocity(int dirX, int dirY){
-        double magnitude = Math.sqrt(dirX^2 + dirY^2);
-        this.velocityX = (dirX/magnitude)*speed;
-        this.velocityY = (dirY/magnitude)*speed;
+    	// Left/right movement.
+        if (dirX > 0) {
+            velocityX = speed;
+        } else if (dirX < 0) {
+            velocityX = -speed;
+        } else {
+            velocityX = 0;
+        }
+
+        // Left/right movement.
+        if (dirY > 0) {
+            velocityY = speed;
+        } else if (dirY < 0) {
+            velocityY = -speed;
+        } else {
+            velocityY = 0;
+        }
+
+        // If moving diagonally, move slower.
+        if (velocityX != 0 && velocityY != 0) {
+            velocityX /= Math.sqrt(2);
+            velocityY /= Math.sqrt(2);
+        }
     }
 
     public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {
@@ -77,7 +99,8 @@ public class Mob extends Character {
 
     @Override
     public void update(float delta) {
-        ai.update(this);
+        //ai.update(this);
+    	this.setVelocity(1, 1);
         super.update(delta);
     }
 

@@ -169,6 +169,16 @@ public abstract class Entity {
                 return true;
             }
         }
+        for (Entity entity : parent.getEntities()) {
+            if (entity == this || this instanceof Projectile) {
+                continue;
+            }
+
+            // If entity is character and we have hit it, damage it and then delete myself.
+            if (entity instanceof Character && entity.intersects(x + deltaX, y, getWidth(), getHeight())) {
+            	return true;
+            }
+        }
 
         return false;
     }
@@ -199,6 +209,17 @@ public abstract class Entity {
         for (int i = (int) x; i < x + getWidth(); i++) {
             if (parent.isTileBlocked(i, (int) Math.floor(y + deltaY))) {
                 return true;
+            }
+        }
+        for (Entity entity : parent.getEntities()) {
+            // Don't damage my owner.
+            if (entity == this || this instanceof Projectile) {
+                continue;
+            }
+
+            // If entity is character and we have hit it, damage it and then delete myself.
+            if (entity instanceof Character && entity.intersects(x, y + deltaY, getWidth(), getHeight())) {
+            	return true;
             }
         }
 

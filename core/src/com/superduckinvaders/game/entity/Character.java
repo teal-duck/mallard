@@ -129,6 +129,10 @@ public abstract class Character extends Entity {
         } else {
             stateTime = 0;
         }
+        
+        if(currentHealth <= 0) {
+        	removed = true;
+        }
 
         super.update(delta);
     }

@@ -104,6 +104,42 @@ public abstract class Character extends Entity {
     }
 
     /**
+     * Causes this Character to use a melee attack.
+     * @param range how far the attack reaches in pixels
+     * @param damage how much damage the attack deals
+     */
+    protected void melee(double range, int damage) {
+        // Don't let mobs melee other mobs (for now).
+        if (this instanceof Mob) {
+            Player player = parent.getPlayer();
+
+            if(distanceTo(player.getX(), player.getY()) <= range && directionTo(player.getX(), player.getY()) == facing) {
+                player.damage(damage);
+            }
+        } else {
+            // Attack the closest Character within the range.
+            Character closest = null;
+
+            for (Entity entity : parent.getEntities()) {
+                // Disregard myself if I'm a player and anything that isn't a Character.
+                if (this == entity || !(entity instanceof Character)) {
+                    continue;
+                }
+
+                double x = entity.getX(), y = entity.getY();
+                if (distanceTo(x, y) <= range && directionTo(x, y) == facing && (closest == null || distanceTo(x, y) < distanceTo(closest.getX(), closest.getY()))) {
+                    closest = (Character) entity;
+                }
+            }
+
+            // Can't attack if nothing in range.
+            if (closest != null) {
+                closest.damage(damage);
+            }
+        }
+    }
+
+    /**
      * Updates the state of this Character.
      *
      * @param delta how much time has passed since the last update

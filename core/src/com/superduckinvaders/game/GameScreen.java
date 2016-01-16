@@ -124,6 +124,7 @@ public class GameScreen implements Screen {
         // TODO: finish UI
         Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         Assets.font.draw(uiBatch, "Objective: Get to the bottom left", 10, 710);
+        Assets.font.draw(uiBatch, "Points:" + round.getPlayer().getScore(), 10, 680);
         
 
 		uiBatch.draw(Assets.staminaEmpty, 1080, 10);

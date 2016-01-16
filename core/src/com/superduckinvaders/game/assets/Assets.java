@@ -32,6 +32,10 @@ public class Assets {
     public static TextureRegion staminaFull;
     public static TextureRegion staminaEmpty;
 
+    // Textures for powerup.
+    public static TextureRegion powerupFull;
+    public static TextureRegion powerupEmpty;
+
     // Animation for explosion.
     public static Animation explosionAnimation;
 
@@ -80,6 +84,10 @@ public class Assets {
         staminaFull = new TextureRegion(stamina, 0, 0, 192, 28);
         staminaEmpty = new TextureRegion(stamina, 0, 28, 192, 28);
 
+        Texture powerup = loadTexture("textures/powerup.png");
+        powerupFull = new TextureRegion(powerup, 0, 0, 192, 28);
+        powerupEmpty = new TextureRegion(powerup, 0, 28, 192, 28);
+
         button = new TextureRegion(loadTexture("textures/button.png"));
     }
 
@@ -118,16 +126,16 @@ public class Assets {
         Texture badGuyIdle = loadTexture("textures/badguy_idle.png");
 
         // Cut idle textures from texture map.
-        TextureRegion front = new TextureRegion(badGuyIdle, 0, 0, 54, 61);
-        TextureRegion back = new TextureRegion(badGuyIdle, 54, 0, 54, 61);
-        TextureRegion left = new TextureRegion(badGuyIdle, 108, 0, 33, 61);
-        TextureRegion right = new TextureRegion(badGuyIdle, 141, 0, 33, 61);
+        TextureRegion front = new TextureRegion(badGuyIdle, 0, 0, 21, 24);
+        TextureRegion back = new TextureRegion(badGuyIdle, 21, 0, 21, 24);
+        TextureRegion left = new TextureRegion(badGuyIdle, 42, 0, 21, 24);
+        TextureRegion right = new TextureRegion(badGuyIdle, 63, 0, 21, 24);
 
         // Load walking animations.
-        Animation walkingFront = loadAnimation("textures/badguy_walking_front.png", 4, 54, 0.2f);
-        Animation walkingBack = loadAnimation("textures/badguy_walking_back.png", 4, 54, 0.2f);
-        Animation walkingLeft = loadAnimation("textures/badguy_walking_left.png", 4, 41, 0.2f);
-        Animation walkingRight = loadAnimation("textures/badguy_walking_right.png", 4, 41, 0.2f);
+        Animation walkingFront = loadAnimation("textures/badguy_walking_front.png", 4, 21, 0.2f);
+        Animation walkingBack = loadAnimation("textures/badguy_walking_back.png", 4, 21, 0.2f);
+        Animation walkingLeft = loadAnimation("textures/badguy_walking_left.png", 4, 16, 0.2f);
+        Animation walkingRight = loadAnimation("textures/badguy_walking_right.png", 4, 16, 0.2f);
 
         badGuyNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
     }

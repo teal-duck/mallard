@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.Entity;
+import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.round.Round;
 
 /**
@@ -124,16 +125,19 @@ public class GameScreen implements Screen {
         // TODO: finish UI
         Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         Assets.font.draw(uiBatch, "Objective: Get to the bottom left", 10, 710);
-        
+        Assets.font.draw(uiBatch, "Score: " + round.getPlayer().getScore(), 10, 680);
+        Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 650);
 
+        // Draw stamina bar (for flight);
 		uiBatch.draw(Assets.staminaEmpty, 1080, 10);
-		if(round.getPlayer().getFlyingTimer()*38.4 > 192) {
-			Assets.staminaFull.setRegionWidth(192);
-		} else {
-			Assets.staminaFull.setRegionWidth((int) Math.max(0, round.getPlayer().getFlyingTimer()*38.4));
-		}
+        if (round.getPlayer().getFlyingTimer() > 0) {
+            Assets.staminaFull.setRegionWidth((int) Math.max(0, Math.min(192, round.getPlayer().getFlyingTimer() / Player.PLAYER_FLIGHT_COOLDOWN * 192)));
+        } else {
+            Assets.staminaFull.setRegionWidth(0);
+        }
 		uiBatch.draw(Assets.staminaFull, 1080, 10);
-		
+
+        // Draw powerup bar.
 		uiBatch.draw(Assets.powerupEmpty, 1080, 50);
         Assets.powerupFull.setRegionWidth((int) Math.max(0, round.getPlayer().getPowerupTime() / round.getPlayer().getPowerupInitialTime() * 192));
         uiBatch.draw(Assets.powerupFull, 1080, 50);
@@ -148,8 +152,6 @@ public class GameScreen implements Screen {
         		uiBatch.draw(Assets.heartEmpty, x * 18 + 10, 10);
         	x += 2;
         }
-
-        Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 200);
 
         uiBatch.end();
     }

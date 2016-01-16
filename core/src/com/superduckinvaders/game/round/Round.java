@@ -81,7 +81,7 @@ public final class Round {
 
         setObjective(new CollectObjective(this, item));
 
-        entities = new ArrayList<Entity>();
+        entities = new ArrayList<Entity>(128);
         entities.add(player);
         entities.add(item);
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);

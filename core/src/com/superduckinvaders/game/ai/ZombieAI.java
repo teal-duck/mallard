@@ -11,7 +11,12 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class ZombieAI extends AI {
-    
+
+    /**
+	 * How many seconds between attacks?
+	 */
+	public static final double ATTACK_DELAY = 1;
+
     public final static int PATHFINDING_ITERATION_LIMIT = 20;
     public final static float PATHFINDING_RATE = (float) 0.2;
     public final static float PATHFINDING_RATE_OFFSET = (float) 0.05;
@@ -35,6 +40,11 @@ public class ZombieAI extends AI {
      * range of zombie melee attacks in pixels
      */
     private int attackRange;
+
+	/**
+	 * How long before we can attack again.
+	 */
+	private double attackTimer = 0;
     
     
     
@@ -124,9 +134,12 @@ public class ZombieAI extends AI {
         double distanceX = mob.getX() - playerX;
         double distanceY = mob.getY() - playerY;
         double distanceFromPlayer = Math.sqrt( Math.pow(distanceX, 2) + Math.pow(distanceY,2));
-        if ((int)distanceFromPlayer < attackRange)
-            //include an attack animation here <---------------
-            roundPointer.getPlayer().damage(1);
+        if ((int)distanceFromPlayer < attackRange && attackTimer <= 0) {
+			roundPointer.getPlayer().damage(1);
+			attackTimer = ATTACK_DELAY;
+		} else if(attackTimer > 0) {
+			attackTimer -= delta;
+		}
     }
     
     @Override

@@ -5,32 +5,102 @@ import com.superduckinvaders.game.entity.Mob;
 import com.superduckinvaders.game.round.Round;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.HashMap;
 
 public class ZombieAI extends AI {
     
     public final static int PATHFINDING_ITERATION_LIMIT = 20;
+    //code shortcuts
+    final int tileWidth = roundPointer.getTileWidth();
+    final int tileHeight = roundPointer.getTileHeight();
+    private int playerX;
+    private int playerY;
+    
+    
+    /**
+     * used in pathfinding algorithm, implements state in statespace
+     */
+	class Coord implements Comparable<Coord>{
+		public int x;
+		public int y;
+		public Coord(int x, int y){
+			this.x = x;
+			this.y = y;
+		}
+		@Override
+		public int compareTo(Coord o) {
+			Double playerDistanceA = Math.sqrt(Math.pow((x-playerX), 2) + Math.pow((y-playerY), 2));
+			Double playerDistanceB = Math.sqrt(Math.pow((o.x-playerX), 2) + Math.pow((o.y-playerY), 2));
+			return playerDistanceA.compareTo(playerDistanceB);
+		}
+		@Override
+		public boolean equals(Object o){
+			if (o==null) return false;
+		    if (getClass() != o.getClass()) return false;
+		    final Coord other = (Coord) o;
+			return (this.x==other.x && this.y==other.y);
+		}
+		
+		@Override
+		public int hashCode(){
+			int hash = 17;
+			hash = hash * 31 + this.x;
+		    hash = hash * 31 + this.y;
+		    return hash;
+		}
+		
+		public boolean inSameTile(Coord B){
+			return (this.x/tileWidth==B.x/tileWidth && this.y/tileHeight==B.y/tileHeight);
+		}
+		
+		public String toString(){
+			return ("("+Integer.toString(this.x)+", "+Integer.toString(this.y)+")");
+		}
+	}
+	/**
+	 * used in pathFinding algorithm, implements node of the search tree
+	 */
+	class SearchNode{
+		public SearchNode predecessor;
+		public int iteration;
+		public SearchNode (SearchNode predecessor, int iteration){
+			this.predecessor = predecessor;
+			this.iteration = iteration;
+		}
+	}
     
     /**
      * range of zombie melee attacks in pixels
      */
     private int attackRange;
+    private Coord previousTile=null;//used to solve pathfinding bugs
     
     /**
      * constructor for zombie AI
      * @param currentRound round pointer
      * @param range range of zombie attacks
+     * @param args optional arguments for the given AI -  args[0] is zombie attack range
      */
-    public ZombieAI(Round currentRound, int range){
-        super(currentRound);
-        attackRange = range;
+    public ZombieAI(Round currentRound, int[] args){
+        super(currentRound, args);
+        attackRange = args[0];
+    }
+    
+    private void updatePlayerCoords(){
+    	playerX = (int)roundPointer.getPlayer().getX();
+    	playerY = (int)roundPointer.getPlayer().getY();
     }
     
     @Override
     public void update(Mob mob) {
-        int[] coord = FindPath(mob);
-        mob.setVelocity(coord[0], coord[1]);
-        double distanceX = mob.getX() - roundPointer.getPlayer().getX();
-        double distanceY = mob.getY() - roundPointer.getPlayer().getY();
+    	updatePlayerCoords();
+        Coord targetCoord = FindPath(mob);
+        Coord targetDir = new Coord ((int) (targetCoord.x-mob.getX()), (int) (targetCoord.y-mob.getY()));
+        mob.setVelocity(targetDir.x, targetDir.y);
+        double distanceX = mob.getX() - playerX;
+        double distanceY = mob.getY() - playerY;
         double distanceFromPlayer = Math.sqrt( Math.pow(distanceX, 2) + Math.pow(distanceY,2));
         if ((int)distanceFromPlayer < attackRange)
             //include an attack animation here <---------------
@@ -48,90 +118,75 @@ public class ZombieAI extends AI {
      * A variation of A* algorithm. Returns a meaningful target coordinate as a pair of integers.
      * Recalculated every tick as player might move and change pathfinding coordinates.
      */
-    private int[] FindPath(Mob mob){
-        int startCoord[] = {(int)mob.getX(), (int)mob.getY()};
-        int finalCoord[] = {(int)roundPointer.getPlayer().getX(), (int)roundPointer.getPlayer().getY(), -1};
+    private Coord FindPath(Mob mob){
+    	
+        Coord startCoord = new Coord((int)mob.getX(), (int)mob.getY());
+        Coord finalCoord = new Coord(playerX, playerY);
+        boolean finalFound = false;
         
-        int tileWidth = roundPointer.getTileWidth();
-        int tileHeight = roundPointer.getTileHeight();
+        PriorityQueue<Coord> fringe = new PriorityQueue<Coord>();
+        HashMap<Coord, SearchNode> visitedStates = new HashMap<Coord, SearchNode>();
+        fringe.add(startCoord);
+        visitedStates.put(startCoord, new SearchNode(null, 0));
         
-        int finalCoordTile[] = {finalCoord[0]/tileWidth, finalCoord[1]/tileHeight};
-        
-
-        
-        ArrayList<int[]> queue = new ArrayList<int[]>();
-        queue.add(new int[]{startCoord[0], startCoord[1], 0});
-        
-        //block below tries to find a valid path in a limited amount of steps
-        for(int i = 0; i<PATHFINDING_ITERATION_LIMIT; i++)
-        {
-            //generate N, E, S, W tile coordinates
-            for (int j = 0; j<queue.size(); j++)
-            {
-                int[][]perm = new int[4][];
-                perm[0] = new int[]{queue.get(j)[0], queue.get(j)[1]+tileHeight, queue.get(j)[2]+1};
-                perm[1] = new int[]{queue.get(j)[0]+tileWidth, queue.get(j)[1], queue.get(j)[2]+1};
-                perm[2] = new int[]{queue.get(j)[0], queue.get(j)[1]-tileHeight, queue.get(j)[2]+1};
-                perm[3] = new int[]{queue.get(j)[0]-tileWidth, queue.get(j)[1], queue.get(j)[2]+1};
-                for(int[] currentPerm : perm)
+        while (!fringe.isEmpty()) {
+        	
+            	Coord currentCoord = fringe.poll();
+            	SearchNode currentState = visitedStates.get(currentCoord);
+            	
+            	if (currentState.iteration>=PATHFINDING_ITERATION_LIMIT)
+            		continue;
+            		
+            	
+            	//work out N, E, S, W permutations
+                Coord[] perm = new Coord[4];
+                perm[0] = new Coord(currentCoord.x, currentCoord.y+tileHeight);
+                perm[1] = new Coord(currentCoord.x+tileWidth, currentCoord.y);
+                perm[2] = new Coord(currentCoord.x, currentCoord.y-tileHeight);
+                perm[3] = new Coord(currentCoord.x-tileWidth, currentCoord.y);
+                
+                for(Coord currentPerm : perm)
                 {
-                    if(!(roundPointer.isTileBlocked(currentPerm[0], currentPerm[1]) || CoordInQueue(currentPerm, queue)))
-                        queue.add(currentPerm);
-                    if(currentPerm[0]/tileWidth==finalCoordTile[0] && currentPerm[1]/tileHeight==finalCoordTile[1])
+                    if(!(mob.collidesXfrom(currentPerm.x-currentCoord.x, currentCoord.x, currentCoord.y) ||
+                    		mob.collidesYfrom(currentPerm.y-currentCoord.y, currentCoord.x, currentCoord.y) ||
+                    		visitedStates.containsKey(currentPerm))){
+                        fringe.add(currentPerm);
+                    	visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration+1));
+                    }
+                	if(currentPerm.inSameTile(finalCoord))
                     {
-                        finalCoord = new int[]{finalCoord[0], finalCoord[1], i};
+                		visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration+1));
+                		finalCoord = currentPerm;
+                        finalFound = true;
                         break;
                     }
                 }
+                if (finalFound) break;
             }
-        }
-        
-        if(finalCoord[2]==-1) //if solution not found
-            return(startCoord);
-        
-        //block below finds the path from the queue generated
-        ArrayList<int[]> path = new ArrayList<int[]>();
-        for(int i = 0; i<PATHFINDING_ITERATION_LIMIT; i++)
-        {
-            int[][]perm = new int[4][];
-            perm[0] = new int[]{finalCoord[0], finalCoord[1]+1, finalCoord[2]-1};
-            perm[1] = new int[]{finalCoord[0]+1, finalCoord[1], finalCoord[2]-1};
-            perm[2] = new int[]{finalCoord[0], finalCoord[1]-1, finalCoord[2]-1};
-            perm[3] = new int[]{finalCoord[0]-1, finalCoord[1], finalCoord[2]-1};
-            
-            for(int[] currentPerm : perm)
-            {
-                //assert -  one of the above permutations will exist in the queue 
-                if(queue.contains(currentPerm))
-                {
-                    path.add(currentPerm);
-                    finalCoord=currentPerm;
-                    if(finalCoord[0]/tileWidth==startCoord[0]/tileWidth && finalCoord[1]/tileHeight==startCoord[1]/tileHeight)
-                        break;
-                }
+            if (!finalFound){
+            	return startCoord;
             }
-        }
-        
-        //path is in reverse order, hence pull from the end
-        int[] resultCoord = path.get(path.size()-2);
-        return new int[]{resultCoord[0], resultCoord[1]};
-        
-        
+            else{
+            	SearchNode resultNode = null;
+            	List<SearchNode> path = new ArrayList<SearchNode>();
+            	path.add(visitedStates.get(finalCoord));
+            	while(path.get(path.size()-1)!=visitedStates.get(startCoord)){
+            		path.add(path.get(path.size()-1).predecessor);
+            	}
+            	switch (path.size()){
+            	case 1:
+            		resultNode = path.get(path.size()-1);
+            		break;
+            	default:
+            		resultNode = path.get(path.size()-2);
+            		break;
+            	}
+            	//for loop below will terminate after at most 4 iterations
+            	for (Coord key: visitedStates.keySet()){
+            		if (visitedStates.get(key)==resultNode)
+            			return key;
+            	}
+            }
+        return startCoord;//you shouldn't be here
     }
-    
-    /**
-     * Strictly private function, part of FindPath algorithm.
-     * Checks if some coordinate already exists in coordinate Queue
-     * Used instead of 'contains' built-in method, as third item in coordinate is irrelevant 
-     */
-    private boolean CoordInQueue(int[] coord, ArrayList<int[]> queue)
-    {
-        for (int[] queueCoord : queue)
-        {
-            if (queueCoord[0]==coord[0] && queueCoord[1]==coord[1])
-                return true;
-        }
-        return false;
-    }
-    
 }

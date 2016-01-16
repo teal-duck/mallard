@@ -135,12 +135,8 @@ public class GameScreen implements Screen {
 		uiBatch.draw(Assets.staminaFull, 1080, 10);
 		
 		uiBatch.draw(Assets.powerupEmpty, 1080, 50);
-		if(round.getPlayer().getPowerupTime()*38.4 > 192) {
-			Assets.powerupFull.setRegionWidth(192);
-		} else {
-			Assets.powerupFull.setRegionWidth((int) Math.max(0, round.getPlayer().getPowerupTime()*38.4));
-		}
-		uiBatch.draw(Assets.powerupFull, 1080, 50);
+        Assets.powerupFull.setRegionWidth((int) Math.max(0, round.getPlayer().getPowerupTime() / round.getPlayer().getPowerupInitialTime() * 192));
+        uiBatch.draw(Assets.powerupFull, 1080, 50);
 
         int x = 0;
         while(x < round.getPlayer().getMaximumHealth()) {
@@ -152,6 +148,7 @@ public class GameScreen implements Screen {
         		uiBatch.draw(Assets.heartEmpty, x * 18 + 10, 10);
         	x += 2;
         }
+
         uiBatch.end();
     }
 

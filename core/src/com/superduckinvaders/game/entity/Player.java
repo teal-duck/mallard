@@ -23,9 +23,9 @@ public class Player extends Character {
      */
     public static final int PLAYER_SPEED = 200;
     /**
-     * Player's standard attack rate (how many seconds between attacks).
+     * Player's standard attack delay (how many seconds between attacks).
      */
-    public static final int PLAYER_ATTACK_RATE = 1;
+    public static final int PLAYER_ATTACK_DELAY = 1;
     /**
      * How much the Player's speed should be multiplied by if they have the super speed powerup.
      */
@@ -35,9 +35,9 @@ public class Player extends Character {
      */
     public static final double PLAYER_FLIGHT_SPEED_MULTIPLIER = 2;
     /**
-     * How much the Player's attack rate should be divided by if they have the rate of fire powerup.
+     * How much the Player's attack rate should be multiplied by if they have the rate of fire powerup.
      */
-    public static final double PLAYER_ATTACK_RATE_MULTIPLIER = 5;
+    public static final double PLAYER_ATTACK_DELAY_MULTIPLIER = 0.2;
     /**
      * How long the Player can fly for, in seconds.
      */
@@ -62,7 +62,7 @@ public class Player extends Character {
     /**
      * How much time is remaining on the Player's powerup.
      */
-    private double powerupTimer = 0;
+    private double powerupInitial, powerupTimer = 0;
     /**
      * Shows if a player is flying. If < 0, player is flying for -flyingTimer seconds. If < PLAYER_FLIGHT_COOLDOWN, flying is on cooldown.
      */
@@ -129,11 +129,20 @@ public class Player extends Character {
     }
 
     /**
+     * Gets the time that the current powerup initially lasted for.
+     *
+     * @return the initial powerup time
+     */
+    public double getPowerupInitialTime() {
+        return powerupInitial;
+    }
+
+    /**
      * Clears the Player's current powerup.
      */
     public void clearPowerup() {
         powerup = Powerup.NONE;
-        powerupTimer = 0;
+        powerupInitial = powerupTimer = 0;
     }
 
     /**
@@ -144,7 +153,7 @@ public class Player extends Character {
      */
     public void setPowerup(Powerup powerup, double time) {
         this.powerup = powerup;
-        this.powerupTimer = time;
+        this.powerupInitial = this.powerupTimer = time;
     }
 
     /**
@@ -217,7 +226,7 @@ public class Player extends Character {
 
         // Left mouse to attack.
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (attackTimer >= PLAYER_ATTACK_RATE * (1 / PLAYER_ATTACK_RATE_MULTIPLIER)) {
+            if (attackTimer >= PLAYER_ATTACK_DELAY * (getPowerup() == Powerup.RATE_OF_FIRE ? PLAYER_ATTACK_DELAY_MULTIPLIER : 1)) {
                 attackTimer = 0;
 
                 if (upgrade == Upgrade.GUN) {

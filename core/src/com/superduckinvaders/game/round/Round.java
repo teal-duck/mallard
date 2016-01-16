@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.DuckGame;
+import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.objective.CollectObjective;
@@ -74,7 +75,7 @@ public final class Round {
         entities.add(player);
         entities.add(item);
         for(int x = 0; x < 20; x++) {
-			Mob mob = new Mob(this, (int) (Math.random() * 200), (int) (Math.random() * 200), 5, Assets.playerNormal, 200);
+			Mob mob = new Mob(this, (int) (Math.random() * 200), (int) (Math.random() * 200), 5, Assets.playerNormal, 100, AI.type.ZOMBIE, new int[] {60});
 	        entities.add(mob);
         }
         //entities.add(mob);

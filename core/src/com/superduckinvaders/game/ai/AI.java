@@ -13,7 +13,7 @@ public abstract class AI {
      */
     protected Round roundPointer;
     
-    public AI(Round currentRound){
+    public AI(Round currentRound, int args[]){
         roundPointer = currentRound;
     }
     

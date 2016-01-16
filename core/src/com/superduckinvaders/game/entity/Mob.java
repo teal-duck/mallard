@@ -25,13 +25,13 @@ public class Mob extends Character {
      * set new AI for the current mob
      * @param newAI new AI type to assign
      */
-    public void setAI(AI.type newAI){
+    public void setAI(AI.type newAI, int[] args){
         switch (newAI){
         case ZOMBIE:
-            //this.ai = new ZombieAI(this.parent);
+            this.ai = new ZombieAI(this.parent, args);
             break;
         case DUMMY:
-            //this.ai = new DummyAI(this.parent);
+            this.ai = new DummyAI(this.parent, args);
             break;
         }
     }
@@ -51,6 +51,7 @@ public class Mob extends Character {
      * @param dirY y component of the direction vector
      */
     public void setVelocity(int dirX, int dirY){
+    	/*
     	// Left/right movement.
         if (dirX > 0) {
             velocityX = speed;
@@ -74,17 +75,31 @@ public class Mob extends Character {
             velocityX /= Math.sqrt(2);
             velocityY /= Math.sqrt(2);
         }
+        */
+    	if(dirX == 0 && dirY==0){
+    		velocityX=0;
+    		velocityY=0;
+    		return;
+    	}
+    	double magnitude = Math.sqrt(dirX*dirX + dirY*dirY);
+    	velocityX = (dirX*speed)/magnitude;
+    	velocityY = (dirY*speed)/magnitude;
+    	
     }
 
-    public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {
+
+    public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed, AI.type aitype, int[] args) {
         super(parent, x, y, health);
 
         this.textureSet = textureSet;
         this.speed = speed;
+        
+        this.setAI(aitype, args);
     }
-    //test
-    //test2
     
+    public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed){
+    	this(parent, x, y, health, textureSet, speed, AI.type.DUMMY, new int[] {});
+    }
     
 
     @Override
@@ -99,8 +114,7 @@ public class Mob extends Character {
 
     @Override
     public void update(float delta) {
-        //ai.update(this);
-    	this.setVelocity(1, 1);
+        ai.update(this);
         super.update(delta);
     }
 

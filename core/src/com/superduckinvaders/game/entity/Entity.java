@@ -188,6 +188,44 @@ public abstract class Entity {
     protected boolean collidesY(double deltaY) {
         return collidesBottom(deltaY) || collidesTop(deltaY);
     }
+    
+    /**
+     * Gets whether specified x delta will cause a collision from an arbitrary position
+     * Used in AI path detection.
+     * @param deltaX the x delta
+     * @param fromX arbitrary x position
+     * @param fromY arbitrary y position
+     * @return whether collides
+     */
+    public boolean collidesXfrom(double deltaX, double fromX, double fromY){
+    	double tempX = this.x;
+    	double tempY = this.y;
+    	this.x = fromX;
+    	this.y = fromY;
+    	boolean result = collidesX(deltaX);
+    	this.x = tempX;
+    	this.y = tempY;
+    	return result;
+    }
+    
+    /**
+     * Gets whether specified y delta will cause a collision from an arbitrary position
+     * Used in AI path detection.
+     * @param deltaX the y delta
+     * @param fromX arbitrary x position
+     * @param fromY arbitrary y position
+     * @return whether collides
+     */
+    public boolean collidesYfrom(double deltaY, double fromX, double fromY){
+    	double tempX = this.x;
+    	double tempY = this.y;
+    	this.x = fromX;
+    	this.y = fromY;
+    	boolean result = collidesY(deltaY);
+    	this.x = tempX;
+    	this.y = tempY;
+    	return result;
+    }
 
     /**
      * Gets whether the specified x delta will cause a collision on the left.

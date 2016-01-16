@@ -22,6 +22,11 @@ public class Mob extends Character {
     private AI ai;
     
     /**
+     * checks whether mob should be updated
+     */
+    private boolean active = false;
+    
+    /**
      * set new AI for the current mob
      * @param newAI new AI type to assign
      */
@@ -51,31 +56,6 @@ public class Mob extends Character {
      * @param dirY y component of the direction vector
      */
     public void setVelocity(int dirX, int dirY){
-    	/*
-    	// Left/right movement.
-        if (dirX > 0) {
-            velocityX = speed;
-        } else if (dirX < 0) {
-            velocityX = -speed;
-        } else {
-            velocityX = 0;
-        }
-
-        // Left/right movement.
-        if (dirY > 0) {
-            velocityY = speed;
-        } else if (dirY < 0) {
-            velocityY = -speed;
-        } else {
-            velocityY = 0;
-        }
-
-        // If moving diagonally, move slower.
-        if (velocityX != 0 && velocityY != 0) {
-            velocityX /= Math.sqrt(2);
-            velocityY /= Math.sqrt(2);
-        }
-        */
     	if(dirX == 0 && dirY==0){
     		velocityX=0;
     		velocityY=0;
@@ -114,8 +94,11 @@ public class Mob extends Character {
 
     @Override
     public void update(float delta) {
-        ai.update(this);
-        super.update(delta);
+    	active = ai.active(this);
+    	if (active){
+            ai.update(this, delta);
+            super.update(delta);
+    	}
     }
 
     @Override

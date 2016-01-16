@@ -10,12 +10,12 @@ public class DummyAI extends AI {
     }
     
     @Override
-    public void update(Mob mob) {
+    public void update(Mob mob, float delta) {
         return;
     }
     
     @Override
-    public boolean StillActive(Mob mob){
+    public boolean active(Mob mob){
         return true;
     }
 

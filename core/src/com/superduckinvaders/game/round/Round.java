@@ -272,7 +272,6 @@ public final class Round {
 
             // TODO: code for winning/losing goes here.
             if (objective.getStatus() == Objective.OBJECTIVE_COMPLETED) {
-                System.out.println("gz you won");
             }
         }
 

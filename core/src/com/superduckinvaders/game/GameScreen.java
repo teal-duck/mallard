@@ -129,7 +129,6 @@ public class GameScreen implements Screen {
 		} else {
 			Assets.staminaFull.setRegionWidth((int) Math.max(0, round.getPlayer().getFlyingTimer()*38.4));
 		}
-		System.out.println(round.getPlayer().getFlyingTimer());
 		uiBatch.draw(Assets.staminaFull, 1080, 10);
 
         int x = 0;

@@ -8,15 +8,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.HashMap;
+import java.util.Random;
 
 public class ZombieAI extends AI {
     
     public final static int PATHFINDING_ITERATION_LIMIT = 20;
+    public final static float PATHFINDING_RATE = (float) 0.2;
+    public final static float PATHFINDING_RATE_OFFSET = (float) 0.05;
     //code shortcuts
     final int tileWidth = roundPointer.getTileWidth();
     final int tileHeight = roundPointer.getTileHeight();
     private int playerX;
     private int playerY;
+    /**
+     * used to calculate rate of pathfinding
+     */
+    private float deltaOffsetLimit = 0;
+    /**
+     * used to track when to recalculate AI
+     */
+    private float currentOffset = 0;
+    
+    private Random randGen = new Random();
+    
+    /**
+     * range of zombie melee attacks in pixels
+     */
+    private int attackRange;
+    
     
     
     /**
@@ -71,11 +90,7 @@ public class ZombieAI extends AI {
 		}
 	}
     
-    /**
-     * range of zombie melee attacks in pixels
-     */
-    private int attackRange;
-    private Coord previousTile=null;//used to solve pathfinding bugs
+
     
     /**
      * constructor for zombie AI
@@ -94,11 +109,18 @@ public class ZombieAI extends AI {
     }
     
     @Override
-    public void update(Mob mob) {
+    public void update(Mob mob, float delta) {
     	updatePlayerCoords();
-        Coord targetCoord = FindPath(mob);
-        Coord targetDir = new Coord ((int) (targetCoord.x-mob.getX()), (int) (targetCoord.y-mob.getY()));
-        mob.setVelocity(targetDir.x, targetDir.y);
+    	
+    	currentOffset += delta;
+    	if (currentOffset >= deltaOffsetLimit){
+    		deltaOffsetLimit = PATHFINDING_RATE + (randGen.nextFloat() % PATHFINDING_RATE_OFFSET);
+    		currentOffset=0;
+    		Coord targetCoord = FindPath(mob);
+            Coord targetDir = new Coord ((int) (targetCoord.x-mob.getX()), (int) (targetCoord.y-mob.getY()));
+            mob.setVelocity(targetDir.x, targetDir.y);
+    	}
+        //damage part
         double distanceX = mob.getX() - playerX;
         double distanceY = mob.getY() - playerY;
         double distanceFromPlayer = Math.sqrt( Math.pow(distanceX, 2) + Math.pow(distanceY,2));
@@ -108,8 +130,11 @@ public class ZombieAI extends AI {
     }
     
     @Override
-    public boolean StillActive(Mob mob){
-        return true;
+    public boolean active(Mob mob){
+        return (mob.getX()>roundPointer.getPlayer().getX()-roundPointer.getMapWidth()/2 &&
+        		mob.getX()<roundPointer.getPlayer().getX()+roundPointer.getMapWidth()/2 &&
+        		mob.getY()<roundPointer.getPlayer().getY()+roundPointer.getMapHeight()/2 &&
+        		mob.getY()<roundPointer.getPlayer().getY()+roundPointer.getMapHeight()/2);
     }
     
 

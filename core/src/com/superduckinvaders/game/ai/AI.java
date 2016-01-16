@@ -25,11 +25,11 @@ public abstract class AI {
      * @param mob - pointer to the Mob
      * @return whether character is still active 
      */
-    public abstract boolean StillActive(Mob mob);
+    public abstract boolean active(Mob mob);
     
     /**
      * execute the AI on a per-frame basis
      * @param mob pointer to the Mob
      */
-    public abstract void update(Mob mob);
+    public abstract void update(Mob mob, float delta);
 }

@@ -75,8 +75,8 @@ public final class Round {
         entities.add(player);
         entities.add(item);
         for(int x = 0; x < 20; x++) {
-			Mob mob = new Mob(this, (int) (Math.random() * 200), (int) (Math.random() * 200), 5, Assets.playerNormal, 100, AI.type.ZOMBIE, new int[] {60});
-	        entities.add(mob);
+            Mob mob = new Mob(this, (int) (Math.random() * 200), (int) (Math.random() * 200), 5, Assets.badGuyNormal, 100, AI.type.ZOMBIE, new int[]{60});
+            entities.add(mob);
         }
         //entities.add(mob);
     }
@@ -272,14 +272,23 @@ public final class Round {
 
             // TODO: code for winning/losing goes here.
             if (objective.getStatus() == Objective.OBJECTIVE_COMPLETED) {
+                parent.showWinScreen(player.getScore());
+            } else if (player.isDead()) {
+                parent.showLoseScreen();
             }
         }
 
         for (int i = 0; i < entities.size(); i++) {
-            if (entities.get(i).isRemoved()) {
+            Entity entity = entities.get(i);
+
+            if (entity.isRemoved()) {
+                if (entity instanceof Mob && ((Mob) entity).isDead()) {
+                    player.addScore(10);
+                }
+
                 entities.remove(i);
             } else {
-                entities.get(i).update(delta);
+                entity.update(delta);
             }
         }
     }

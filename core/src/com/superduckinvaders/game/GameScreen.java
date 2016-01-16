@@ -7,20 +7,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.assets.Assets;
+import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.round.Round;
 
 /**
  * Screen for interaction with the game.
  */
 public class GameScreen implements Screen {
-
-    /**
-     * The dimensions of the game screen.
-     */
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
 
     /**
      * The game camera.
@@ -63,11 +57,18 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * @return the Round currently on this GameScreen
+     */
+    public Round getRound() {
+        return round;
+    }
+
+    /**
      * Shows this GameScreen. Called by libGDX to set up the graphics.
      */
     @Override
     public void show() {
-        camera = new OrthographicCamera(WIDTH, HEIGHT);
+        camera = new OrthographicCamera(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT);
         camera.zoom -= 0.5;
 
         spriteBatch = new SpriteBatch();
@@ -170,11 +171,11 @@ public class GameScreen implements Screen {
      */
     @Override
     public void hide() {
+
     }
 
-
     /**
-     * Called by libGDX when the GameScreen is disposed.
+     * Called to dispose libGDX objects used by this GameScreen.
      */
     @Override
     public void dispose() {

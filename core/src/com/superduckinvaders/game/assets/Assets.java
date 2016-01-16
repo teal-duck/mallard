@@ -27,8 +27,8 @@ public class Assets {
     public static TextureRegion heartFull;
     public static TextureRegion heartHalf;
     public static TextureRegion heartEmpty;
-    
-    // Textures for stamina
+
+    // Textures for stamina.
     public static TextureRegion staminaFull;
     public static TextureRegion staminaEmpty;
 
@@ -39,7 +39,10 @@ public class Assets {
     public static TiledMap levelOneMap;
 
     // The font for the UI.
-    public static BitmapFont font;
+    public static BitmapFont font, fontGreen, fontRed;
+
+    // The texture for the button.
+    public static TextureRegion button;
 
     /**
      * Responsible for loading maps.
@@ -61,6 +64,13 @@ public class Assets {
 
         font = loadFont("font/gamefont.fnt", "font/gamefont.png");
 
+        fontGreen = loadFont("font/gamefont.fnt", "font/gamefont.png");
+        fontGreen.setColor(0, 1, 0, 1);
+        //fontGreen.getData().setScale(3, 3);
+
+        fontRed = loadFont("font/gamefont.fnt", "font/gamefont.png");
+        fontRed.setColor(1, 0, 0, 1);
+
         Texture hearts = loadTexture("textures/hearts.png");
         heartFull = new TextureRegion(hearts, 0, 0, 32, 28);
         heartHalf = new TextureRegion(hearts, 32, 0, 32, 28);
@@ -69,6 +79,8 @@ public class Assets {
         Texture stamina = loadTexture("textures/stamina.png");
         staminaFull = new TextureRegion(stamina, 0, 0, 192, 28);
         staminaEmpty = new TextureRegion(stamina, 0, 28, 192, 28);
+
+        button = new TextureRegion(loadTexture("textures/button.png"));
     }
 
     /**

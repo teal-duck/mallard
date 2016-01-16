@@ -68,6 +68,8 @@ public class GameScreen implements Screen {
      */
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(null);
+
         camera = new OrthographicCamera(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT);
         camera.zoom -= 0.5;
 

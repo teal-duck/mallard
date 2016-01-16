@@ -9,6 +9,9 @@ import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
+import com.superduckinvaders.game.entity.item.Item;
+import com.superduckinvaders.game.entity.item.Powerup;
+import com.superduckinvaders.game.entity.item.Upgrade;
 import com.superduckinvaders.game.objective.CollectObjective;
 import com.superduckinvaders.game.objective.Objective;
 
@@ -67,13 +70,15 @@ public final class Round {
         int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
-        Item item = new Item(this, 100, 100);
+        Item item = new Item(this, 100, 100, Assets.projectile);
 
         setObjective(new CollectObjective(this, item));
 
         entities = new ArrayList<Entity>();
         entities.add(player);
         entities.add(item);
+        createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
+        createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
         for(int x = 0; x < 20; x++) {
             Mob mob = new Mob(this, (int) (Math.random() * 200), (int) (Math.random() * 200), 5, Assets.badGuyNormal, 100, AI.type.ZOMBIE, new int[]{60});
             entities.add(mob);
@@ -259,6 +264,29 @@ public final class Round {
      */
     public void createParticle(double x, double y, double duration, Animation animation) {
         entities.add(new Particle(this, x - animation.getKeyFrame(0).getRegionWidth() / 2, y - animation.getKeyFrame(0).getRegionHeight() / 2, duration, animation));
+    }
+
+    /**
+     * Creates a powerup on the floor and adds it to the list of entities.
+     *
+     * @param x       the x coordinate of the powerup
+     * @param y       the y coordinate of the powerup
+     * @param powerup the powerup to grant to the player
+     * @param time    how long the powerup should last for
+     */
+    public void createPowerup(double x, double y, Player.Powerup powerup, double time) {
+        entities.add(new Powerup(this, x, y, powerup, time));
+    }
+
+    /**
+     * Creates an upgrade on the floor and adds it to the list of entities.
+     *
+     * @param x       the x coordinate of the upgrade
+     * @param y       the y coordinate of the upgrade
+     * @param upgrade the upgrade to grant to the player
+     */
+    public void createUpgrade(double x, double y, Player.Upgrade upgrade) {
+        entities.add(new Upgrade(this, x, y, upgrade));
     }
 
     /**

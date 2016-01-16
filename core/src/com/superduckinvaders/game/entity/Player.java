@@ -3,6 +3,7 @@ package com.superduckinvaders.game.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
@@ -80,7 +81,6 @@ public class Player extends Character {
      */
     public Player(Round parent, double x, double y) {
         super(parent, x, y, PLAYER_HEALTH);
-    	this.upgrade = Upgrade.GUN;
     }
 
     /**
@@ -145,6 +145,15 @@ public class Player extends Character {
     public void setPowerup(Powerup powerup, double time) {
         this.powerup = powerup;
         this.powerupTimer = time;
+    }
+
+    /**
+     * Sets the Player's current upgrade.
+     *
+     * @param upgrade the upgrade to set
+     */
+    public void setUpgrade(Upgrade upgrade) {
+        this.upgrade = upgrade;
     }
 
     /**
@@ -280,13 +289,32 @@ public class Player extends Character {
     }
 
     /**
-     * Available powerups (only lst for
+     * Available powerups (only last for a while).
      */
     public enum Powerup {
         NONE,
         SUPER_SPEED,
         RATE_OF_FIRE,
-        INVULNERABLE
+        INVULNERABLE;
+
+        /**
+         * Gets a texture for this powerup's floor item.
+         *
+         * @param powerup the powerup
+         * @return the texture for the floor item
+         */
+        public static TextureRegion getTextureForPowerup(Powerup powerup) {
+            switch (powerup) {
+                case SUPER_SPEED:
+                    return Assets.floorItemSpeed;
+                case RATE_OF_FIRE:
+                    return Assets.floorItemRateOfFire;
+                case INVULNERABLE:
+                    return Assets.floorItemInvulnerable;
+                default:
+                    return null;
+            }
+        }
     }
 
     /**
@@ -294,6 +322,21 @@ public class Player extends Character {
      */
     public enum Upgrade {
         NONE,
-        GUN
+        GUN;
+
+        /**
+         * Gets a texture for this upgrade's floor item.
+         *
+         * @param upgrade the upgrade
+         * @return the texture for the floor item
+         */
+        public static TextureRegion getTextureForUpgrade(Upgrade upgrade) {
+            switch (upgrade) {
+                case GUN:
+                    return Assets.floorItemGun;
+                default:
+                    return null;
+            }
+        }
     }
 }

@@ -43,10 +43,16 @@ public class Assets {
     public static TiledMap levelOneMap;
 
     // The font for the UI.
-    public static BitmapFont font, fontGreen, fontRed;
+    public static BitmapFont font;
 
     // The texture for the button.
     public static TextureRegion button;
+
+    // Textures for floor items.
+    public static TextureRegion floorItemGun;
+    public static TextureRegion floorItemSpeed;
+    public static TextureRegion floorItemInvulnerable;
+    public static TextureRegion floorItemRateOfFire;
 
     /**
      * Responsible for loading maps.
@@ -59,6 +65,7 @@ public class Assets {
     public static void load() {
         loadPlayerTextureSets();
         loadBadGuyTextureSet();
+        loadFloorItems();
 
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
 
@@ -67,13 +74,6 @@ public class Assets {
         levelOneMap = loadTiledMap("maps/map.tmx");
 
         font = loadFont("font/gamefont.fnt", "font/gamefont.png");
-
-        fontGreen = loadFont("font/gamefont.fnt", "font/gamefont.png");
-        fontGreen.setColor(0, 1, 0, 1);
-        //fontGreen.getData().setScale(3, 3);
-
-        fontRed = loadFont("font/gamefont.fnt", "font/gamefont.png");
-        fontRed.setColor(1, 0, 0, 1);
 
         Texture hearts = loadTexture("textures/hearts.png");
         heartFull = new TextureRegion(hearts, 0, 0, 32, 28);
@@ -140,6 +140,15 @@ public class Assets {
         badGuyNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
     }
 
+    public static void loadFloorItems() {
+        Texture floorItems = loadTexture("textures/floor_items.png");
+
+        floorItemGun = new TextureRegion(floorItems, 0, 0, 15, 15);
+        floorItemSpeed = new TextureRegion(floorItems, 15, 0, 15, 15);
+        floorItemInvulnerable = new TextureRegion(floorItems, 30, 0, 15, 15);
+        floorItemRateOfFire = new TextureRegion(floorItems, 45, 0, 15, 15);
+    }
+
     /**
      * Loads the texture from the specified file.
      *
@@ -190,4 +199,6 @@ public class Assets {
     public static BitmapFont loadFont(String fontFile, String imageFile) {
         return new BitmapFont(Gdx.files.internal(fontFile), Gdx.files.internal(imageFile), false);
     }
+
+
 }

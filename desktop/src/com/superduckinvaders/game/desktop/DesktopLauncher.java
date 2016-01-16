@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		config.width = 1280;
 		config.height = 720;
 		config.resizable = false;
-		config.title = "SUPER DUCK INVADERS! - v0.01";
+		config.title = "SUPER DUCK INVADERS! - Team Mallard";
 		new LwjglApplication(new DuckGame(), config);
 	}
 }

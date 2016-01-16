@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.superduckinvaders.game.assets.Assets;
 
 /**
- * Created by olivermcclellan on 16/01/2016.
+ * Screen for displaying when a player has won.
  */
 public class WinScreen implements Screen {
 
@@ -51,6 +51,9 @@ public class WinScreen implements Screen {
         this.score = score;
     }
 
+    /**
+     * Shows this GameScreen. Called by libGDX to set up the graphics.
+     */
     @Override
     public void show() {
         uiBatch = new SpriteBatch();
@@ -89,6 +92,11 @@ public class WinScreen implements Screen {
         stage.addActor(backLabel);
     }
 
+    /**
+     * Main screen loop.
+     *
+     * @param delta how much time has passed since the last update
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);

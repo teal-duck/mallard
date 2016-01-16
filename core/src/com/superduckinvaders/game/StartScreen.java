@@ -16,9 +16,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.round.Round;
 
-/**
- * Created by olivermcclellan on 16/01/2016.
- */
 public class StartScreen implements Screen {
 
     /**
@@ -38,6 +35,9 @@ public class StartScreen implements Screen {
         this.parent = parent;
     }
 
+    /**
+     * Shows this GameScreen. Called by libGDX to set up the graphics.
+     */
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
@@ -65,6 +65,11 @@ public class StartScreen implements Screen {
         stage.addActor(playLabel);
     }
 
+    /**
+     * Main screen loop.
+     *
+     * @param delta how much time has passed since the last update
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);

@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.superduckinvaders.game.assets.Assets;
 
 /**
- * Created by olivermcclellan on 16/01/2016.
+ * Screen that is displayed when a player loses.
  */
 public class LoseScreen implements Screen {
 
@@ -37,6 +37,9 @@ public class LoseScreen implements Screen {
         this.parent = parent;
     }
 
+    /**
+     * Shows this GameScreen. Called by libGDX to set up the graphics.
+     */
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
@@ -68,7 +71,12 @@ public class LoseScreen implements Screen {
         stage.addActor(titleLabel);
         stage.addActor(backLabel);
     }
-
+    
+    /**
+     * Main screen loop.
+     *
+     * @param delta how much time has passed since the last update
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);

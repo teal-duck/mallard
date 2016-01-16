@@ -1,9 +1,8 @@
 
 package com.superduckinvaders.game.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.round.Round;
 import com.superduckinvaders.game.ai.*;
@@ -68,7 +67,7 @@ public class Mob extends Character {
     }
 
 
-    public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed, AI.type aitype, int[] args) {
+    public Mob(Round parent, double x, double y, int health, TextureSet textureSet, int speed, AI.type aitype, int[] args) {
         super(parent, x, y, health);
 
         this.textureSet = textureSet;
@@ -97,6 +96,25 @@ public class Mob extends Character {
     	active = ai.active(this);
     	if (active){
             ai.update(this, delta);
+
+            // Chance of spawning a random powerup.
+            if (isDead()) {
+                float random = MathUtils.random();
+                Player.Powerup powerup = null;
+
+                if(random < 0.05) {
+                    powerup = Player.Powerup.RATE_OF_FIRE;
+                } else if(random >= 0.05 && random < 0.1) {
+                    powerup = Player.Powerup.INVULNERABLE;
+                } else if(random >= 0.1 && random < 0.15) {
+                    powerup = Player.Powerup.SUPER_SPEED;
+                }
+
+                if(powerup != null) {
+                    parent.createPowerup(x, y, powerup, 10);
+                }
+            }
+
             super.update(delta);
     	}
     }

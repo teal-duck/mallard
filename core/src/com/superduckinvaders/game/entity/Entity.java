@@ -175,7 +175,19 @@ public abstract class Entity {
      * @param deltaX the x delta
      * @return whether a collision would occur on the left or right
      */
-    protected boolean collidesX(double deltaX) {
+    public boolean collidesX(double deltaX) {
+        // Check for entity collisions.
+        for (Entity entity : parent.getEntities()) {
+            if (entity == this || this instanceof Projectile) {
+                continue;
+            }
+
+            if (entity instanceof Character && entity.intersects(x + deltaX, y, getWidth(), getHeight())) {
+                return true;
+            }
+        }
+
+        // Check for tile collisions.
         return collidesLeft(deltaX) || collidesRight(deltaX);
     }
 
@@ -185,7 +197,20 @@ public abstract class Entity {
      * @param deltaY the y delta
      * @return whether a collision would occur on the bottom or top
      */
-    protected boolean collidesY(double deltaY) {
+    public boolean collidesY(double deltaY) {
+        // Check for entity collisions.
+        for (Entity entity : parent.getEntities()) {
+            // Don't damage my owner.
+            if (entity == this || this instanceof Projectile) {
+                continue;
+            }
+
+            if (entity instanceof Character && entity.intersects(x, y + deltaY, getWidth(), getHeight())) {
+                return true;
+            }
+        }
+
+        // Check for tile collisions.
         return collidesBottom(deltaY) || collidesTop(deltaY);
     }
     
@@ -211,7 +236,7 @@ public abstract class Entity {
     /**
      * Gets whether specified y delta will cause a collision from an arbitrary position
      * Used in AI path detection.
-     * @param deltaX the y delta
+     * @param deltaY the y delta
      * @param fromX arbitrary x position
      * @param fromY arbitrary y position
      * @return whether collides
@@ -237,16 +262,6 @@ public abstract class Entity {
         // N.B. this code can be greatly simplified if the player texture is smaller than the tile size.
         for (int i = (int) y; i < y + getHeight(); i++) {
             if (parent.isTileBlocked((int) Math.floor(x + deltaX), i)) {
-                return true;
-            }
-        }
-        for (Entity entity : parent.getEntities()) {
-            if (entity == this || this instanceof Projectile) {
-                continue;
-            }
-
-            // If entity is character and we have hit it, damage it and then delete myself.
-            if (entity instanceof Character && entity.intersects(x + deltaX, y, getWidth(), getHeight())) {
                 return true;
             }
         }
@@ -279,17 +294,6 @@ public abstract class Entity {
     private boolean collidesBottom(double deltaY) {
         for (int i = (int) x; i < x + getWidth(); i++) {
             if (parent.isTileBlocked(i, (int) Math.floor(y + deltaY))) {
-                return true;
-            }
-        }
-        for (Entity entity : parent.getEntities()) {
-            // Don't damage my owner.
-            if (entity == this || this instanceof Projectile) {
-                continue;
-            }
-
-            // If entity is character and we have hit it, damage it and then delete myself.
-            if (entity instanceof Character && entity.intersects(x, y + deltaY, getWidth(), getHeight())) {
                 return true;
             }
         }

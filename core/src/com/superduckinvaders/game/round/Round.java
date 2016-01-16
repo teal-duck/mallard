@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.assets.Assets;
+import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.*;
+import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.item.Item;
 import com.superduckinvaders.game.entity.item.Powerup;
 import com.superduckinvaders.game.entity.item.Upgrade;
@@ -22,6 +24,11 @@ import java.util.List;
  * Represents a round of the game played on one level with a single objective.
  */
 public final class Round {
+
+    /**
+     * How near entities must be to the player to get updated in the game loop.
+     */
+    public static final int UPDATE_DISTANCE = DuckGame.GAME_WIDTH / 2;
 
     /**
      * The GameTest instance this Round belongs to.
@@ -79,10 +86,12 @@ public final class Round {
         entities.add(item);
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
-        for(int x = 0; x < 20; x++) {
+        /*for(int x = 0; x < 20; x++) {
             Mob mob = new Mob(this, (int) (Math.random() * 200), (int) (Math.random() * 200), 5, Assets.badGuyNormal, 100, AI.type.ZOMBIE, new int[]{60});
             entities.add(mob);
-        }
+        }*/
+
+        spawnRandomMobs(100, 200, 200, 1000, 1000);
         //entities.add(mob);
     }
 
@@ -104,6 +113,23 @@ public final class Round {
             return null;
         } else {
             return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count - 1)));
+        }
+    }
+
+    /**
+     * Spawns a number of random mobs the specified distance from the player.
+     * @param amount how many random mobs to spawn
+     * @param minX the minimum x distance from the player to spawn the mobs
+     * @param minY the minimum y distance from the player to spawn the mobs
+     * @param maxX the maximum x distance from the player to spawn the mobs
+     * @param maxY the maximum y distance from the player to spawn the mobs
+     */
+    private void spawnRandomMobs(int amount, int minX, int minY, int maxX, int maxY) {
+        while(amount > 0) {
+            int x = MathUtils.random(minX, maxX) * (MathUtils.randomBoolean() ? -1 : 1);
+            int y = MathUtils.random(minY, maxY) * (MathUtils.randomBoolean() ? -1 : 1);
+
+            amount -= createMob(getPlayer().getX() + x, getPlayer().getY() + y, 100, Assets.badGuyNormal, 100) ? 1 : 0;
         }
     }
 
@@ -290,6 +316,35 @@ public final class Round {
     }
 
     /**
+     * Creates a mob and adds it to the list of entities, but only if it doesn't intersect with another character.
+     * @param x the initial x coordinate
+     * @param y the initial y coordinate
+     * @param health the initial health of the mob
+     * @param textureSet the texture set to use
+     * @param speed how fast the mob moves in pixels per second
+     * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
+     */
+    public boolean createMob(double x, double y, int health, TextureSet textureSet, int speed) {
+        Mob mob = new Mob(this, x, y, health, textureSet, speed, AI.type.ZOMBIE, new int[]{60});
+
+        // Check mob isn't out of bounds.
+        if (x < 0 || x > getMapWidth() - textureSet.getWidth() || y > getMapHeight() - textureSet.getHeight()) {
+            return false;
+        }
+
+        // Check mob doesn't intersect anything.
+        for (Entity entity : entities) {
+            if (entity instanceof Character
+                    && (mob.intersects(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight()) || mob.collidesX(0) || mob.collidesY(0))) {
+                return false;
+            }
+        }
+
+        entities.add(mob);
+        return true;
+    }
+
+    /**
      * Updates all entities in this Round.
      *
      * @param delta the time elapsed since the last update
@@ -298,7 +353,6 @@ public final class Round {
         if (objective != null) {
             objective.update(delta);
 
-            // TODO: code for winning/losing goes here.
             if (objective.getStatus() == Objective.OBJECTIVE_COMPLETED) {
                 parent.showWinScreen(player.getScore());
             } else if (player.isDead()) {
@@ -315,7 +369,8 @@ public final class Round {
                 }
 
                 entities.remove(i);
-            } else {
+            } else if (entity.distanceTo(player.getX(), player.getY()) < UPDATE_DISTANCE){
+                // Don't bother updating entities that aren't on screen.
                 entity.update(delta);
             }
         }

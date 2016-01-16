@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="42">
+ <properties>
+  <property name="StartX" value="20"/>
+  <property name="StartY" value="28"/>
+ </properties>
  <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32" tilecount="400" columns="20">
   <image source="Tileset.png" width="640" height="640"/>
  </tileset>

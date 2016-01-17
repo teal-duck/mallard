@@ -42,6 +42,7 @@ public class DuckGame extends Game {
      */
     @Override
     public void create() {
+    	System.out.println("test");
         Assets.load();
 
         round = new Round(this, Assets.levelOneMap);

@@ -1,6 +1,7 @@
 package com.superduckinvaders.game.objective;
 
 import com.superduckinvaders.game.entity.Entity;
+import com.superduckinvaders.game.entity.item.Item;
 import com.superduckinvaders.game.round.Round;
 
 /**
@@ -9,17 +10,17 @@ import com.superduckinvaders.game.round.Round;
 public class CollectObjective extends Objective {
 
     /**
-     * The entity that needs to be collected.
+     * The item that needs to be collected.
      */
-    private Entity target;
+    private Item target;
 
     /**
      * Initialises this CollectObjective.
      *
      * @param parent the round this CollectObjective belongs to
-     * @param target the entity that needs to be collected
+     * @param target the item that needs to be collected
      */
-    public CollectObjective(Round parent, Entity target) {
+    public CollectObjective(Round parent, Item target) {
         super(parent);
 
         this.target = target;
@@ -32,7 +33,7 @@ public class CollectObjective extends Objective {
      */
     @Override
     public String getObjectiveString() {
-        return "Collect the object";
+        return "Collect the red flag";
     }
 
     /**

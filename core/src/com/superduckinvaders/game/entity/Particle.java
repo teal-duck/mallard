@@ -24,7 +24,7 @@ public class Particle extends Entity {
      *
      * @param parent    the round this Particle belongs to
      * @param x         the x coordinate
-     * @param y         the y coordinate
+     * @param y         gradle bullshitthe y coordinate
      * @param duration  how long the particle effect should last for
      * @param animation the animation to use for the particle effect
      */

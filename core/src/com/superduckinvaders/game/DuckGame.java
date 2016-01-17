@@ -38,9 +38,9 @@ public class DuckGame extends Game {
     private Round round;
     
     /**
-     * Stores the current round that is being rendered using the gameScreen
+     * stores whether the game is in a main game state
      */
-    public boolean created = false;
+    public boolean onGameScreen = false;
 
     /**
      * Initialises the startScreen. Called by libGDX to set up the graphics.
@@ -53,7 +53,6 @@ public class DuckGame extends Game {
         round = new Round(this, Assets.levelOneMap);
 
         showStartScreen();
-        created = true;
     }
 
     /**
@@ -74,7 +73,7 @@ public class DuckGame extends Game {
         if (gameScreen != null) {
             gameScreen.dispose();
         }
-
+        onGameScreen = true;
         setScreen(gameScreen = new GameScreen(round));
     }
     

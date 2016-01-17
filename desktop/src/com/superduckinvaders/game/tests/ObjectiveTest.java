@@ -1,4 +1,4 @@
-package com.superduckinvaders.tests;
+package com.superduckinvaders.game.tests;
 
 import static org.junit.Assert.*;
 

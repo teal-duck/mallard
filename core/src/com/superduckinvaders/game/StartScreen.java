@@ -49,7 +49,6 @@ public class StartScreen implements Screen {
         playButton.setPosition((stage.getWidth() - playButton.getPrefWidth()) / 2, 300);
         playButton.addListener(new ClickListener() {
 
-            @Override
             public void clicked(InputEvent event, float x, float y) {
                 parent.showGameScreen(new Round(parent, Assets.levelOneMap));
             }

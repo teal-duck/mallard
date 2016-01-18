@@ -124,7 +124,7 @@ public class GameScreen implements Screen {
         uiBatch.begin();
         // TODO: finish UI
         Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        Assets.font.draw(uiBatch, "Objective: Get to the bottom left", 10, 710);
+        Assets.font.draw(uiBatch, "Objective: " + round.getObjective().getObjectiveString(), 10, 710);
         Assets.font.draw(uiBatch, "Score: " + round.getPlayer().getScore(), 10, 680);
         Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 650);
 

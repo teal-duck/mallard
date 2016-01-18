@@ -54,6 +54,9 @@ public class Assets {
     public static TextureRegion floorItemInvulnerable;
     public static TextureRegion floorItemRateOfFire;
 
+    // Texture for objective flag.
+    public static TextureRegion flag;
+
     /**
      * Responsible for loading maps.
      */
@@ -89,6 +92,8 @@ public class Assets {
         powerupEmpty = new TextureRegion(powerup, 0, 28, 192, 28);
 
         button = new TextureRegion(loadTexture("textures/button.png"));
+
+        flag = new TextureRegion(loadTexture("textures/flag.png"));
     }
 
     /**

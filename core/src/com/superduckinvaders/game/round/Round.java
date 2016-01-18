@@ -77,22 +77,21 @@ public final class Round {
         int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
-        Item item = new Item(this, 100, 100, Assets.projectile);
 
-        setObjective(new CollectObjective(this, item));
+        // Determine where to spawn the objective.
+        int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
+        int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
+
+        Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
+        setObjective(new CollectObjective(this, objective));
 
         entities = new ArrayList<Entity>(128);
         entities.add(player);
-        entities.add(item);
+        entities.add(objective);
+
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
-        /*for(int x = 0; x < 20; x++) {
-            Mob mob = new Mob(this, (int) (Math.random() * 200), (int) (Math.random() * 200), 5, Assets.badGuyNormal, 100, AI.type.ZOMBIE, new int[]{60});
-            entities.add(mob);
-        }*/
-
         spawnRandomMobs(10, 200, 200, 1000, 1000);
-        //entities.add(mob);
     }
 
     /**

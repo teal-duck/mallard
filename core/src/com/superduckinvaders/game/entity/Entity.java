@@ -213,43 +213,45 @@ public abstract class Entity {
         // Check for tile collisions.
         return collidesBottom(deltaY) || collidesTop(deltaY);
     }
-    
+
     /**
      * Gets whether specified x delta will cause a collision from an arbitrary position
      * Used in AI path detection.
+     *
      * @param deltaX the x delta
-     * @param fromX arbitrary x position
-     * @param fromY arbitrary y position
+     * @param fromX  arbitrary x position
+     * @param fromY  arbitrary y position
      * @return whether collides
      */
-    public boolean collidesXfrom(double deltaX, double fromX, double fromY){
-    	double tempX = this.x;
-    	double tempY = this.y;
-    	this.x = fromX;
-    	this.y = fromY;
-    	boolean result = collidesX(deltaX);
-    	this.x = tempX;
-    	this.y = tempY;
-    	return result;
+    public boolean collidesXfrom(double deltaX, double fromX, double fromY) {
+        double tempX = this.x;
+        double tempY = this.y;
+        this.x = fromX;
+        this.y = fromY;
+        boolean result = collidesX(deltaX);
+        this.x = tempX;
+        this.y = tempY;
+        return result;
     }
-    
+
     /**
      * Gets whether specified y delta will cause a collision from an arbitrary position
      * Used in AI path detection.
+     *
      * @param deltaY the y delta
-     * @param fromX arbitrary x position
-     * @param fromY arbitrary y position
+     * @param fromX  arbitrary x position
+     * @param fromY  arbitrary y position
      * @return whether collides
      */
-    public boolean collidesYfrom(double deltaY, double fromX, double fromY){
-    	double tempX = this.x;
-    	double tempY = this.y;
-    	this.x = fromX;
-    	this.y = fromY;
-    	boolean result = collidesY(deltaY);
-    	this.x = tempX;
-    	this.y = tempY;
-    	return result;
+    public boolean collidesYfrom(double deltaY, double fromX, double fromY) {
+        double tempX = this.x;
+        double tempY = this.y;
+        this.x = fromX;
+        this.y = fromY;
+        boolean result = collidesY(deltaY);
+        this.x = tempX;
+        this.y = tempY;
+        return result;
     }
 
     /**
@@ -259,14 +261,18 @@ public abstract class Entity {
      * @return whether a collision would occur on the left
      */
     private boolean collidesLeft(double deltaX) {
-        // N.B. this code can be greatly simplified if the player texture is smaller than the tile size.
-        for (int i = (int) y; i < y + getHeight(); i++) {
-            if (parent.isTileBlocked((int) Math.floor(x + deltaX), i)) {
-                return true;
+        // If entity is smaller than tile we can just check to see if each corner collides instead of all points along the edge.
+        if (getHeight() <= parent.getTileHeight()) {
+            return parent.isTileBlocked((int) Math.floor(x + deltaX), (int) y) || parent.isTileBlocked((int) Math.floor(x + deltaX), (int) y + getHeight());
+        } else {
+            for (int i = (int) y; i < y + getHeight(); i++) {
+                if (parent.isTileBlocked((int) Math.floor(x + deltaX), i)) {
+                    return true;
+                }
             }
-        }
 
-        return false;
+            return false;
+        }
     }
 
     /**
@@ -276,13 +282,18 @@ public abstract class Entity {
      * @return whether a collision would occur on the right
      */
     private boolean collidesRight(double deltaX) {
-        for (int i = (int) y; i < y + getHeight(); i++) {
-            if (parent.isTileBlocked((int) Math.ceil(x + getWidth() - 1 + deltaX), i)) {
-                return true;
+        // If entity is smaller than tile we can just check to see if each corner collides instead of all points along the edge.
+        if (getHeight() <= parent.getTileHeight()) {
+            return parent.isTileBlocked((int) Math.floor(x + getWidth() + deltaX), (int) y) || parent.isTileBlocked((int) Math.floor(x + getWidth() + deltaX), (int) y + getHeight());
+        } else {
+            for (int i = (int) y; i < y + getHeight(); i++) {
+                if (parent.isTileBlocked((int) Math.ceil(x + getWidth() - 1 + deltaX), i)) {
+                    return true;
+                }
             }
-        }
 
-        return false;
+            return false;
+        }
     }
 
     /**
@@ -292,13 +303,18 @@ public abstract class Entity {
      * @return whether a collision would occur on the bottom
      */
     private boolean collidesBottom(double deltaY) {
-        for (int i = (int) x; i < x + getWidth(); i++) {
-            if (parent.isTileBlocked(i, (int) Math.floor(y + deltaY))) {
-                return true;
+        // If entity is smaller than tile we can just check to see if each corner collides instead of all points along the edge.
+        if (getWidth() <= parent.getTileWidth()) {
+            return parent.isTileBlocked((int) x, (int) Math.floor(y + deltaY)) || parent.isTileBlocked((int) x + getWidth(), (int) Math.floor(y + deltaY));
+        } else {
+            for (int i = (int) x; i < x + getWidth(); i++) {
+                if (parent.isTileBlocked(i, (int) Math.floor(y + deltaY))) {
+                    return true;
+                }
             }
-        }
 
-        return false;
+            return false;
+        }
     }
 
 
@@ -309,13 +325,18 @@ public abstract class Entity {
      * @return whether a collision would occur on the top
      */
     private boolean collidesTop(double deltaY) {
-        for (int i = (int) x; i < x + getWidth(); i++) {
-            if (parent.isTileBlocked(i, (int) Math.ceil(y + getHeight() - 1 + deltaY))) {
-                return true;
+        // If entity is smaller than tile we can just check to see if each corner collides instead of all points along the edge.
+        if (getWidth() <= parent.getTileWidth()) {
+            return parent.isTileBlocked((int) x, (int) Math.floor(y + getHeight() + deltaY)) || parent.isTileBlocked((int) x + getWidth(), (int) Math.floor(y + getHeight() + deltaY));
+        } else {
+            for (int i = (int) x; i < x + getWidth(); i++) {
+                if (parent.isTileBlocked(i, (int) Math.ceil(y + getHeight() - 1 + deltaY))) {
+                    return true;
+                }
             }
-        }
 
-        return false;
+            return false;
+        }
     }
 
     /**

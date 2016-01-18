@@ -33,7 +33,7 @@ public class CollectObjective extends Objective {
      */
     @Override
     public String getObjectiveString() {
-        return "Collect the red flag";
+        return "Collect the red flag in the top left";
     }
 
     /**

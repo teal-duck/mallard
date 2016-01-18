@@ -128,7 +128,6 @@ public class ZombieAI extends AI {
         
     	currentOffset += delta;
     	if (currentOffset >= deltaOffsetLimit && (int)distanceFromPlayer < 1280/4){
-    		System.out.println(distanceFromPlayer);
     		deltaOffsetLimit = PATHFINDING_RATE + (randGen.nextFloat() % PATHFINDING_RATE_OFFSET);
     		currentOffset=0;
     		Coord targetCoord = FindPath(mob);

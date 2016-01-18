@@ -91,7 +91,7 @@ public final class Round {
 
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
-        spawnRandomMobs(10, 200, 200, 1000, 1000);
+        spawnRandomMobs(100, 200, 200, 1000, 1000);
     }
 
     /**
@@ -324,7 +324,7 @@ public final class Round {
      * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
      */
     public boolean createMob(double x, double y, int health, TextureSet textureSet, int speed) {
-        Mob mob = new Mob(this, x, y, health, textureSet, speed, AI.type.ZOMBIE, new int[]{60});
+        Mob mob = new Mob(this, x, y, health, textureSet, speed, AI.type.ZOMBIE, new int[]{30});
 
         // Check mob isn't out of bounds.
         if (x < 0 || x > getMapWidth() - textureSet.getWidth() || y > getMapHeight() - textureSet.getHeight()) {

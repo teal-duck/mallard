@@ -57,6 +57,9 @@ public class Assets {
     // Texture for objective flag.
     public static TextureRegion flag;
 
+    // Texture for the game logo.
+    public static TextureRegion logo;
+
     /**
      * Responsible for loading maps.
      */
@@ -94,6 +97,7 @@ public class Assets {
         button = new TextureRegion(loadTexture("textures/button.png"));
 
         flag = new TextureRegion(loadTexture("textures/flag.png"));
+        logo = new TextureRegion(loadTexture("textures/logo.png"));
     }
 
     /**

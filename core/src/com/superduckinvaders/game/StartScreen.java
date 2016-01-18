@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -43,9 +44,12 @@ public class StartScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        Drawable drawable = new TextureRegionDrawable(Assets.button);
+        Image logoImage = new Image(Assets.logo);
+        logoImage.setPosition((stage.getWidth() - logoImage.getPrefWidth()) / 2, 400);
 
-        Button playButton = new Button(new Button.ButtonStyle(drawable, drawable, drawable));
+        Drawable button = new TextureRegionDrawable(Assets.button);
+
+        Button playButton = new Button(new Button.ButtonStyle(button, button, button));
         playButton.setPosition((stage.getWidth() - playButton.getPrefWidth()) / 2, 300);
         playButton.addListener(new ClickListener() {
 
@@ -60,6 +64,7 @@ public class StartScreen implements Screen {
         playLabel.setPosition((stage.getWidth() - playLabel.getPrefWidth()) / 2, 315);
         playLabel.setTouchable(Touchable.disabled);
 
+        stage.addActor(logoImage);
         stage.addActor(playButton);
         stage.addActor(playLabel);
     }

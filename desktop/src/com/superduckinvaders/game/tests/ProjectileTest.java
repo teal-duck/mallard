@@ -2,7 +2,7 @@ package com.superduckinvaders.game.tests;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.superduckinvaders.game.DuckGame;
@@ -19,8 +19,8 @@ public class ProjectileTest {
 	protected static DuckGame duckGame;
 	protected static Round testRound;
  
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
     	duckGame = new DuckGame();
  
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

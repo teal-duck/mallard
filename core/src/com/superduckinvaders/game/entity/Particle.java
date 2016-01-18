@@ -25,7 +25,7 @@ public class Particle extends Entity {
      * @param parent    the round this Particle belongs to
      * @param x         the x coordinate
      * @param y         the y coordinate
-     * @param duration  how long the particle effect should last for
+     * @param duration  how long the particle effect should last for, in seconds
      * @param animation the animation to use for the particle effect
      */
     public Particle(Round parent, double x, double y, double duration, Animation animation) {

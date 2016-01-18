@@ -118,6 +118,14 @@ public class Player extends Character {
     public Powerup getPowerup() {
         return powerup;
     }
+    
+    /**
+     * Get the players current upgrade (in the Upgrade enum). 
+     * @return the current upgrade
+     */
+    public Upgrade getUpgrade(){
+    	return upgrade;
+    }
 
     /**
      * Gets the time remaining on the Player's powerup.

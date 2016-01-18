@@ -73,11 +73,5 @@ public class EntityTest {
 		actualCoord[1]=(int)testSubject.getY();
 		assertArrayEquals(expectedCoord, actualCoord);
 	}
-	
-	@Test 
-	public void CollisionDetectionTest(){
-		//TODO finish me once collision detection is complete
-		return;
-	}
 }
 		

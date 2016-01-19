@@ -18,8 +18,9 @@ public class DummyAI extends AI {
     }
 
     /**
-     * Updates this DummyAI.
-     * @param mob pointer to the Mob using this AI
+     * Updates this DummyAI.Commented.
+     *
+     * @param mob   pointer to the Mob using this AI
      * @param delta time since the previous update
      */
     @Override

@@ -208,6 +208,7 @@ public class ZombieAI extends AI {
 
         /**
          * Initialises this Coordinate.
+         *
          * @param x the x coordinate
          * @param y the y coordinate
          */
@@ -218,6 +219,7 @@ public class ZombieAI extends AI {
 
         /**
          * Compares this Coordinate to another Coordinate.
+         *
          * @param o the coordinate to compare to
          * @return the result of the comparison
          */
@@ -230,6 +232,7 @@ public class ZombieAI extends AI {
 
         /**
          * Tests this Coordinate with another object for equality.
+         *
          * @param o the object to compare to
          * @return true of the objects are equal, false if not
          */
@@ -243,6 +246,7 @@ public class ZombieAI extends AI {
 
         /**
          * Gets a unique hash code for this coordinate.
+         *
          * @return the hash code
          */
         @Override
@@ -265,6 +269,7 @@ public class ZombieAI extends AI {
 
         /**
          * Returns a string representation of this Coordinate.
+         *
          * @return a string representation of this Coordinate
          */
         public String toString() {
@@ -287,8 +292,9 @@ public class ZombieAI extends AI {
 
         /**
          * Initialises this SearchNode.
+         *
          * @param predecessor the predecessor node
-         * @param iteration the iteration of this node
+         * @param iteration   the iteration of this node
          */
         public SearchNode(SearchNode predecessor, int iteration) {
             this.predecessor = predecessor;

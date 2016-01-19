@@ -1,6 +1,6 @@
 package com.superduckinvaders.game.objective;
 
-import com.superduckinvaders.game.round.Round;
+import com.superduckinvaders.game.Round;
 
 /**
  * Represents an objective that needs to be completed in order to advance.

@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.Player;
-import com.superduckinvaders.game.round.Round;
 
 /**
  * Screen for interaction with the game.

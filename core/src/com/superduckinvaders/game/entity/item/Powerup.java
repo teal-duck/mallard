@@ -1,7 +1,7 @@
 package com.superduckinvaders.game.entity.item;
 
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.Player;
-import com.superduckinvaders.game.round.Round;
 
 /**
  * Represents a powerup on the floor.

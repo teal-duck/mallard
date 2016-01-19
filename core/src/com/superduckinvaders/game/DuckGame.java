@@ -2,7 +2,6 @@ package com.superduckinvaders.game;
 
 import com.badlogic.gdx.Game;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.round.Round;
 
 public class DuckGame extends Game {
 	
@@ -14,7 +13,10 @@ public class DuckGame extends Game {
      * The height of the game window.
      */
     public static final int GAME_HEIGHT = 720;
-
+    /**
+     * stores whether the game is in a main game state
+     */
+    public boolean onGameScreen = false;
     /**
      * Stores the Screen displayed at the start of the game
      */
@@ -31,23 +33,16 @@ public class DuckGame extends Game {
      * Stores the Screen displayed when the player has lost the level
      */
     private LoseScreen loseScreen = null;
-
     /**
      * Stores the current round that is being rendered using the gameScreen
      */
     private Round round;
-    
-    /**
-     * stores whether the game is in a main game state
-     */
-    public boolean onGameScreen = false;
 
     /**
      * Initialises the startScreen. Called by libGDX to set up the graphics.
      */
     @Override
     public void create() {
-    	System.out.println("test");
         Assets.load();
 
         round = new Round(this, Assets.levelOneMap);

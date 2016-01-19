@@ -2,7 +2,7 @@ package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.superduckinvaders.game.round.Round;
+import com.superduckinvaders.game.Round;
 
 /**
  * Represents a particle effect using an Animation.

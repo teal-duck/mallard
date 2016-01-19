@@ -1,8 +1,8 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.round.Round;
 
 /**
  * Represents a projectile.

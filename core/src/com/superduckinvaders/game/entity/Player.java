@@ -5,9 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
-import com.superduckinvaders.game.round.Round;
 
 /**
  * Represents the player of the game.
@@ -132,6 +132,15 @@ public class Player extends Character {
     }
 
     /**
+     * Sets the Player's current upgrade.
+     *
+     * @param upgrade the upgrade to set
+     */
+    public void setUpgrade(Upgrade upgrade) {
+        this.upgrade = upgrade;
+    }
+
+    /**
      * Gets the time remaining on the Player's powerup.
      *
      * @return the time remaining on the powerup
@@ -166,15 +175,6 @@ public class Player extends Character {
     public void setPowerup(Powerup powerup, double time) {
         this.powerup = powerup;
         this.powerupInitial = this.powerupTimer = time;
-    }
-
-    /**
-     * Sets the Player's current upgrade.
-     *
-     * @param upgrade the upgrade to set
-     */
-    public void setUpgrade(Upgrade upgrade) {
-        this.upgrade = upgrade;
     }
 
     /**

@@ -2,8 +2,8 @@
 package com.superduckinvaders.game.ai;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.Mob;
-import com.superduckinvaders.game.round.Round;
 
 import java.util.ArrayList;
 import java.util.HashMap;

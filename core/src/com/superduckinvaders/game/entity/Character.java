@@ -1,7 +1,7 @@
 package com.superduckinvaders.game.entity;
 
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.TextureSet;
-import com.superduckinvaders.game.round.Round;
 
 /**
  * Represents a character in the game.

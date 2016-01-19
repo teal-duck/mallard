@@ -2,8 +2,8 @@ package com.superduckinvaders.game.entity.item;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.Entity;
-import com.superduckinvaders.game.round.Round;
 
 public class Item extends Entity {
 

@@ -5,18 +5,12 @@ import com.superduckinvaders.game.round.Round;
 
 public class DummyAI extends AI {
 
-    public DummyAI(Round currentRound, int[]args){
-        super(currentRound, args);
+    public DummyAI(Round currentRound) {
+        super(currentRound);
     }
     
     @Override
     public void update(Mob mob, float delta) {
-        return;
-    }
-    
-    @Override
-    public boolean active(Mob mob){
-        return true;
     }
 
 }

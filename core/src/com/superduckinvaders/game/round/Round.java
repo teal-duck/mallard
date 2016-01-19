@@ -6,11 +6,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.DuckGame;
-import com.superduckinvaders.game.ai.AI;
+import com.superduckinvaders.game.ai.ZombieAI;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
-import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.entity.Character;
+import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.entity.item.Item;
 import com.superduckinvaders.game.entity.item.Powerup;
 import com.superduckinvaders.game.entity.item.Upgrade;
@@ -325,7 +325,7 @@ public final class Round {
      * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
      */
     public boolean createMob(double x, double y, int health, TextureSet textureSet, int speed) {
-        Mob mob = new Mob(this, x, y, health, textureSet, speed, AI.type.ZOMBIE, new int[]{30});
+        Mob mob = new Mob(this, x, y, health, textureSet, speed, new ZombieAI(this, 60));
 
         // Check mob isn't out of bounds.
         if (x < 0 || x > getMapWidth() - textureSet.getWidth() || y > getMapHeight() - textureSet.getHeight()) {

@@ -1,31 +1,18 @@
 package com.superduckinvaders.game.ai;
 
-import com.superduckinvaders.game.round.Round;
 import com.superduckinvaders.game.entity.Mob;
+import com.superduckinvaders.game.round.Round;
 
 public abstract class AI {
     
-    public static enum type {
-        DUMMY, ZOMBIE
-    }
     /**
      * pointer to the current round
      */
-    protected Round roundPointer;
-    
-    public AI(Round currentRound, int args[]){
-        roundPointer = currentRound;
+    protected Round round;
+
+    public AI(Round round) {
+        this.round = round;
     }
-    
-    /**
-     * checks whether the character is still active
-     * left to AI as some AI may still be active off screen 
-     * (i.e. zombie once active should never deactivate)
-     * 
-     * @param mob - pointer to the Mob
-     * @return whether character is still active 
-     */
-    public abstract boolean active(Mob mob);
     
     /**
      * execute the AI on a per-frame basis
@@ -33,4 +20,8 @@ public abstract class AI {
      * @param delta time since the previous update
      */
     public abstract void update(Mob mob, float delta);
+
+    public enum Type {
+        DUMMY, ZOMBIE
+    }
 }

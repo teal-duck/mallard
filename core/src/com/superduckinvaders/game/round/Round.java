@@ -134,6 +134,7 @@ public final class Round {
     }
 
     /**
+     * Gets the current map
      * @return this Round's map
      */
     public TiledMap getMap() {
@@ -141,6 +142,7 @@ public final class Round {
     }
 
     /**
+     * Gets the base layer of the map
      * @return this Round's base layer (used for calculating map width/height)
      */
     public TiledMapTileLayer getBaseLayer() {
@@ -148,6 +150,7 @@ public final class Round {
     }
 
     /**
+     * Gets the collision layer of the map
      * @return this Round's collision map layer
      */
     public TiledMapTileLayer getCollisionLayer() {
@@ -155,6 +158,7 @@ public final class Round {
     }
 
     /**
+     * Gets the obstacles layer of the map
      * @return this Round's obstacles map layer or null if there isn't one
      */
     public TiledMapTileLayer getObstaclesLayer() {
@@ -162,6 +166,7 @@ public final class Round {
     }
 
     /**
+     * gets the overhang layer of the map
      * @return this Round's overhang map layer (rendered over entities)
      */
     public TiledMapTileLayer getOverhangLayer() {
@@ -169,6 +174,7 @@ public final class Round {
     }
 
     /**
+     * Gets the width of the map in pixels
      * @return the width of this Round's map in pixels
      */
     public int getMapWidth() {
@@ -176,6 +182,7 @@ public final class Round {
     }
 
     /**
+     * Gets the height of the map in pixels
      * @return the height of this Round's map in pixels
      */
     public int getMapHeight() {
@@ -183,6 +190,7 @@ public final class Round {
     }
 
     /**
+     * Gets the width of each tile
      * @return the width of one tile in this Round's map
      */
     public int getTileWidth() {
@@ -190,6 +198,7 @@ public final class Round {
     }
 
     /**
+     * Gets the height of each tile
      * @return the height of one tile in this Round's map
      */
     public int getTileHeight() {
@@ -222,6 +231,7 @@ public final class Round {
     }
 
     /**
+     * Gets the player in the round
      * @return this Round's player
      */
     public Player getPlayer() {
@@ -229,6 +239,7 @@ public final class Round {
     }
 
     /**
+     * Gets all entities in the round
      * @return the list of all entities currently in the Round
      */
     public List<Entity> getEntities() {

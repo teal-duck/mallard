@@ -52,6 +52,7 @@ public abstract class Entity {
     }
 
     /**
+     * Returns the x coordinate of the entity
      * @return the x coordinate of this Entity
      */
     public double getX() {
@@ -59,6 +60,7 @@ public abstract class Entity {
     }
 
     /**
+     * Returns the y coordinate of the entity
      * @return the y coordinate of this Entity
      */
     public double getY() {
@@ -66,6 +68,7 @@ public abstract class Entity {
     }
 
     /**
+     * Returns the x velocity of the entity
      * @return the x velocity of this MobileEntity in pixels per second
      */
     public double getVelocityX() {
@@ -73,6 +76,7 @@ public abstract class Entity {
     }
 
     /**
+     * Returns the y velocity of the entity
      * @return the y coordinate of this MobileEntity in pixels per second
      */
     public double getVelocityY() {
@@ -136,16 +140,19 @@ public abstract class Entity {
     }
 
     /**
+     * Returns the width of the entity
      * @return the width of this Entity
      */
     public abstract int getWidth();
 
     /**
+     * Returns the height of the entity
      * @return the height of this Entity
      */
     public abstract int getHeight();
 
     /**
+     * Returns if this entity should be removed
      * @return whether this Entity has been removed
      */
     public boolean isRemoved() {

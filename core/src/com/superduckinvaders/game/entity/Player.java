@@ -178,6 +178,7 @@ public class Player extends Character {
     }
 
     /**
+     * Returns if the player is currently flying
      * @return true if the Player is currently flying, false if not
      */
     public boolean isFlying() {

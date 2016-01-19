@@ -45,7 +45,11 @@ public class Mob extends Character {
      * speed of the mob in pixels per second
      */
     private int speed;
-    
+
+    /**
+     * Sets the speed of the mob
+     * @param newSpeed the updated speed
+     */
     public void setSpeed(int newSpeed){
         this.speed = newSpeed;
     }

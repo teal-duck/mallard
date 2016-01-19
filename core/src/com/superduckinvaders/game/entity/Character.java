@@ -38,6 +38,7 @@ public abstract class Character extends Entity {
     }
 
     /**
+     * Gets the direction the character is facing
      * @return the direction this Character is facing (one of the FACING_ constants in TextureSet)
      */
     public int getFacing() {
@@ -85,6 +86,7 @@ public abstract class Character extends Entity {
     }
 
     /**
+     * Returns if the character is dead
      * @return whether this Character is dead (i.e. its health is 0)
      */
     public boolean isDead() {

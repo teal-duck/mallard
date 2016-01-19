@@ -32,6 +32,7 @@ public class LoseScreen implements Screen {
 
     /**
      * Initialises this LoseScreen.
+     * @param parent the game the screen is associated with
      */
     public LoseScreen(DuckGame parent) {
         this.parent = parent;

@@ -27,6 +27,10 @@ public class Player extends Character {
      */
     public static final int PLAYER_ATTACK_DELAY = 1;
     /**
+     * How much the Player's score increases should be multiplied by if they have the score multiplier powerup.
+     */
+    public static final double PLAYER_SCORE_MULTIPLIER = 5;
+    /**
      * How much the Player's speed should be multiplied by if they have the super speed powerup.
      */
     public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 3;
@@ -64,7 +68,7 @@ public class Player extends Character {
      */
     private double powerupInitial, powerupTimer = 0;
     /**
-     * Shows if a player is flying. If < 0, player is flying for -flyingTimer seconds. If < PLAYER_FLIGHT_COOLDOWN, flying is on cooldown.
+     * Shows if a player is flying. If less than 0, player is flying for -flyingTimer seconds. If less than PLAYER_FLIGHT_COOLDOWN, flying is on cooldown.
      */
     private double flyingTimer = 5;
     /**
@@ -308,6 +312,7 @@ public class Player extends Character {
      */
     public enum Powerup {
         NONE,
+        SCORE_MULTIPLIER,
         SUPER_SPEED,
         RATE_OF_FIRE,
         INVULNERABLE;
@@ -320,8 +325,10 @@ public class Player extends Character {
          */
         public static TextureRegion getTextureForPowerup(Powerup powerup) {
             switch (powerup) {
-                case SUPER_SPEED:
-                    return Assets.floorItemSpeed;
+	            case SCORE_MULTIPLIER:
+	                return Assets.floorItemRateOfFire;
+	            case SUPER_SPEED:
+	                return Assets.floorItemSpeed;
                 case RATE_OF_FIRE:
                     return Assets.floorItemRateOfFire;
                 case INVULNERABLE:

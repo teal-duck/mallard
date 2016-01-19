@@ -30,6 +30,7 @@ public abstract class AI {
     /**
      * execute the AI on a per-frame basis
      * @param mob pointer to the Mob
+     * @param delta time since the previous update
      */
     public abstract void update(Mob mob, float delta);
 }

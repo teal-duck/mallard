@@ -105,7 +105,6 @@ public class ZombieAI extends AI {
     /**
      * constructor for zombie AI
      * @param currentRound round pointer
-     * @param range range of zombie attacks
      * @param args optional arguments for the given AI -  args[0] is zombie attack range
      */
     public ZombieAI(Round currentRound, int[] args){
@@ -156,6 +155,8 @@ public class ZombieAI extends AI {
     /**
      * A variation of A* algorithm. Returns a meaningful target coordinate as a pair of integers.
      * Recalculated every tick as player might move and change pathfinding coordinates.
+     * @param mob Mob that a path is being generated for
+     * @return Returns a Coordinate for the path finding
      */
     private Coord FindPath(Mob mob){
     	
@@ -226,6 +227,6 @@ public class ZombieAI extends AI {
             			return key;
             	}
             }
-        return startCoord;//you shouldn't be here
+        return startCoord;
     }
 }

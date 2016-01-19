@@ -31,6 +31,7 @@ public class StartScreen implements Screen {
 
     /**
      * Initialises this StartScreen.
+     * @param parent the game the screen is associated with
      */
     public StartScreen(DuckGame parent) {
         this.parent = parent;

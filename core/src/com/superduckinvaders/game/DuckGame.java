@@ -68,6 +68,7 @@ public class DuckGame extends Game {
 
     /**
      * Sets the current screen to the gameScreen.
+     * @param round The round to be displayed on the game screen
      */
     public void showGameScreen(Round round) {
         if (gameScreen != null) {
@@ -79,6 +80,7 @@ public class DuckGame extends Game {
     
     /**
      * Sets the current screen to the winScreen.
+     * @param score The final score the player had, to be displayed on the win screen
      */
     public void showWinScreen(int score) {
         if (winScreen != null) {

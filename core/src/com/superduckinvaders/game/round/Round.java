@@ -63,6 +63,7 @@ public final class Round {
     /**
      * Initialises a new Round with the specified map.
      *
+     * @param parent the game the round is associated with
      * @param map the Round's map
      */
     public Round(DuckGame parent, TiledMap map) {
@@ -364,7 +365,7 @@ public final class Round {
 
             if (entity.isRemoved()) {
                 if (entity instanceof Mob && ((Mob) entity).isDead()) {
-                    player.addScore(10);
+                    player.addScore((int) (10 * (player.getPowerup() == Player.Powerup.SCORE_MULTIPLIER ? Player.PLAYER_SCORE_MULTIPLIER : 1)));
                 }
 
                 entities.remove(i);

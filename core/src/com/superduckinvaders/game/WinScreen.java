@@ -44,6 +44,7 @@ public class WinScreen implements Screen {
     /**
      * Initialises this WinScreen to display the final score.
      *
+     * @param parent the game the screen is associated with
      * @param score the final score to display
      */
     public WinScreen(DuckGame parent, int score) {

@@ -28,6 +28,7 @@ public class Mob extends Character {
     /**
      * set new AI for the current mob
      * @param newAI new AI type to assign
+     * @param args Arguments to be passed to the AI
      */
     public void setAI(AI.type newAI, int[] args){
         switch (newAI){
@@ -103,7 +104,7 @@ public class Mob extends Character {
                 Player.Powerup powerup = null;
 
                 if(random < 0.05) {
-                    powerup = Player.Powerup.RATE_OF_FIRE;
+                    powerup = Player.Powerup.SCORE_MULTIPLIER;
                 } else if(random >= 0.05 && random < 0.1) {
                     powerup = Player.Powerup.INVULNERABLE;
                 } else if(random >= 0.1 && random < 0.15) {

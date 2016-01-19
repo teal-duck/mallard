@@ -9,7 +9,7 @@ import com.superduckinvaders.game.round.Round;
 public abstract class AI {
     
     /**
-     * pointer to the current round
+     * The round the Mob this AI controls is a part of.
      */
     protected Round round;
 

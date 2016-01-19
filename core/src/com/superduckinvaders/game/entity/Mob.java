@@ -3,9 +3,10 @@ package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.superduckinvaders.game.ai.AI;
+import com.superduckinvaders.game.ai.DummyAI;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.round.Round;
-import com.superduckinvaders.game.ai.*;
 
 public class Mob extends Character {
 
@@ -24,27 +25,30 @@ public class Mob extends Character {
      * checks whether mob should be updated
      */
     private boolean active = false;
-    
-    /**
-     * set new AI for the current mob
-     * @param newAI new AI type to assign
-     * @param args Arguments to be passed to the AI
-     */
-    public void setAI(AI.type newAI, int[] args){
-        switch (newAI){
-        case ZOMBIE:
-            this.ai = new ZombieAI(this.parent, args);
-            break;
-        case DUMMY:
-            this.ai = new DummyAI(this.parent, args);
-            break;
-        }
-    }
-    
     /**
      * speed of the mob in pixels per second
      */
     private int speed;
+
+    public Mob(Round parent, double x, double y, int health, TextureSet textureSet, int speed, AI ai) {
+        super(parent, x, y, health);
+
+        this.textureSet = textureSet;
+        this.speed = speed;
+        this.ai = ai;
+    }
+
+    public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {
+        this(parent, x, y, health, textureSet, speed, new DummyAI(parent));
+    }
+    
+    /**
+     * Sets the AI for this Mob.
+     * @param ai the new AI to use
+     */
+    public void setAI(AI ai) {
+        this.ai = ai;
+    }
 
     /**
      * Sets the speed of the mob
@@ -68,24 +72,9 @@ public class Mob extends Character {
     	double magnitude = Math.sqrt(dirX*dirX + dirY*dirY);
     	velocityX = (dirX*speed)/magnitude;
     	velocityY = (dirY*speed)/magnitude;
-    	
-    }
 
-
-    public Mob(Round parent, double x, double y, int health, TextureSet textureSet, int speed, AI.type aitype, int[] args) {
-        super(parent, x, y, health);
-
-        this.textureSet = textureSet;
-        this.speed = speed;
-        
-        this.setAI(aitype, args);
     }
     
-    public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed){
-    	this(parent, x, y, health, textureSet, speed, AI.type.DUMMY, new int[] {});
-    }
-    
-
     @Override
     public int getWidth() {
         return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionWidth();
@@ -98,30 +87,27 @@ public class Mob extends Character {
 
     @Override
     public void update(float delta) {
-    	active = ai.active(this);
-    	if (active){
-            ai.update(this, delta);
+        ai.update(this, delta);
 
-            // Chance of spawning a random powerup.
-            if (isDead()) {
-                float random = MathUtils.random();
-                Player.Powerup powerup = null;
+        // Chance of spawning a random powerup.
+        if (isDead()) {
+            float random = MathUtils.random();
+            Player.Powerup powerup = null;
 
-                if(random < 0.05) {
-                    powerup = Player.Powerup.SCORE_MULTIPLIER;
-                } else if(random >= 0.05 && random < 0.1) {
-                    powerup = Player.Powerup.INVULNERABLE;
-                } else if(random >= 0.1 && random < 0.15) {
-                    powerup = Player.Powerup.SUPER_SPEED;
-                }
-
-                if(powerup != null) {
-                    parent.createPowerup(x, y, powerup, 10);
-                }
+            if (random < 0.05) {
+                powerup = Player.Powerup.SCORE_MULTIPLIER;
+            } else if (random >= 0.05 && random < 0.1) {
+                powerup = Player.Powerup.INVULNERABLE;
+            } else if (random >= 0.1 && random < 0.15) {
+                powerup = Player.Powerup.SUPER_SPEED;
             }
 
-            super.update(delta);
-    	}
+            if (powerup != null) {
+                parent.createPowerup(x, y, powerup, 10);
+            }
+        }
+
+        super.update(delta);
     }
 
     @Override

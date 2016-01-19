@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
+/**
+ * AI that follows and attacks the player within a certain range.
+ */
 public class ZombieAI extends AI {
 
     /**
@@ -28,10 +31,21 @@ public class ZombieAI extends AI {
      * The random offset to be added or taken from the base pathfinding rate.
      */
     public final static float PATHFINDING_RATE_OFFSET = (float) 0.05;
-    //code shortcuts
+    /**
+     * Width of one tile in the map.
+     */
     private int tileWidth;
+    /**
+     * Height of one tile in the map.
+     */
     private int tileHeight;
+    /**
+     * Player's last X coordinate.
+     */
     private int playerX;
+    /**
+     * Player's last Y coordinate.
+     */
     private int playerY;
     /**
      * Used to calculate rate of pathfinding.
@@ -50,11 +64,10 @@ public class ZombieAI extends AI {
      */
     private double attackTimer = 0;
 
-
     /**
      * Initialises this ZombieAI.
      *
-     * @param round       the round the player is in
+     * @param round       the round the Mob this AI controls is a part of
      * @param attackRange how far away from the player can this ZombieAI attack
      */
     public ZombieAI(Round round, int attackRange) {
@@ -65,11 +78,20 @@ public class ZombieAI extends AI {
         this.attackRange = attackRange;
     }
 
+    /**
+     * Updates this ZombieAI with the player's last coordinates.
+     */
     private void updatePlayerCoords() {
         playerX = (int) round.getPlayer().getX();
         playerY = (int) round.getPlayer().getY();
     }
 
+    /**
+     * Updates this ZombieAI.
+     *
+     * @param mob   pointer to the Mob using this AI
+     * @param delta time since the previous update
+     */
     @Override
     public void update(Mob mob, float delta) {
         updatePlayerCoords();
@@ -87,7 +109,7 @@ public class ZombieAI extends AI {
             mob.setVelocity(targetDir.x, targetDir.y);
         }
 
-        //damage part
+        // Damage player.
         if ((int) distanceFromPlayer < attackRange && attackTimer <= 0) {
             round.getPlayer().damage(1);
             attackTimer = ATTACK_DELAY;
@@ -172,17 +194,33 @@ public class ZombieAI extends AI {
     }
 
     /**
-     * used in pathfinding algorithm, implements state in statespace
+     * Represents a pair of coordinates.
      */
     class Coordinate implements Comparable<Coordinate> {
+        /**
+         * The X coordinate.
+         */
         public int x;
+        /**
+         * The Y coordinate.
+         */
         public int y;
 
+        /**
+         * Initialises this Coordinate.
+         * @param x the x coordinate
+         * @param y the y coordinate
+         */
         public Coordinate(int x, int y) {
             this.x = x;
             this.y = y;
         }
 
+        /**
+         * Compares this Coordinate to another Coordinate.
+         * @param o the coordinate to compare to
+         * @return the result of the comparison
+         */
         @Override
         public int compareTo(Coordinate o) {
             Double playerDistanceA = Math.sqrt(Math.pow((x - playerX), 2) + Math.pow((y - playerY), 2));
@@ -190,6 +228,11 @@ public class ZombieAI extends AI {
             return playerDistanceA.compareTo(playerDistanceB);
         }
 
+        /**
+         * Tests this Coordinate with another object for equality.
+         * @param o the object to compare to
+         * @return true of the objects are equal, false if not
+         */
         @Override
         public boolean equals(Object o) {
             if (o == null) return false;
@@ -198,6 +241,10 @@ public class ZombieAI extends AI {
             return (this.x == other.x && this.y == other.y);
         }
 
+        /**
+         * Gets a unique hash code for this coordinate.
+         * @return the hash code
+         */
         @Override
         public int hashCode() {
             int hash = 17;
@@ -206,22 +253,43 @@ public class ZombieAI extends AI {
             return hash;
         }
 
-        public boolean inSameTile(Coordinate B) {
-            return (this.x / tileWidth == B.x / tileWidth && this.y / tileHeight == B.y / tileHeight);
+        /**
+         * Gets whether this Coordinate is in the same map tile as another.
+         *
+         * @param b the coordinate to compare with
+         * @return true if the coordinates are in the same map tile, false if not
+         */
+        public boolean inSameTile(Coordinate b) {
+            return (this.x / tileWidth == b.x / tileWidth && this.y / tileHeight == b.y / tileHeight);
         }
 
+        /**
+         * Returns a string representation of this Coordinate.
+         * @return a string representation of this Coordinate
+         */
         public String toString() {
             return ("(" + Integer.toString(this.x) + ", " + Integer.toString(this.y) + ")");
         }
     }
 
     /**
-     * used in pathFinding algorithm, implements node of the search tree
+     * Represents a node in the A* search tree.
      */
     class SearchNode {
+        /**
+         * The predecessor node in the search tree.
+         */
         public SearchNode predecessor;
+        /**
+         * The iteration this node is a part of.
+         */
         public int iteration;
 
+        /**
+         * Initialises this SearchNode.
+         * @param predecessor the predecessor node
+         * @param iteration the iteration of this node
+         */
         public SearchNode(SearchNode predecessor, int iteration) {
             this.predecessor = predecessor;
             this.iteration = iteration;

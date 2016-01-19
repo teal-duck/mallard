@@ -151,9 +151,6 @@ public class Assets {
 
     /**
      * Loads the textures from the bad guy textures file.
-     *
-     * @param file the file to load from
-     * @return the texture
      */
     private static void loadBadGuyTextureSet() {
         // Load idle texture map.
@@ -176,9 +173,6 @@ public class Assets {
 
     /**
      * Loads the texture from the floor items file.
-     *
-     * @param file the file to load from
-     * @return the texture
      */
     public static void loadFloorItems() {
         Texture floorItems = loadTexture("textures/floor_items.png");

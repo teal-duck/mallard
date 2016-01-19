@@ -14,50 +14,69 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Assets {
 
-    // Player texture sets for normal and flying.
+    /**
+     *  Player texture sets for normal and flying.
+     */
     public static TextureSet playerNormal, playerFlying;
 
-    // Bad guy texture set.
+    /**
+     *  Bad guy texture set.
+     */
     public static TextureSet badGuyNormal;
 
-    // Texture for Projectile.
+    /**
+     *  Texture for Projectile.
+     */
     public static TextureRegion projectile;
     
-    // Textures for Hearts
-    public static TextureRegion heartFull;
-    public static TextureRegion heartHalf;
-    public static TextureRegion heartEmpty;
+    /**
+     *  Textures for Hearts
+     */
+    public static TextureRegion heartFull, heartHalf, heartEmpty;
 
-    // Textures for stamina.
-    public static TextureRegion staminaFull;
-    public static TextureRegion staminaEmpty;
+    /**
+     *  Textures for stamina.
+     */
+    public static TextureRegion staminaFull, staminaEmpty;
 
-    // Textures for powerup.
-    public static TextureRegion powerupFull;
-    public static TextureRegion powerupEmpty;
+    /**
+     *  Textures for powerup.
+     */
+    public static TextureRegion powerupFull, powerupEmpty;
 
-    // Animation for explosion.
+    /**
+     *  Animation for explosion.
+     */
     public static Animation explosionAnimation;
 
-    // Tile map for level one.
+    /**
+     *  Tile map for level one.
+     */
     public static TiledMap levelOneMap;
 
-    // The font for the UI.
+    /**
+     *  The font for the UI.
+     */
     public static BitmapFont font;
 
-    // The texture for the button.
+    /**
+     * The texture for the button.
+     */
     public static TextureRegion button;
 
-    // Textures for floor items.
-    public static TextureRegion floorItemGun;
-    public static TextureRegion floorItemSpeed;
-    public static TextureRegion floorItemInvulnerable;
-    public static TextureRegion floorItemRateOfFire;
+    /**
+     *  Textures for floor items.
+     */
+    public static TextureRegion floorItemGun, floorItemSpeed, floorItemInvulnerable, floorItemRateOfFire;
 
-    // Texture for objective flag.
+    /**
+     *  Texture for objective flag.
+     */
     public static TextureRegion flag;
 
-    // Texture for the game logo.
+    /**
+     *  Texture for the game logo.
+     */
     public static TextureRegion logo;
 
     /**
@@ -130,6 +149,9 @@ public class Assets {
         playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
     }
 
+    /**
+     * Loads the textures from the bad guy textures file.
+     */
     private static void loadBadGuyTextureSet() {
         // Load idle texture map.
         Texture badGuyIdle = loadTexture("textures/badguy_idle.png");
@@ -149,6 +171,9 @@ public class Assets {
         badGuyNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
     }
 
+    /**
+     * Loads the texture from the floor items file.
+     */
     public static void loadFloorItems() {
         Texture floorItems = loadTexture("textures/floor_items.png");
 

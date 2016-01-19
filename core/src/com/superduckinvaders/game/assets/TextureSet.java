@@ -11,10 +11,7 @@ public final class TextureSet {
     /**
      * Constants for which way the character is facing.
      */
-    public static final int FACING_FRONT = 0;
-    public static final int FACING_BACK = 1;
-    public static final int FACING_LEFT = 2;
-    public static final int FACING_RIGHT = 3;
+    public static final int FACING_FRONT = 0, FACING_BACK = 1, FACING_LEFT = 2, FACING_RIGHT = 3;
 
     /**
      * Textures to use when the character isn't moving.

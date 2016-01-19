@@ -100,6 +100,8 @@ public class Mob extends Character {
                 powerup = Player.Powerup.INVULNERABLE;
             } else if (random >= 0.1 && random < 0.15) {
                 powerup = Player.Powerup.SUPER_SPEED;
+            } else if (random >= 0.15 && random < 0.2) {
+                powerup = Player.Powerup.RATE_OF_FIRE;
             }
 
             if (powerup != null) {

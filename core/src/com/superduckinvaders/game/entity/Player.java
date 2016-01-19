@@ -327,11 +327,11 @@ public class Player extends Character {
         public static TextureRegion getTextureForPowerup(Powerup powerup) {
             switch (powerup) {
 	            case SCORE_MULTIPLIER:
-	                return Assets.floorItemRateOfFire;
-	            case SUPER_SPEED:
+                    return Assets.floorItemScore;
+                case SUPER_SPEED:
 	                return Assets.floorItemSpeed;
                 case RATE_OF_FIRE:
-                    return Assets.floorItemRateOfFire;
+                    return Assets.floorItemFireRate;
                 case INVULNERABLE:
                     return Assets.floorItemInvulnerable;
                 default:

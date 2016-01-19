@@ -67,7 +67,7 @@ public class Assets {
     /**
      *  Textures for floor items.
      */
-    public static TextureRegion floorItemGun, floorItemSpeed, floorItemInvulnerable, floorItemRateOfFire;
+    public static TextureRegion floorItemGun, floorItemSpeed, floorItemInvulnerable, floorItemScore, floorItemFireRate;
 
     /**
      *  Texture for objective flag.
@@ -180,7 +180,8 @@ public class Assets {
         floorItemGun = new TextureRegion(floorItems, 0, 0, 15, 15);
         floorItemSpeed = new TextureRegion(floorItems, 15, 0, 15, 15);
         floorItemInvulnerable = new TextureRegion(floorItems, 30, 0, 15, 15);
-        floorItemRateOfFire = new TextureRegion(floorItems, 45, 0, 15, 15);
+        floorItemScore = new TextureRegion(floorItems, 45, 0, 15, 15);
+        floorItemFireRate = new TextureRegion(floorItems, 60, 0, 15, 15);
     }
 
     /**

@@ -10,7 +10,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.Mob;
-import com.superduckinvaders.game.round.Round;
+import com.superduckinvaders.game.Round;
 
 public class RoundTest {
 	protected static DuckGame duckGame;

@@ -13,7 +13,7 @@ public class ObjectiveTest {
 	public void test() {
 		CollectObjective testObj = new CollectObjective(null, null);
 		assertEquals("Collect the object" ,testObj.getObjectiveString());
-		assertEquals(Objective.OBJECTIVE_ONGOING, testObj.getStatus());
+		assertEquals(Objective.ObjectiveStatus.ONGOING, testObj.getStatus());
 	}
 
 }

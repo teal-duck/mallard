@@ -363,7 +363,7 @@ public final class Round {
         if (objective != null) {
             objective.update(delta);
 
-            if (objective.getStatus() == Objective.OBJECTIVE_COMPLETED) {
+            if (objective.getStatus() == Objective.ObjectiveStatus.COMPLETED) {
                 parent.showWinScreen(player.getScore());
             } else if (player.isDead()) {
                 parent.showLoseScreen();

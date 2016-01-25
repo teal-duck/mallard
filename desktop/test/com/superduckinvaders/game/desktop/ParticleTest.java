@@ -9,7 +9,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.entity.Particle;
-import com.superduckinvaders.game.round.Round;
+import com.superduckinvaders.game.Round;
 
 public class ParticleTest {
 

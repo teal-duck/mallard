@@ -1,6 +1,7 @@
 package com.superduckinvaders.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
@@ -125,5 +126,16 @@ public class DuckGame extends Game {
     public GameScreen getGameScreen() {
         return gameScreen;
     }
-    
+
+    /**
+     * Switches to the next screen, disposing the current one.
+     *
+     * Remember, the screen isn't garbage collected until java wants to, so
+     * make sure to not use the deleted screen again.
+     */
+    public void replaceScreen(Screen newScreen) {
+        Screen currentScreen = this.getScreen();
+        if (currentScreen != null) currentScreen.dispose();
+        setScreen(newScreen);
+    }
 }

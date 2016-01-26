@@ -56,7 +56,7 @@ public class StartScreen extends BaseScreen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.replaceScreen(new GameScreen(new Round(parent, Assets.levelOneMap)));
+                parent.setScreen(new GameScreen(new Round(parent, Assets.levelOneMap)));
             }
         });
 

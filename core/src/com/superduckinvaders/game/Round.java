@@ -372,9 +372,9 @@ public final class Round {
             objective.update(delta);
 
             if (objective.getStatus() == Objective.ObjectiveStatus.COMPLETED) {
-                parent.replaceScreen(new WinScreen(parent, player.getScore()));
+                parent.setScreen(new WinScreen(parent, player.getScore()));
             } else if (player.isDead()) {
-                parent.replaceScreen(new LoseScreen(parent));
+                parent.setScreen(new LoseScreen(parent));
             }
         }
 

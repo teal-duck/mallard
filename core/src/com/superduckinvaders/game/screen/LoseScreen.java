@@ -1,7 +1,6 @@
 package com.superduckinvaders.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -52,10 +51,9 @@ public class LoseScreen extends BaseScreen {
         Button backButton = new Button(new Button.ButtonStyle(drawable, drawable, drawable));
         backButton.setPosition((stage.getWidth() - backButton.getPrefWidth()) / 2, 220);
         backButton.addListener(new ClickListener() {
-
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.replaceScreen(new StartScreen(parent));
+                parent.setScreen(new StartScreen(parent));
             }
         });
 
@@ -73,7 +71,7 @@ public class LoseScreen extends BaseScreen {
         stage.addActor(titleLabel);
         stage.addActor(backLabel);
     }
-    
+
     /**
      * Main screen loop.
      *

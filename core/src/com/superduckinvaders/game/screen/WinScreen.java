@@ -1,7 +1,6 @@
 package com.superduckinvaders.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -70,7 +69,7 @@ public class WinScreen extends BaseScreen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.replaceScreen(parent.startScreen);
+                parent.setScreen(new StartScreen(parent));
             }
         });
 

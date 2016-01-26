@@ -55,7 +55,7 @@ public class LoseScreen extends BaseScreen {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.showStartScreen();
+                parent.replaceScreen(new StartScreen(parent));
             }
         });
 

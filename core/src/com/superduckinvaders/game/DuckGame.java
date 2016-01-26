@@ -18,26 +18,19 @@ public class DuckGame extends Game {
      * The height of the game window.
      */
     public static final int GAME_HEIGHT = 720;
+
     /**
      * stores whether the game is in a main game state
      */
     public boolean onGameScreen = false;
+
     /**
-     * Stores the Screen displayed at the start of the game
+     * Stores the Screen displayed at the start of the game.
+     * We can cache this screen because it's the only one that's always constant.
+     * @apiNote This should be final, but libGDX won't let us mark it as such.
      */
-    private StartScreen startScreen = null;
-    /**
-     * Stores the Screen displayed when a level has begun
-     */
-    private GameScreen gameScreen = null;
-    /**
-     * Stores the Screen displayed when a level has been won
-     */
-    private WinScreen winScreen = null;
-    /**
-     * Stores the Screen displayed when the player has lost the level
-     */
-    private LoseScreen loseScreen = null;
+    public StartScreen startScreen;
+
     /**
      * Stores the current round that is being rendered using the gameScreen
      */
@@ -50,92 +43,31 @@ public class DuckGame extends Game {
     public void create() {
         Assets.load();
 
-        round = new Round(this, Assets.levelOneMap);
-
-        showStartScreen();
-    }
-
-    /**
-     * Sets the current screen to the startScreen.
-     */
-    public void showStartScreen() {
-        if (startScreen != null) {
-            startScreen.dispose();
-        }
-
-        setScreen(startScreen = new StartScreen(this));
-    }
-
-    /**
-     * Sets the current screen to the gameScreen.
-     * @param round The round to be displayed on the game screen
-     */
-    public void showGameScreen(Round round) {
-        if (gameScreen != null) {
-            gameScreen.dispose();
-        }
-        onGameScreen = true;
-        setScreen(gameScreen = new GameScreen(round));
+        startScreen = new StartScreen(this);
+        this.setScreen(startScreen);
     }
     
     /**
-     * Sets the current screen to the winScreen.
-     * @param score The final score the player had, to be displayed on the win screen
-     */
-    public void showWinScreen(int score) {
-        if (winScreen != null) {
-            winScreen.dispose();
-        }
-
-        setScreen(winScreen = new WinScreen(this, score));
-    }
-
-    /**
-     * Sets the current screen to the loseScreen.
-     */
-    public void showLoseScreen() {
-        if (loseScreen != null) {
-            loseScreen.dispose();
-        }
-
-        setScreen(loseScreen = new LoseScreen(this));
-    }
-    
-    /**
-     * Returns the current round being displayed by the gameScreen
+     * Switches to the next screen, disposing the current one.
      *
-     * @return Round being displayed by the GameScreen
+     * @implNote The screen isn't garbage collected until java wants to, so
+     *   make sure to not use the deleted screen again.
      */
-    public Round getRound(){
-        return gameScreen.getRound();
+    public void replaceScreen(Screen newScreen) {
+        Screen currentScreen = this.getScreen();
+        if (currentScreen != null) currentScreen.dispose();
+        setScreen(newScreen);
     }
-    
+
+    /**
+     * Restarts the game.
+     */
+
     /**
      * Called by libGDX to set up the graphics.
      */
     @Override
     public void render() {
         super.render();
-    }
-
-    /**
-     * Returns the current GameScreen being displayed
-     *
-     * @return GameScreen being displayed
-     */
-    public GameScreen getGameScreen() {
-        return gameScreen;
-    }
-
-    /**
-     * Switches to the next screen, disposing the current one.
-     *
-     * Remember, the screen isn't garbage collected until java wants to, so
-     * make sure to not use the deleted screen again.
-     */
-    public void replaceScreen(Screen newScreen) {
-        Screen currentScreen = this.getScreen();
-        if (currentScreen != null) currentScreen.dispose();
-        setScreen(newScreen);
     }
 }

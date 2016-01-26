@@ -16,7 +16,7 @@ import com.superduckinvaders.game.entity.Player;
 /**
  * Screen for interaction with the game.
  */
-public class GameScreen implements Screen {
+public class GameScreen extends BaseScreen {
 
     /**
      * The game camera.

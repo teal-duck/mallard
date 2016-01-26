@@ -18,7 +18,7 @@ import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 
-public class StartScreen implements Screen {
+public class StartScreen extends BaseScreen {
 
     /**
      * The DuckGame this StartScreen belongs to.

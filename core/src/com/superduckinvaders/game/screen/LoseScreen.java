@@ -19,7 +19,7 @@ import com.superduckinvaders.game.assets.Assets;
 /**
  * Screen that is displayed when a player loses.
  */
-public class LoseScreen implements Screen {
+public class LoseScreen extends BaseScreen {
 
     /**
      * The DuckGame this LoseScreen belongs to.

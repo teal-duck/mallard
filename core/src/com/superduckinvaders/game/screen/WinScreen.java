@@ -20,7 +20,7 @@ import com.superduckinvaders.game.assets.Assets;
 /**
  * Screen for displaying when a player has won.
  */
-public class WinScreen implements Screen {
+public class WinScreen extends BaseScreen {
 
     /**
      * The DuckGame this WinScreen belongs to.

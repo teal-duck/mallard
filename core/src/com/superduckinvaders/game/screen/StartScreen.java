@@ -1,35 +1,29 @@
-package com.superduckinvaders.game;
+package com.superduckinvaders.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.superduckinvaders.game.DuckGame;
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 
-/**
- * Screen for displaying when a player has won.
- */
-public class WinScreen implements Screen {
+public class StartScreen implements Screen {
 
     /**
-     * The DuckGame this WinScreen belongs to.
+     * The DuckGame this StartScreen belongs to.
      */
     private DuckGame parent;
-
-    /**
-     * The sprite batch for rendering.
-     */
-    private SpriteBatch uiBatch;
 
     /**
      * Stage for containing the button.
@@ -37,19 +31,11 @@ public class WinScreen implements Screen {
     private Stage stage;
 
     /**
-     * The final score to display on the WinScreen.
-     */
-    private int score;
-
-    /**
-     * Initialises this WinScreen to display the final score.
-     *
+     * Initialises this StartScreen.
      * @param parent the game the screen is associated with
-     * @param score the final score to display
      */
-    public WinScreen(DuckGame parent, int score) {
+    public StartScreen(DuckGame parent) {
         this.parent = parent;
-        this.score = score;
     }
 
     /**
@@ -57,40 +43,32 @@ public class WinScreen implements Screen {
      */
     @Override
     public void show() {
-        uiBatch = new SpriteBatch();
-
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        Drawable drawable = new TextureRegionDrawable(Assets.button);
+        Image logoImage = new Image(Assets.logo);
+        logoImage.setPosition((stage.getWidth() - logoImage.getPrefWidth()) / 2, 400);
 
-        Button backButton = new Button(new Button.ButtonStyle(drawable, drawable, drawable));
-        backButton.setPosition((stage.getWidth() - backButton.getPrefWidth()) / 2, 220);
-        backButton.addListener(new ClickListener() {
+        Drawable button = new TextureRegionDrawable(Assets.button);
 
-            @Override
+        Button playButton = new Button(new Button.ButtonStyle(button, button, button));
+        playButton.setPosition((stage.getWidth() - playButton.getPrefWidth()) / 2, 300);
+        playButton.addListener(new ClickListener() {
+
             public void clicked(InputEvent event, float x, float y) {
-                parent.showStartScreen();
+                parent.showGameScreen(new Round(parent, Assets.levelOneMap));
             }
         });
 
-        Label.LabelStyle green = new Label.LabelStyle(Assets.font, Color.GREEN);
         Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
 
-        Label titleLabel = new Label("You win!", green);
-        titleLabel.setPosition((stage.getWidth() - titleLabel.getPrefWidth()) / 2, 500);
+        Label playLabel = new Label("Click here to play", white);
+        playLabel.setPosition((stage.getWidth() - playLabel.getPrefWidth()) / 2, 315);
+        playLabel.setTouchable(Touchable.disabled);
 
-        Label scoreLabel = new Label("Final score: " + score, green);
-        scoreLabel.setPosition((stage.getWidth() - scoreLabel.getPrefWidth()) / 2, 460);
-
-        Label backLabel = new Label("Back to start screen", white);
-        backLabel.setPosition((stage.getWidth() - backLabel.getPrefWidth()) / 2, 235);
-        backLabel.setTouchable(Touchable.disabled);
-
-        stage.addActor(backButton);
-        stage.addActor(titleLabel);
-        stage.addActor(scoreLabel);
-        stage.addActor(backLabel);
+        stage.addActor(logoImage);
+        stage.addActor(playButton);
+        stage.addActor(playLabel);
     }
 
     /**
@@ -135,10 +113,9 @@ public class WinScreen implements Screen {
     }
 
     /**
-     * Called to dispose libGDX objects used by this GameScreen.
+     * Called to dispose libGDX objects used by this StartScreen.
      */
     @Override
     public void dispose() {
-        uiBatch.dispose();
     }
 }

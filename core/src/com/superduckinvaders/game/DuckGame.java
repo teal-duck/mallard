@@ -2,6 +2,10 @@ package com.superduckinvaders.game;
 
 import com.badlogic.gdx.Game;
 import com.superduckinvaders.game.assets.Assets;
+import com.superduckinvaders.game.screen.GameScreen;
+import com.superduckinvaders.game.screen.LoseScreen;
+import com.superduckinvaders.game.screen.StartScreen;
+import com.superduckinvaders.game.screen.WinScreen;
 
 public class DuckGame extends Game {
 	

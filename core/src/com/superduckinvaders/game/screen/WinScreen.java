@@ -1,27 +1,36 @@
-package com.superduckinvaders.game;
+package com.superduckinvaders.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.assets.Assets;
 
-public class StartScreen implements Screen {
+/**
+ * Screen for displaying when a player has won.
+ */
+public class WinScreen implements Screen {
 
     /**
-     * The DuckGame this StartScreen belongs to.
+     * The DuckGame this WinScreen belongs to.
      */
     private DuckGame parent;
+
+    /**
+     * The sprite batch for rendering.
+     */
+    private SpriteBatch uiBatch;
 
     /**
      * Stage for containing the button.
@@ -29,11 +38,19 @@ public class StartScreen implements Screen {
     private Stage stage;
 
     /**
-     * Initialises this StartScreen.
-     * @param parent the game the screen is associated with
+     * The final score to display on the WinScreen.
      */
-    public StartScreen(DuckGame parent) {
+    private int score;
+
+    /**
+     * Initialises this WinScreen to display the final score.
+     *
+     * @param parent the game the screen is associated with
+     * @param score the final score to display
+     */
+    public WinScreen(DuckGame parent, int score) {
         this.parent = parent;
+        this.score = score;
     }
 
     /**
@@ -41,32 +58,40 @@ public class StartScreen implements Screen {
      */
     @Override
     public void show() {
+        uiBatch = new SpriteBatch();
+
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        Image logoImage = new Image(Assets.logo);
-        logoImage.setPosition((stage.getWidth() - logoImage.getPrefWidth()) / 2, 400);
+        Drawable drawable = new TextureRegionDrawable(Assets.button);
 
-        Drawable button = new TextureRegionDrawable(Assets.button);
+        Button backButton = new Button(new Button.ButtonStyle(drawable, drawable, drawable));
+        backButton.setPosition((stage.getWidth() - backButton.getPrefWidth()) / 2, 220);
+        backButton.addListener(new ClickListener() {
 
-        Button playButton = new Button(new Button.ButtonStyle(button, button, button));
-        playButton.setPosition((stage.getWidth() - playButton.getPrefWidth()) / 2, 300);
-        playButton.addListener(new ClickListener() {
-
+            @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.showGameScreen(new Round(parent, Assets.levelOneMap));
+                parent.showStartScreen();
             }
         });
 
+        Label.LabelStyle green = new Label.LabelStyle(Assets.font, Color.GREEN);
         Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
 
-        Label playLabel = new Label("Click here to play", white);
-        playLabel.setPosition((stage.getWidth() - playLabel.getPrefWidth()) / 2, 315);
-        playLabel.setTouchable(Touchable.disabled);
+        Label titleLabel = new Label("You win!", green);
+        titleLabel.setPosition((stage.getWidth() - titleLabel.getPrefWidth()) / 2, 500);
 
-        stage.addActor(logoImage);
-        stage.addActor(playButton);
-        stage.addActor(playLabel);
+        Label scoreLabel = new Label("Final score: " + score, green);
+        scoreLabel.setPosition((stage.getWidth() - scoreLabel.getPrefWidth()) / 2, 460);
+
+        Label backLabel = new Label("Back to start screen", white);
+        backLabel.setPosition((stage.getWidth() - backLabel.getPrefWidth()) / 2, 235);
+        backLabel.setTouchable(Touchable.disabled);
+
+        stage.addActor(backButton);
+        stage.addActor(titleLabel);
+        stage.addActor(scoreLabel);
+        stage.addActor(backLabel);
     }
 
     /**
@@ -111,9 +136,10 @@ public class StartScreen implements Screen {
     }
 
     /**
-     * Called to dispose libGDX objects used by this StartScreen.
+     * Called to dispose libGDX objects used by this GameScreen.
      */
     @Override
     public void dispose() {
+        uiBatch.dispose();
     }
 }

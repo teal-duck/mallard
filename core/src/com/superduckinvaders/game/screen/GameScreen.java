@@ -13,6 +13,9 @@ import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.Player;
 
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+
 /**
  * Screen for interaction with the game.
  */
@@ -37,6 +40,9 @@ public class GameScreen extends BaseScreen {
      * The Round this GameScreen renders.
      */
     private Round round;
+    
+    Box2DDebugRenderer debugRenderer;
+    Matrix4 debugMatrix;
 
     /**
      * Initialises this GameScreen for the specified round.
@@ -45,6 +51,7 @@ public class GameScreen extends BaseScreen {
      */
     public GameScreen(Round round) {
         this.round = round;
+        debugRenderer=new Box2DDebugRenderer();
     }
 
     /**
@@ -94,14 +101,15 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Centre the camera on the player.
-        camera.position.set((int) round.getPlayer().getX() + round.getPlayer().getWidth() / 2, (int) round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
+        camera.position.set(round.getPlayer().getX() + round.getPlayer().getWidth() / 2, round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
         camera.update();
-
+        
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
 
         // Render base and collision layers.
         mapRenderer.setView(camera);
+        
         mapRenderer.renderTileLayer(round.getBaseLayer());
         mapRenderer.renderTileLayer(round.getCollisionLayer());
 
@@ -119,8 +127,11 @@ public class GameScreen extends BaseScreen {
         if (round.getOverhangLayer() != null) {
             mapRenderer.renderTileLayer(round.getOverhangLayer());
         }
-
+        
         spriteBatch.end();
+        
+        debugMatrix=new Matrix4(camera.combined);
+        debugRenderer.render(round.world, debugMatrix);
 
         uiBatch.begin();
         // TODO: finish UI
@@ -132,7 +143,9 @@ public class GameScreen extends BaseScreen {
         // Draw stamina bar (for flight);
 		uiBatch.draw(Assets.staminaEmpty, 1080, 10);
         if (round.getPlayer().getFlyingTimer() > 0) {
-            Assets.staminaFull.setRegionWidth((int) Math.max(0, Math.min(192, round.getPlayer().getFlyingTimer() / Player.PLAYER_FLIGHT_COOLDOWN * 192)));
+            float remainingFlight = round.getPlayer().getFlyingTimer();
+            float barFraction = Math.min(1,  (remainingFlight / Player.PLAYER_FLIGHT_TIME));
+            Assets.staminaFull.setRegionWidth((int)Math.max(0f, barFraction*192));
         } else {
             Assets.staminaFull.setRegionWidth(0);
         }

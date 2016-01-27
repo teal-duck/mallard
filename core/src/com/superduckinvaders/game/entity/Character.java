@@ -2,6 +2,8 @@ package com.superduckinvaders.game.entity;
 
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.TextureSet;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Represents a character in the game.
@@ -31,9 +33,8 @@ public abstract class Character extends Entity {
      * @param y             the initial y coordinate
      * @param maximumHealth the maximum (and initial) health of this Character
      */
-    public Character(Round parent, double x, double y, int maximumHealth) {
+    public Character(Round parent, float x, float y, int maximumHealth) {
         super(parent, x, y);
-
         this.maximumHealth = this.currentHealth = maximumHealth;
     }
 
@@ -101,8 +102,8 @@ public abstract class Character extends Entity {
      * @param speed  how fast the projectile moves
      * @param damage how much damage the projectile deals
      */
-    protected void fireAt(double x, double y, int speed, int damage) {
-        parent.createProjectile(this.x + getWidth() / 2, this.y + getHeight() / 2, x, y, speed, velocityX, velocityY, damage, this);
+    protected void fireAt(float x, float y, int speed, int damage) {
+        parent.createProjectile(getX() + getWidth() / 2, getY() + getHeight() / 2, x, y, speed, velocityX, velocityY, damage, this);
     }
 
     /**
@@ -111,7 +112,7 @@ public abstract class Character extends Entity {
      * @param range  how far the attack reaches in pixels
      * @param damage how much damage the attack deals
      */
-    protected void melee(double range, int damage) {
+    protected void melee(float range, int damage) {
         // Don't let mobs melee other mobs (for now).
         if (this instanceof Mob) {
             Player player = parent.getPlayer();
@@ -129,7 +130,7 @@ public abstract class Character extends Entity {
                     continue;
                 }
 
-                double x = entity.getX(), y = entity.getY();
+                float x = entity.getX(), y = entity.getY();
                 if (distanceTo(x, y) <= range && directionTo(x, y) == facing && (closest == null || distanceTo(x, y) < distanceTo(closest.getX(), closest.getY()))) {
                     closest = (Character) entity;
                 }
@@ -149,21 +150,22 @@ public abstract class Character extends Entity {
      */
     @Override
     public void update(float delta) {
+        
+        Vector2 velocity = getVelocity();
         // Update Character facing.
-        if (velocityX < 0) {
+        if (velocity.y < 0) {
+            facing = TextureSet.FACING_FRONT;
+        } else if (velocity.y > 0) {
+            facing = TextureSet.FACING_BACK;
+        }
+        if (velocity.x < 0) {
             facing = TextureSet.FACING_LEFT;
-        } else if (velocityX > 0) {
+        } else if (velocity.x > 0) {
             facing = TextureSet.FACING_RIGHT;
         }
 
-        if (velocityY < 0) {
-            facing = TextureSet.FACING_FRONT;
-        } else if (velocityY > 0) {
-            facing = TextureSet.FACING_BACK;
-        }
-
         // Update animation state time.
-        if (velocityX != 0 || velocityY != 0) {
+        if (!velocity.isZero()) {
             stateTime += delta;
         } else {
             stateTime = 0;

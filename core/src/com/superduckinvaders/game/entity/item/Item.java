@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.Entity;
 
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.math.Vector2;
+
 public class Item extends Entity {
 
     /**
@@ -13,19 +16,19 @@ public class Item extends Entity {
     protected TextureRegion texture;
 
     // TODO: finish me
-    public Item(Round parent, double x, double y, TextureRegion texture) {
+    public Item(Round parent, float x, float y, TextureRegion texture) {
         super(parent, x, y);
-
         this.texture = texture;
+        createBody(BodyDef.BodyType.DynamicBody, WORLD_BITS);
     }
 
     @Override
-    public int getWidth() {
+    public float getWidth() {
         return texture.getRegionWidth();
     }
 
     @Override
-    public int getHeight() {
+    public float getHeight() {
         return texture.getRegionHeight();
     }
 
@@ -36,7 +39,7 @@ public class Item extends Entity {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(texture, (int) x, (int) y);
+        spriteBatch.draw(texture, getX(), getY());
     }
 
 }

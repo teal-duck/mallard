@@ -16,9 +16,9 @@ public class Powerup extends Item {
     /**
      * How long the powerup will last for.
      */
-    private double time;
+    private float time;
 
-    public Powerup(Round parent, double x, double y, Player.Powerup powerup, double time) {
+    public Powerup(Round parent, float x, float y, Player.Powerup powerup, float time) {
         super(parent, x, y, Player.Powerup.getTextureForPowerup(powerup));
 
         this.powerup = powerup;
@@ -28,10 +28,12 @@ public class Powerup extends Item {
     @Override
     public void update(float delta) {
         Player player = parent.getPlayer();
-
+        
+        /*
         if (this.intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) {
             player.setPowerup(powerup, time);
             removed = true;
         }
+        */
     }
 }

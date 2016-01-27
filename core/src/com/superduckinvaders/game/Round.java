@@ -19,6 +19,11 @@ import com.superduckinvaders.game.objective.Objective;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.math.Vector2;
+
+
+
 /**
  * Represents a round of the game played on one level with a single objective.
  */
@@ -58,6 +63,8 @@ public final class Round {
      * The current objective.
      */
     private Objective objective;
+    
+    public World world;
 
     /**
      * Initialises a new Round with the specified map.
@@ -68,15 +75,33 @@ public final class Round {
     public Round(DuckGame parent, TiledMap map) {
         this.parent = parent;
         this.map = map;
+        
+        world = new World(Vector2.Zero, true);
 
         // Choose which obstacles to use.
         obstaclesLayer = chooseObstacles();
+        
+        TiledMapTileLayer collision = getCollisionLayer();
+        
+        float tw = collision.getTileWidth();
+        float th = collision.getTileHeight();
+        
+        for (int x = 0 ; x<collision.getWidth() ; x++){
+            for (int y = 0 ; y<collision.getHeight() ; y++){
+                if (null != collision.getCell(x, y)){
+                    float tileX = x*tw;
+                    float tileY = y*th;
+                    new Obstacle(this, tileX, tileY, tw, th);
+                }
+            }
+        }
 
         // Determine starting coordinates for player (0, 0 default).
         int startX = Integer.parseInt(map.getProperties().get("StartX", "0", String.class)) * getTileWidth();
         int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
+        //Obstacle obstacle = new Obstacle(this, startX, startY - 40, 20, 20);
 
         // Determine where to spawn the objective.
         int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
@@ -87,6 +112,7 @@ public final class Round {
 
         entities = new ArrayList<Entity>(128);
         entities.add(player);
+        //entities.add(obstacle);
         entities.add(objective);
 
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
@@ -286,7 +312,7 @@ public final class Round {
      * @param damage          how much damage the projectile deals
      * @param owner           the owner of the projectile (i.e. the one who fired it)
      */
-    public void createProjectile(double x, double y, double targetX, double targetY, double speed, double velocityXOffset, double velocityYOffset, int damage, Entity owner) {
+    public void createProjectile(float x, float y, float targetX, float targetY, float speed, float velocityXOffset, float velocityYOffset, int damage, Entity owner) {
         entities.add(new Projectile(this, x, y, targetX, targetY, speed, velocityXOffset, velocityYOffset, damage, owner));
     }
 
@@ -298,7 +324,7 @@ public final class Round {
      * @param duration  how long the particle effect should last for
      * @param animation the animation to use for the particle effect
      */
-    public void createParticle(double x, double y, double duration, Animation animation) {
+    public void createParticle(float x, float y, float duration, Animation animation) {
         entities.add(new Particle(this, x - animation.getKeyFrame(0).getRegionWidth() / 2, y - animation.getKeyFrame(0).getRegionHeight() / 2, duration, animation));
     }
 
@@ -310,7 +336,7 @@ public final class Round {
      * @param powerup the powerup to grant to the player
      * @param time    how long the powerup should last for
      */
-    public void createPowerup(double x, double y, Player.Powerup powerup, double time) {
+    public void createPowerup(float x, float y, Player.Powerup powerup, float time) {
         entities.add(new Powerup(this, x, y, powerup, time));
     }
 
@@ -321,7 +347,7 @@ public final class Round {
      * @param y       the y coordinate of the upgrade
      * @param upgrade the upgrade to grant to the player
      */
-    public void createUpgrade(double x, double y, Player.Upgrade upgrade) {
+    public void createUpgrade(float x, float y, Player.Upgrade upgrade) {
         entities.add(new Upgrade(this, x, y, upgrade));
     }
 
@@ -334,14 +360,14 @@ public final class Round {
      * @param speed how fast the mob moves in pixels per second
      * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
      */
-    public boolean createMob(double x, double y, int health, TextureSet textureSet, int speed) {
+    public boolean createMob(float x, float y, int health, TextureSet textureSet, int speed) {
         Mob mob = new Mob(this, x, y, health, textureSet, speed, new ZombieAI(this, 32));
 
         // Check mob isn't out of bounds.
         if (x < 0 || x > getMapWidth() - textureSet.getWidth() || y > getMapHeight() - textureSet.getHeight()) {
             return false;
         }
-
+        /*
         // Check mob doesn't intersect anything.
         for (Entity entity : entities) {
             if (entity instanceof Character
@@ -349,6 +375,7 @@ public final class Round {
                 return false;
             }
         }
+        */
 
         entities.add(mob);
         return true;
@@ -360,6 +387,7 @@ public final class Round {
      * @param delta the time elapsed since the last update
      */
     public void update(float delta) {
+        world.step(delta, 6, 2);
         if (objective != null) {
             objective.update(delta);
 

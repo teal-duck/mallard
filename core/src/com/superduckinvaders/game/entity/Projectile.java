@@ -3,6 +3,8 @@ package com.superduckinvaders.game.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Represents a projectile.
@@ -31,7 +33,7 @@ public class Projectile extends Entity {
      * @param damage  how much damage the projectile deals
      * @param owner   the owner of the projectile (i.e. the one who fired it)
      */
-    public Projectile(Round parent, double x, double y, double targetX, double targetY, double speed, int damage, Entity owner) {
+    public Projectile(Round parent, float x, float y, float targetX, float targetY, float speed, int damage, Entity owner) {
         this(parent, x, y, targetX, targetY, speed, 0, 0, damage, owner);
     }
 
@@ -49,11 +51,14 @@ public class Projectile extends Entity {
      * @param damage          how much damage the projectile deals
      * @param owner           the owner of the projectile (i.e. the one who fired it)
      */
-    public Projectile(Round parent, double x, double y, double targetX, double targetY, double speed, double velocityXOffset, double velocityYOffset, int damage, Entity owner) {
+    public Projectile(Round parent, float x, float y, float targetX, float targetY, float speed, float velocityXOffset, float velocityYOffset, int damage, Entity owner) {
         super(parent, x, y);
+        
+        this.width = Assets.projectile.getRegionWidth();
+        this.height = Assets.projectile.getRegionHeight();
 
         // Angle between initial position and target.
-        double angle = angleTo(targetX, targetY);
+        float angle = angleTo(targetX, targetY);
 
         velocityX = Math.round(Math.cos(angle) * speed);
         velocityY = Math.round(Math.sin(angle) * speed);
@@ -64,22 +69,8 @@ public class Projectile extends Entity {
 
         this.damage = damage;
         this.owner = owner;
-    }
-
-    /**
-     * @return the width of this Projectile
-     */
-    @Override
-    public int getWidth() {
-        return Assets.projectile.getRegionWidth();
-    }
-
-    /**
-     * @return the height of this Projectile
-     */
-    @Override
-    public int getHeight() {
-        return Assets.projectile.getRegionHeight();
+        
+        createBody(BodyDef.BodyType.DynamicBody, WORLD_BITS);
     }
 
     /**
@@ -92,13 +83,16 @@ public class Projectile extends Entity {
         super.update(delta);
 
         // Do manual collision checking in order to remove projectile.
-        double deltaX = velocityX * delta;
-        double deltaY = velocityY * delta;
+        float deltaX = velocityX * delta;
+        float deltaY = velocityY * delta;
+        
+        float x = getX();
+        float y = getY();
 
         // Check for collisions with blocked tiles and the map boundary.
         if (collidesX(deltaX) || collidesY(deltaY) || x + deltaX < 0 || x + getWidth() + deltaX > parent.getMapWidth() || y + deltaY < 0 || y + getHeight() + deltaY > parent.getMapHeight()) {
             // Create explosion particle effect.
-            parent.createParticle(x, y, 0.6, Assets.explosionAnimation);
+            parent.createParticle(x, y, 0.6f, Assets.explosionAnimation);
 
             removed = true;
             return;
@@ -110,12 +104,13 @@ public class Projectile extends Entity {
             if (entity == owner) {
                 continue;
             }
-
+            /*
             // If entity is character and we have hit it, damage it and then delete myself.
             if (entity instanceof Character && entity.intersects(x, y, getWidth(), getHeight())) {
                 ((Character) entity).damage(damage);
                 removed = true;
             }
+            */
         }
     }
 
@@ -126,6 +121,7 @@ public class Projectile extends Entity {
      */
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(Assets.projectile, (int) x, (int) y);
+        Vector2 pos = getPosition();
+        spriteBatch.draw(Assets.projectile, pos.x, pos.y);
     }
 }

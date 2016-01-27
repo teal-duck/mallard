@@ -75,7 +75,7 @@ public final class TextureSet {
      *
      * @return the width
      */
-    public int getWidth() {
+    public float getWidth() {
         return idleTextures[0].getRegionWidth();
     }
 
@@ -84,7 +84,7 @@ public final class TextureSet {
      *
      * @return the height
      */
-    public int getHeight() {
+    public float getHeight() {
         return idleTextures[0].getRegionHeight();
     }
 

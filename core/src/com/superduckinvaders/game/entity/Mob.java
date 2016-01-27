@@ -8,6 +8,9 @@ import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.ai.DummyAI;
 import com.superduckinvaders.game.assets.TextureSet;
 
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.math.Vector2;
+
 public class Mob extends Character {
 
     // TODO: finish me
@@ -28,14 +31,16 @@ public class Mob extends Character {
     /**
      * speed of the mob in pixels per second
      */
-    private int speed;
+    private float speed;
 
-    public Mob(Round parent, double x, double y, int health, TextureSet textureSet, int speed, AI ai) {
+    public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
         super(parent, x, y, health);
 
         this.textureSet = textureSet;
         this.speed = speed;
         this.ai = ai;
+        
+        createBody(BodyDef.BodyType.DynamicBody, MOB_BITS);
     }
 
     public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {
@@ -49,13 +54,16 @@ public class Mob extends Character {
     public void setAI(AI ai) {
         this.ai = ai;
     }
-
+    
     /**
      * Sets the speed of the mob
      * @param newSpeed the updated speed
      */
-    public void setSpeed(int newSpeed){
-        this.speed = newSpeed;
+    public void setSpeed(float speed){
+        this.speed = speed;
+    }
+    public float getSpeed(){
+        return 1f;
     }
     
     /**
@@ -63,27 +71,6 @@ public class Mob extends Character {
      * @param dirX x component of the direction vector
      * @param dirY y component of the direction vector
      */
-    public void setVelocity(int dirX, int dirY){
-    	if(dirX == 0 && dirY==0){
-    		velocityX=0;
-    		velocityY=0;
-    		return;
-    	}
-    	double magnitude = Math.sqrt(dirX*dirX + dirY*dirY);
-    	velocityX = (dirX*speed)/magnitude;
-    	velocityY = (dirY*speed)/magnitude;
-
-    }
-    
-    @Override
-    public int getWidth() {
-        return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionHeight();
-    }
 
     @Override
     public void update(float delta) {
@@ -105,7 +92,7 @@ public class Mob extends Character {
             }
 
             if (powerup != null) {
-                parent.createPowerup(x, y, powerup, 10);
+                parent.createPowerup(getX(), getY(), powerup, 10);
             }
         }
 
@@ -114,6 +101,6 @@ public class Mob extends Character {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(textureSet.getTexture(facing, stateTime), (int) x, (int) y);
+        spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
     }
 }

@@ -65,7 +65,9 @@ public class ZombieAI extends AI {
     private float attackTimer = 0;
     
     public Coordinate target;
+    public Coordinate target2;
     public Vector2 targetPoint;
+    public List<SearchNode> path;
 
     /**
      * Initialises this ZombieAI.
@@ -82,10 +84,8 @@ public class ZombieAI extends AI {
         
     }
     
-    public void applyVelocity(Mob mob){
-        
-        Vector2 dst = new Vector2(targetPoint);
-        Vector2 velocity = dst.sub(mob.getCentre())
+    public void moveInDirection(Mob mob, Vector2 dst){
+        Vector2 velocity = new Vector2(dst).sub(mob.getCentre())
                                .nor().scl(mob.getSpeed());
         mob.setVelocity(velocity);
     }
@@ -105,40 +105,60 @@ public class ZombieAI extends AI {
         float distanceToTargetTile;
         
         if (target != null){
-            distanceToTargetTile = mob.getCentre().sub(targetPoint).len();
+            distanceToTargetTile = mob.getCentre().sub(target.vector()).len();
         }
         else {
             distanceToTargetTile = 0f;
         }
         
-        currentOffset += delta;
-        if ((currentOffset >= deltaOffsetLimit || distanceToTargetTile < 10) && (int) distanceFromPlayer < 1280 / 4) {
-            deltaOffsetLimit = PATHFINDING_RATE + (MathUtils.random() % PATHFINDING_RATE_OFFSET);
-            currentOffset = 0;
-            List<SearchNode> path = FindPath(mob);
-            SearchNode targetNode;
-            switch (path.size()) {
-                case 1:
-                    targetNode = path.get(path.size() - 1);
-                    break;
-                default:
-                    targetNode = path.get(path.size() - 2);
-                    break;
-            }
-            
-            target = targetNode.coord;
-            // if (targetPoint != null) {
-                // targetPoint = targetPoint.scl(3).add(target.vector()).scl(0.25f);
-            // }
-            // else {
-                targetPoint = target.vector();
-            // }
-            // setTargetTile(mob, target);
+        //currentOffset += delta;
+        // if ((currentOffset >= deltaOffsetLimit || distanceToTargetTile < 2) && (int) distanceFromPlayer < 1280 / 4) {
+            // deltaOffsetLimit = PATHFINDING_RATE + (MathUtils.random() % PATHFINDING_RATE_OFFSET);
+            // currentOffset = 0;
+            // path = FindPath(mob);
+        // }
+        if (path == null) {
+            path = FindPath(mob);
         }
-        else {
-            System.out.println(distanceToTargetTile);
+
+        Vector2 targetVector;
+        SearchNode targetNode;
+        SearchNode nextTargetNode;
+        switch (path.size()) {
+            case 1:
+                targetNode = path.get(path.size() - 1);
+                target = targetNode.coord;
+                targetVector = target.vector();
+                moveInDirection(mob, targetVector);
+                break;
+            default:
+                targetNode     = path.get(path.size() - 1);
+                nextTargetNode = path.get(path.size() - 2);
+                
+                target = targetNode.coord;
+                target2 = nextTargetNode.coord;
+                
+                Vector2 t1Vector = target.vector();
+                Vector2 t2Vector = nextTargetNode.coord.vector();
+                Vector2 direction = new Vector2(t2Vector).sub(t1Vector).nor();
+                Vector2 perpendicular = direction.rotate90(0);
+                
+                Vector2 mobPos = mob.getCentre();
+                Vector2 displacement   = new Vector2(mobPos).sub(t2Vector);
+                float perpDist = new Vector2(displacement).dot(perpendicular);
+                
+                float fraction = 1/Math.max(1, perpDist);
+                
+                moveInDirection(mob, t1Vector.lerp(t2Vector, fraction));
+                
+                if (displacement.len() < 3f){
+                    path = FindPath(mob);
+                }
+                break;
         }
-        applyVelocity(mob);
+        
+
+        
         
         
         
@@ -256,7 +276,7 @@ public class ZombieAI extends AI {
     /**
      * Represents a pair of coordinates.
      */
-    class Coordinate implements Comparable<Coordinate> {
+    public class Coordinate implements Comparable<Coordinate> {
         /**
          * The X coordinate.
          */

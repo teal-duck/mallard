@@ -66,7 +66,7 @@ public class Mob extends Character {
         this.speed = speed;
     }
     public float getSpeed(){
-        return 1f;
+        return this.speed;
     }
     
     @Override

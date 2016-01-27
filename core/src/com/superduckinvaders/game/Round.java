@@ -194,7 +194,7 @@ public final class Round {
     }
     
     private Mob spawnZombieMob(float x, float y){
-        return createMob(x, y, 100, Assets.badGuyNormal, 100);
+        return createMob(x, y, 100, Assets.badGuyNormal, 5);
     }
     
     /**

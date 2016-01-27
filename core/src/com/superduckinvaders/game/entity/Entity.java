@@ -249,14 +249,14 @@ public abstract class Entity {
     protected void checkBounds() {
     }
 
-    public boolean collidesX(float deltaX) {return false;}
-    public boolean collidesY(float deltaY) {return false;}
-    public boolean collidesXfrom(float deltaX, float fromX, float fromY) {return false;}
-    public boolean collidesYfrom(float deltaY, float fromX, float fromY) {return false;}
-    private boolean collidesLeft(float deltaX) {return false;}
-    private boolean collidesRight(float deltaX) {return false;}
-    private boolean collidesBottom(float deltaY) {return false;}
-    private boolean collidesTop(float deltaY) {return false;}
+    // public boolean collidesX(float deltaX) {return false;}
+    // public boolean collidesY(float deltaY) {return false;}
+    // public boolean collidesXfrom(float deltaX, float fromX, float fromY) {return false;}
+    // public boolean collidesYfrom(float deltaY, float fromX, float fromY) {return false;}
+    // private boolean collidesLeft(float deltaX) {return false;}
+    // private boolean collidesRight(float deltaX) {return false;}
+    // private boolean collidesBottom(float deltaY) {return false;}
+    // private boolean collidesTop(float deltaY) {return false;}
     
 
     /**

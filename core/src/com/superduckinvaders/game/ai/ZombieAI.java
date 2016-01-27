@@ -119,22 +119,6 @@ public class ZombieAI extends AI {
             targetPoint = target.vector();
         }
         applyVelocity(mob);
-        
-        // currentOffset += delta;
-        // if (currentOffset >= deltaOffsetLimit && (int) distanceFromPlayer < 1280 / 4) {
-            // deltaOffsetLimit = PATHFINDING_RATE + (MathUtils.random() % PATHFINDING_RATE_OFFSET);
-            // currentOffset = 0;
-            // Coordinate target = FindPath(mob);
-            // setTargetTile(mob, target);
-        // }
-
-        // Damage player.
-        // if ((int) distanceFromPlayer < attackRange && attackTimer <= 0) {
-            // round.getPlayer().damage(1);
-            // attackTimer = ATTACK_DELAY;
-        // } else if (attackTimer > 0) {
-            // attackTimer -= delta;
-        // }
     }
 
     /**
@@ -148,8 +132,6 @@ public class ZombieAI extends AI {
         Vector2 mobPos = mob.getCentre();
         Coordinate startCoord = roundToTile(mobPos);
         Coordinate finalCoord = roundToTile(playerPos);
-        // Coordinate startCoord = new Coordinate(mobPos.x, mobPos.y);
-        // Coordinate finalCoord = new Coordinate(playerPos.x, playerPos.y);
         boolean finalFound = false;
         
         if (!round.rayCast(mobPos, playerPos)){

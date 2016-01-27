@@ -90,13 +90,13 @@ public class Projectile extends Entity {
         float y = getY();
 
         // Check for collisions with blocked tiles and the map boundary.
-        if (collidesX(deltaX) || collidesY(deltaY) || x + deltaX < 0 || x + getWidth() + deltaX > parent.getMapWidth() || y + deltaY < 0 || y + getHeight() + deltaY > parent.getMapHeight()) {
-            // Create explosion particle effect.
-            parent.createParticle(x, y, 0.6f, Assets.explosionAnimation);
+        // if (collidesX(deltaX) || collidesY(deltaY) || x + deltaX < 0 || x + getWidth() + deltaX > parent.getMapWidth() || y + deltaY < 0 || y + getHeight() + deltaY > parent.getMapHeight()) {
+            // // Create explosion particle effect.
+            // parent.createParticle(x, y, 0.6f, Assets.explosionAnimation);
 
-            removed = true;
-            return;
-        }
+            // removed = true;
+            // return;
+        // }
 
         // Otherwise check with collisions with every other entity.
         for (Entity entity : parent.getEntities()) {

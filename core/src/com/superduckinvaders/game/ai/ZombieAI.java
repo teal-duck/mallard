@@ -109,6 +109,10 @@ public class ZombieAI extends AI {
             attackTimer -= delta;
         }
     }
+    
+    private Coordinate lineOfSight(Vector2 point1, Vector2 point2){
+        
+    }
 
     /**
      * A variation of A* algorithm. Returns a meaningful target coordinate as a pair of integers.
@@ -118,9 +122,14 @@ public class ZombieAI extends AI {
      * @return Returns a Coordinate for the path finding
      */
     private Coordinate FindPath(Mob mob) {
-        Coordinate startCoord = roundToTile(mob.getPosition());
+        Vector2 mobPos = mob.getPosition();
+        Coordinate startCoord = roundToTile(mobPos);
         Coordinate finalCoord = roundToTile(playerPos);
         boolean finalFound = false;
+        
+        if (!round.rayCast(mobPos, playerPos)){
+            return finalCoord;
+        }
 
         PriorityQueue<Coordinate> fringe = new PriorityQueue<Coordinate>();
         HashMap<Coordinate, SearchNode> visitedStates = new HashMap<Coordinate, SearchNode>();

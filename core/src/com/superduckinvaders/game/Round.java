@@ -155,6 +155,13 @@ public final class Round {
         world.QueryAABB(q, p.x, p.y, p.x+1, p.y+1);
         return q.result;
     }
+    
+    public boolean rayCast(Vector2 pos1, Vector2 pos2){
+        RayCastCB r = new RayCastCB();
+        //new vectors as they may be modified
+        world.rayCast(r, new Vector2(pos1), new Vector2(pos2));
+        return r.collidesEnvironment;
+    }
 
     /**
      * Spawns a number of random mobs the specified distance from the player.
@@ -440,6 +447,29 @@ public final class Round {
                 return false; // ends the query
             }
             return true; // keep searching
+        }
+    }
+    
+    class RayCastCB implements RayCastCallback {
+        public float fraction;
+        public boolean collidesEnvironment=false;
+        
+        public RayCastCB(){
+            fraction = 1f;
+            
+        }
+        @Override
+        public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction){
+            if (!fixture.getUserData() instanceof Player){
+                this.collidesEnvironment = true;
+                this.fraction = fraction;
+                return 0f;
+            }
+            /* this reduces the length of the ray to the currently found intersection
+             * this is done because fixtures are not necessarily reported in
+             * in any order, and we only care about the closest intersection
+             */
+            return fraction;
         }
     }
     

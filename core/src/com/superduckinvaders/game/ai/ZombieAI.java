@@ -134,10 +134,10 @@ public class ZombieAI extends AI {
         Coordinate finalCoord = roundToTile(playerPos);
         boolean finalFound = false;
         
-        if (!round.rayCast(mobPos, playerPos)){
-            currentOffset = deltaOffsetLimit;
-            return finalCoord;
-        }
+        // if (!round.rayCast(mobPos, playerPos)){
+            // currentOffset = deltaOffsetLimit;
+            // return finalCoord;
+        // }
         
 
         PriorityQueue<Coordinate> fringe = new PriorityQueue<Coordinate>();

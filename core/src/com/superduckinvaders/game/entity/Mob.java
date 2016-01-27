@@ -119,15 +119,12 @@ public class Mob extends Character {
         
         if (ai instanceof ZombieAI){
             ZombieAI.Coordinate coord = ((ZombieAI)ai).target;
-            ZombieAI.Coordinate coord2 = ((ZombieAI)ai).target2;
-            if (coord2 != null){
+            if (coord != null){
                 spriteBatch.end();
                 shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 shapeRenderer.setColor(1, 1, 0, 1);
                 shapeRenderer.x(coord.vector(), 10);
-                shapeRenderer.setColor(1, 0, 1, 1);
-                shapeRenderer.x(coord2.vector(), 5);
                 shapeRenderer.end();
                 spriteBatch.begin();
             }            

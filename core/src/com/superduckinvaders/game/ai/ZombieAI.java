@@ -65,7 +65,6 @@ public class ZombieAI extends AI {
     private float attackTimer = 0;
     
     public Coordinate target;
-    public Coordinate target2;
     public Vector2 targetPoint;
     public List<SearchNode> path;
 
@@ -123,38 +122,23 @@ public class ZombieAI extends AI {
 
         Vector2 targetVector;
         SearchNode targetNode;
-        SearchNode nextTargetNode;
         switch (path.size()) {
             case 1:
                 targetNode = path.get(path.size() - 1);
-                target = targetNode.coord;
-                targetVector = target.vector();
-                moveInDirection(mob, targetVector);
                 break;
             default:
-                targetNode     = path.get(path.size() - 1);
-                nextTargetNode = path.get(path.size() - 2);
-                
-                target = targetNode.coord;
-                target2 = nextTargetNode.coord;
-                
-                Vector2 t1Vector = target.vector();
-                Vector2 t2Vector = nextTargetNode.coord.vector();
-                Vector2 direction = new Vector2(t2Vector).sub(t1Vector).nor();
-                Vector2 perpendicular = direction.rotate90(0);
-                
-                Vector2 mobPos = mob.getCentre();
-                Vector2 displacement   = new Vector2(mobPos).sub(t2Vector);
-                float perpDist = new Vector2(displacement).dot(perpendicular);
-                
-                float fraction = 1/Math.max(1, perpDist);
-                
-                moveInDirection(mob, t1Vector.lerp(t2Vector, fraction));
-                
-                if (displacement.len() < 3f){
-                    path = FindPath(mob);
-                }
+                targetNode     = path.get(path.size() - 2);
                 break;
+        }
+        target = targetNode.coord;
+        targetVector = target.vector();
+        moveInDirection(mob, targetVector);
+                
+        Vector2 mobPos = mob.getCentre();
+        Vector2 displacement   = new Vector2(mobPos).sub(targetVector);
+        
+        if (displacement.len() < 3f){
+            path = FindPath(mob);
         }
         
 

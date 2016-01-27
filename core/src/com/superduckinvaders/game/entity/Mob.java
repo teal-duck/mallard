@@ -66,6 +66,17 @@ public class Mob extends Character {
         return 1f;
     }
     
+    @Override
+    public float getWidth() {
+        return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionWidth();
+    }
+
+    @Override
+    public float getHeight() {
+        return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionHeight();
+    }
+    
+    
     /**
      * change where the given mob moves to according to its speed and a new direction vector
      * @param dirX x component of the direction vector

@@ -60,12 +60,15 @@ public abstract class Entity {
         this.y = y;
     }
     public void createBody(BodyDef.BodyType bodyType){
-        createBody(bodyType, WORLD_BITS);
+        createBody(bodyType, WORLD_BITS, false);
     }
     public void createBody(short collisionBits){
-        createBody(BodyDef.BodyType.DynamicBody, collisionBits);
+        createBody(BodyDef.BodyType.DynamicBody, collisionBits, false);
     }
     public void createBody(BodyDef.BodyType bodyType, short collisionBits){
+        createBody(bodyType, collisionBits, false);
+    }
+    public void createBody(BodyDef.BodyType bodyType, short collisionBits, boolean isSensor){
         float width = getWidth();
         float height = getHeight();
         BodyDef bodyDef = new BodyDef();
@@ -79,9 +82,11 @@ public abstract class Entity {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = boundingBox;
+        fixtureDef.isSensor = isSensor;
 
         body = parent.world.createBody(bodyDef);
         body.createFixture(fixtureDef);
+        body.setUserData(this);
         boundingBox.dispose();
     }
     

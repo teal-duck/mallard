@@ -24,6 +24,12 @@ public abstract class Character extends Entity {
      * Current health and the maximum health of this Character.
      */
     protected int maximumHealth, currentHealth;
+    
+    /**
+     * for use when determining player movement direction
+     */
+    private final Vector2 reference = new Vector2(0f, -1f);
+    private final Vector2 bias = new Vector2(1.5f, 1);
 
     /**
      * Initialises this Character.
@@ -152,16 +158,23 @@ public abstract class Character extends Entity {
     public void update(float delta) {
         
         Vector2 velocity = getVelocity();
-        // Update Character facing.
-        if (velocity.y < 0) {
-            facing = TextureSet.FACING_FRONT;
-        } else if (velocity.y > 0) {
-            facing = TextureSet.FACING_BACK;
-        }
-        if (velocity.x < 0) {
-            facing = TextureSet.FACING_LEFT;
-        } else if (velocity.x > 0) {
-            facing = TextureSet.FACING_RIGHT;
+        
+        if (!velocity.isZero()){
+            float angle = velocity.scl(bias).angle(reference);
+            int index = (2 + (int)Math.rint(angle/90f)) % 4;
+            
+            // Update Character facing.
+            switch (index){
+                case 0: facing = TextureSet.FACING_FRONT;
+                        break;
+                case 1: facing = TextureSet.FACING_RIGHT;
+                        break;
+                case 2: facing = TextureSet.FACING_BACK;
+                        break;
+                case 3: facing = TextureSet.FACING_LEFT;
+                        break;
+            }
+            
         }
 
         // Update animation state time.

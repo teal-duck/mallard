@@ -150,7 +150,7 @@ public class ZombieAI extends AI {
                     finalFound = true;
                     break;
                 }
-                if (!(collidePoint(currentPerm.x, currentPerm.y) ||visitedStates.containsKey(currentPerm))) {
+                if (!(round.collidePoint(currentPerm.x, currentPerm.y) ||visitedStates.containsKey(currentPerm))) {
                     fringe.add(currentPerm);
                     visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration + 1));
                 }

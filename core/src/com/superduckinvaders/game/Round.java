@@ -140,6 +140,21 @@ public final class Round {
             return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count - 1)));
         }
     }
+    
+    /**
+     * Tests if a point resides inside a body
+     * @param x x
+     * @param y y 
+     */
+    public boolean collidePoint(float x, float y) {
+        return collidePoint(new Vector2(x, y));
+    }
+    public boolean collidePoint(Vector2 p) {
+        p.scl(Entity.METRES_PER_PIXEL);
+        QueryCB q = new QueryCB(p);
+        world.QueryAABB(q, p.x, p.y, p.x+1, p.y+1);
+        return q.result;
+    }
 
     /**
      * Spawns a number of random mobs the specified distance from the player.
@@ -361,21 +376,16 @@ public final class Round {
      * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
      */
     public boolean createMob(float x, float y, int health, TextureSet textureSet, int speed) {
-        Mob mob = new Mob(this, x, y, health, textureSet, speed, new ZombieAI(this, 32));
-
-        // Check mob isn't out of bounds.
+        if (collidePoint(x, y)){
+            return false;
+        }
+        
         if (x < 0 || x > getMapWidth() - textureSet.getWidth() || y > getMapHeight() - textureSet.getHeight()) {
             return false;
         }
-        /*
-        // Check mob doesn't intersect anything.
-        for (Entity entity : entities) {
-            if (entity instanceof Character
-                    && (mob.intersects(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight()) || mob.collidesX(0) || mob.collidesY(0))) {
-                return false;
-            }
-        }
-        */
+        
+        
+        Mob mob = new Mob(this, x, y, health, textureSet, speed, new ZombieAI(this, 32));
 
         entities.add(mob);
         return true;
@@ -413,4 +423,24 @@ public final class Round {
             }
         }
     }
+        
+    public static class QueryCB implements QueryCallback {
+        public boolean result = false;
+        public Vector2 p;
+        
+        public QueryCB(Vector2 p){
+            this.p = p;
+        }
+        
+        public boolean reportFixture(Fixture fixture){
+            // if ((fixture.getFilterData().categoryBits | Entity.WORLD_BITS) != 0 && 
+            if (fixture.testPoint(p)) {
+                 // fixture.testPoint(p)) {
+                result = true; // we collided
+                return false; // ends the query
+            }
+            return true; // keep searching
+        }
+    }
+    
 }

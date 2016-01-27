@@ -90,7 +90,7 @@ public class Player extends Character {
      */
     public Player(Round parent, float x, float y) {
         super(parent, x, y, PLAYER_HEALTH);
-        createBody(BodyDef.BodyType.DynamicBody, WORLD_BITS);
+        createDynamicBody(WORLD_BITS, ALL_BITS, NO_GROUP, false);
     }
 
     /**

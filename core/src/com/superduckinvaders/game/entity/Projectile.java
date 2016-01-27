@@ -70,7 +70,7 @@ public class Projectile extends Entity {
         this.damage = damage;
         this.owner = owner;
         
-        createBody(BodyDef.BodyType.DynamicBody, WORLD_BITS);
+        createDynamicBody(WORLD_BITS, WORLD_BITS, NO_GROUP, false);
     }
 
     /**

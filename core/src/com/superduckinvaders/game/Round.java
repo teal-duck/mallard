@@ -65,6 +65,7 @@ public final class Round {
     private Objective objective;
     
     public World world;
+    Mob debugMob;
 
     /**
      * Initialises a new Round with the specified map.
@@ -117,7 +118,9 @@ public final class Round {
 
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
-        spawnRandomMobs(500, 200, 200, 1000, 1000);
+        
+        debugMob = spawnZombieMob(startX + 40, startY+50);
+        //spawnRandomMobs(500, 200, 200, 1000, 1000);
     }
 
     /**
@@ -151,15 +154,23 @@ public final class Round {
     }
     public boolean collidePoint(Vector2 p) {
         p.scl(Entity.METRES_PER_PIXEL);
-        QueryCB q = new QueryCB(p);
-        world.QueryAABB(q, p.x, p.y, p.x+1, p.y+1);
-        return q.result;
+        Query q = new QueryPoint(world, p);
+        return q.query();
+    }
+    
+    public boolean collideArea(Vector2 pos, Vector2 size) {
+        pos.scl(Entity.METRES_PER_PIXEL);
+        size.scl(Entity.METRES_PER_PIXEL);
+        Query q = new QueryArea(world, pos, size);
+        return q.query();
     }
     
     public boolean rayCast(Vector2 pos1, Vector2 pos2){
         RayCastCB r = new RayCastCB();
         //new vectors as they may be modified
-        world.rayCast(r, new Vector2(pos1), new Vector2(pos2));
+        world.rayCast(r,
+                new Vector2(pos1).scl(Entity.METRES_PER_PIXEL),
+                new Vector2(pos2).scl(Entity.METRES_PER_PIXEL));
         return r.collidesEnvironment;
     }
 
@@ -173,11 +184,32 @@ public final class Round {
      */
     private void spawnRandomMobs(int amount, int minX, int minY, int maxX, int maxY) {
         while(amount > 0) {
-            int x = MathUtils.random(minX, maxX) * (MathUtils.randomBoolean() ? -1 : 1);
-            int y = MathUtils.random(minY, maxY) * (MathUtils.randomBoolean() ? -1 : 1);
-
-            amount -= createMob(getPlayer().getX() + x, getPlayer().getY() + y, 100, Assets.badGuyNormal, 100) ? 1 : 0;
+            int x = MathUtils.random(0, getMapWidth());
+            int y = MathUtils.random(0, getMapHeight());
+            if (!collidePoint(x, y)){
+                spawnZombieMob(getPlayer().getX() + x, getPlayer().getY() + y);
+                amount--;
+            }
         }
+    }
+    
+    private Mob spawnZombieMob(float x, float y){
+        return createMob(x, y, 100, Assets.badGuyNormal, 100);
+    }
+    
+    /**
+     * Creates a mob and adds it to the list of entities, but only if it doesn't intersect with another character.
+     * @param x the initial x coordinate
+     * @param y the initial y coordinate
+     * @param health the initial health of the mob
+     * @param textureSet the texture set to use
+     * @param speed how fast the mob moves in pixels per second
+     * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
+     */
+    public Mob createMob(float x, float y, int health, TextureSet textureSet, int speed) {
+        Mob mob = new Mob(this, x, y, health, textureSet, speed, new ZombieAI(this, 32));
+        entities.add(mob);
+        return mob;
     }
 
     /**
@@ -374,31 +406,6 @@ public final class Round {
     }
 
     /**
-     * Creates a mob and adds it to the list of entities, but only if it doesn't intersect with another character.
-     * @param x the initial x coordinate
-     * @param y the initial y coordinate
-     * @param health the initial health of the mob
-     * @param textureSet the texture set to use
-     * @param speed how fast the mob moves in pixels per second
-     * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
-     */
-    public boolean createMob(float x, float y, int health, TextureSet textureSet, int speed) {
-        if (collidePoint(x, y)){
-            return false;
-        }
-        
-        if (x < 0 || x > getMapWidth() - textureSet.getWidth() || y > getMapHeight() - textureSet.getHeight()) {
-            return false;
-        }
-        
-        
-        Mob mob = new Mob(this, x, y, health, textureSet, speed, new ZombieAI(this, 32));
-
-        entities.add(mob);
-        return true;
-    }
-
-    /**
      * Updates all entities in this Round.
      *
      * @param delta the time elapsed since the last update
@@ -431,24 +438,60 @@ public final class Round {
         }
     }
         
-    public static class QueryCB implements QueryCallback {
+    public static abstract class Query implements QueryCallback {
         public boolean result = false;
+        public World world;
+        
+        public Query(World world){
+            this.world=world;
+        }
+        public abstract boolean query();
+        public abstract boolean reportFixture(Fixture fixture);
+        
+    }
+    public static class QueryPoint extends Query {
         public Vector2 p;
         
-        public QueryCB(Vector2 p){
+        public QueryPoint(World world, Vector2 p){
+            super(world);
             this.p = p;
         }
         
+        public boolean query(){
+            world.QueryAABB(this, p.x, p.y, p.x+1, p.y+1);
+            return result;
+        }
+        
         public boolean reportFixture(Fixture fixture){
-            // if ((fixture.getFilterData().categoryBits | Entity.WORLD_BITS) != 0 && 
-            if (fixture.testPoint(p)) {
-                 // fixture.testPoint(p)) {
+            if (fixture.testPoint(p)) { // if ((fixture.getFilterData().categoryBits | Entity.WORLD_BITS) != 0 && 
                 result = true; // we collided
                 return false; // ends the query
             }
             return true; // keep searching
         }
     }
+    public static class QueryArea extends Query {
+        Vector2 p1;
+        Vector2 p2;
+        
+        public QueryArea(World world, Vector2 pos, Vector2 size){
+            super(world);
+            this.p1 = pos;
+            this.p2 = size.add(pos);
+        }
+        
+        public boolean query(){
+            world.QueryAABB(this, p1.x, p1.y, p2.x, p2.y);
+            return result;
+        }
+        
+        public boolean reportFixture(Fixture fixture){
+            result = true; //AABB gave us ANY fixture, BB overlaps.
+            return false;
+        }
+    }
+    
+    
     
     class RayCastCB implements RayCastCallback {
         public float fraction;
@@ -460,7 +503,7 @@ public final class Round {
         }
         @Override
         public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction){
-            if (!fixture.getUserData() instanceof Player){
+            if (!(fixture.getUserData() instanceof Player)){
                 this.collidesEnvironment = true;
                 this.fraction = fraction;
                 return 0f;

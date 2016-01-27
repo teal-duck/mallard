@@ -165,11 +165,11 @@ public abstract class Character extends Entity {
             
             // Update Character facing.
             switch (index){
-                case 0: facing = TextureSet.FACING_FRONT;
+                case 0: facing = TextureSet.FACING_BACK;
                         break;
                 case 1: facing = TextureSet.FACING_RIGHT;
                         break;
-                case 2: facing = TextureSet.FACING_BACK;
+                case 2: facing = TextureSet.FACING_FRONT;
                         break;
                 case 3: facing = TextureSet.FACING_LEFT;
                         break;

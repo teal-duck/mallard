@@ -14,7 +14,7 @@ public class Obstacle extends Entity {
         super(parent, x, y);
         this.width = width;
         this.height = height;
-        createBody(BodyDef.BodyType.StaticBody, WORLD_BITS);
+        createBody(BodyDef.BodyType.StaticBody, WORLD_BITS, ALL_BITS, NO_GROUP, false);
     }
     
     @Override

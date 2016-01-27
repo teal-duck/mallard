@@ -13,6 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class Entity {
     public static final short WORLD_BITS = 0x1;
     public static final short MOB_BITS   = 0x2;
+    public static final short ALL_BITS   = WORLD_BITS | MOB_BITS;
+    public static final short NO_GROUP  = 0;
+    public static final short MOB_GROUP  = -1;
 
     /**
      * The round that this Entity is in.
@@ -59,16 +62,17 @@ public abstract class Entity {
         this.x = x;
         this.y = y;
     }
+    
+    public void createStaticBody(short categoryBits, short maskBits, short groupIndex, boolean isSensor){
+        createBody(BodyDef.BodyType.StaticBody, categoryBits, maskBits, groupIndex, isSensor);
+    }
+    public void createDynamicBody(short categoryBits, short maskBits, short groupIndex, boolean isSensor){
+        createBody(BodyDef.BodyType.DynamicBody, categoryBits, maskBits, groupIndex, isSensor);
+    }
     public void createBody(BodyDef.BodyType bodyType){
-        createBody(bodyType, WORLD_BITS, false);
+        createBody(bodyType, WORLD_BITS, WORLD_BITS, NO_GROUP, false);
     }
-    public void createBody(short collisionBits){
-        createBody(BodyDef.BodyType.DynamicBody, collisionBits, false);
-    }
-    public void createBody(BodyDef.BodyType bodyType, short collisionBits){
-        createBody(bodyType, collisionBits, false);
-    }
-    public void createBody(BodyDef.BodyType bodyType, short collisionBits, boolean isSensor){
+    public void createBody(BodyDef.BodyType bodyType, short categoryBits, short maskBits, short groupIndex, boolean isSensor){
         float width = getWidth();
         float height = getHeight();
         BodyDef bodyDef = new BodyDef();
@@ -83,9 +87,14 @@ public abstract class Entity {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = boundingBox;
         fixtureDef.isSensor = isSensor;
+        
+        fixtureDef.filter.categoryBits = categoryBits;
+        fixtureDef.filter.maskBits = maskBits;
+        fixtureDef.filter.groupIndex = groupIndex;
 
         body = parent.world.createBody(bodyDef);
-        body.createFixture(fixtureDef);
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
         body.setUserData(this);
         boundingBox.dispose();
     }
@@ -108,13 +117,12 @@ public abstract class Entity {
     }
     
     public Vector2 getPosition() {
-        return body.getPosition()
-        .scl(PIXELS_PER_METRE)
+        return getCentre()
         .sub(getWidth()/2f, getHeight()/2f);
     }
     
     public Vector2 getCentre(){
-        return body.getPosition();
+        return body.getPosition().scl(PIXELS_PER_METRE);
     }
 
     /**

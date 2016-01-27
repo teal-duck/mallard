@@ -30,7 +30,7 @@ public class ZombieAI extends AI {
     /**
      * How often to update the AI.
      */
-    public final static float PATHFINDING_RATE = (float) 0.2;
+    public final static float PATHFINDING_RATE = (float) 0.2f;
     /**
      * The random offset to be added or taken from the base pathfinding rate.
      */
@@ -63,6 +63,9 @@ public class ZombieAI extends AI {
      * How long before we can attack again.
      */
     private float attackTimer = 0;
+    
+    public Coordinate target;
+    public Vector2 targetPoint;
 
     /**
      * Initialises this ZombieAI.
@@ -76,6 +79,15 @@ public class ZombieAI extends AI {
         this.tileWidth = round.getTileWidth();
         this.tileHeight = round.getTileHeight();
         this.attackRange = attackRange;
+        
+    }
+    
+    public void applyVelocity(Mob mob){
+        
+        Vector2 dst = new Vector2(targetPoint);
+        Vector2 velocity = dst.sub(mob.getCentre())
+                               .nor().scl(mob.getSpeed());
+        mob.setVelocity(velocity);
     }
 
 
@@ -87,31 +99,53 @@ public class ZombieAI extends AI {
      */
     @Override
     public void update(Mob mob, float delta) {
-        playerPos = round.getPlayer().getPosition();
+        playerPos = round.getPlayer().getCentre();
 
         float distanceFromPlayer = mob.distanceTo(playerPos);
-
+        float distanceToTargetTile;
+        
+        if (target != null){
+            distanceToTargetTile = mob.getCentre().sub(targetPoint).len();
+        }
+        else {
+            distanceToTargetTile = 0f;
+        }
+        
         currentOffset += delta;
-        if (currentOffset >= deltaOffsetLimit && (int) distanceFromPlayer < 1280 / 4) {
+        if ((currentOffset >= deltaOffsetLimit || distanceToTargetTile < 10) && (int) distanceFromPlayer < 1280 / 4) {
             deltaOffsetLimit = PATHFINDING_RATE + (MathUtils.random() % PATHFINDING_RATE_OFFSET);
             currentOffset = 0;
-            Coordinate target = FindPath(mob);
-            Vector2 velocity = new Vector2(target.x, target.y).sub(mob.getPosition())
-                                   .nor().scl(mob.getSpeed());
-            mob.setVelocity(velocity);
+            target = FindPath(mob);
+            // if (targetPoint != null) {
+                // targetPoint = targetPoint.scl(3).add(target.vector()).scl(0.25f);
+            // }
+            // else {
+                targetPoint = target.vector();
+            // }
+            // setTargetTile(mob, target);
         }
+        else {
+            System.out.println(distanceToTargetTile);
+        }
+        applyVelocity(mob);
+        
+        
+        
+        // currentOffset += delta;
+        // if (currentOffset >= deltaOffsetLimit && (int) distanceFromPlayer < 1280 / 4) {
+            // deltaOffsetLimit = PATHFINDING_RATE + (MathUtils.random() % PATHFINDING_RATE_OFFSET);
+            // currentOffset = 0;
+            // Coordinate target = FindPath(mob);
+            // setTargetTile(mob, target);
+        // }
 
         // Damage player.
-        if ((int) distanceFromPlayer < attackRange && attackTimer <= 0) {
-            round.getPlayer().damage(1);
-            attackTimer = ATTACK_DELAY;
-        } else if (attackTimer > 0) {
-            attackTimer -= delta;
-        }
-    }
-    
-    private Coordinate lineOfSight(Vector2 point1, Vector2 point2){
-        
+        // if ((int) distanceFromPlayer < attackRange && attackTimer <= 0) {
+            // round.getPlayer().damage(1);
+            // attackTimer = ATTACK_DELAY;
+        // } else if (attackTimer > 0) {
+            // attackTimer -= delta;
+        // }
     }
 
     /**
@@ -122,14 +156,17 @@ public class ZombieAI extends AI {
      * @return Returns a Coordinate for the path finding
      */
     private Coordinate FindPath(Mob mob) {
-        Vector2 mobPos = mob.getPosition();
+        Vector2 mobPos = mob.getCentre();
         Coordinate startCoord = roundToTile(mobPos);
         Coordinate finalCoord = roundToTile(playerPos);
+        // Coordinate startCoord = new Coordinate(mobPos.x, mobPos.y);
+        // Coordinate finalCoord = new Coordinate(playerPos.x, playerPos.y);
         boolean finalFound = false;
         
-        if (!round.rayCast(mobPos, playerPos)){
-            return finalCoord;
-        }
+        // if (!round.rayCast(mobPos, playerPos)){
+            // return finalCoord;
+        // }
+        
 
         PriorityQueue<Coordinate> fringe = new PriorityQueue<Coordinate>();
         HashMap<Coordinate, SearchNode> visitedStates = new HashMap<Coordinate, SearchNode>();
@@ -153,13 +190,15 @@ public class ZombieAI extends AI {
             perm[3] = new Coordinate(currentCoord.x - tileWidth, currentCoord.y);
 
             for (Coordinate currentPerm : perm) {
+                boolean isEmpty = !round.collidePoint(currentPerm.x, currentPerm.y);
+                // if (currentPerm.inSameTile(finalCoord) || !round.rayCast(new Vector2(currentPerm.x, currentPerm.y), playerPos)) {
                 if (currentPerm.inSameTile(finalCoord)) {
                     visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration + 1));
                     finalCoord = currentPerm;
                     finalFound = true;
                     break;
                 }
-                if (!(round.collidePoint(currentPerm.x, currentPerm.y) ||visitedStates.containsKey(currentPerm))) {
+                if (isEmpty && !visitedStates.containsKey(currentPerm)) {
                     fringe.add(currentPerm);
                     visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration + 1));
                 }
@@ -173,7 +212,11 @@ public class ZombieAI extends AI {
             List<SearchNode> path = new ArrayList<SearchNode>();
             path.add(visitedStates.get(finalCoord));
             while (path.get(path.size() - 1) != visitedStates.get(startCoord)) {
-                path.add(path.get(path.size() - 1).predecessor);
+                SearchNode pred = path.get(path.size() - 1).predecessor;
+                if (pred == null){
+                    break;
+                }
+                path.add(pred);
             }
             switch (path.size()) {
                 case 1:
@@ -221,6 +264,9 @@ public class ZombieAI extends AI {
          * @param x the x coordinate
          * @param y the y coordinate
          */
+        public Coordinate(float x, float y) {
+            this((int)x, (int)y);
+        }
         public Coordinate(int x, int y) {
             this.x = x;
             this.y = y;
@@ -283,6 +329,10 @@ public class ZombieAI extends AI {
          */
         public String toString() {
             return ("(" + Integer.toString(this.x) + ", " + Integer.toString(this.y) + ")");
+        }
+        
+        public Vector2 vector() {
+            return new Vector2(x, y);
         }
     }
 

@@ -4,12 +4,13 @@ package com.superduckinvaders.game.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.ai.AI;
-import com.superduckinvaders.game.ai.DummyAI;
+import com.superduckinvaders.game.ai.*;
 import com.superduckinvaders.game.assets.TextureSet;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
+
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Mob extends Character {
 
@@ -32,6 +33,8 @@ public class Mob extends Character {
      * speed of the mob in pixels per second
      */
     private float speed;
+    
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
         super(parent, x, y, health);
@@ -40,7 +43,7 @@ public class Mob extends Character {
         this.speed = speed;
         this.ai = ai;
         
-        createBody(BodyDef.BodyType.DynamicBody, MOB_BITS);
+        createDynamicBody(WORLD_BITS, WORLD_BITS, MOB_GROUP, false);
     }
 
     public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {
@@ -113,5 +116,16 @@ public class Mob extends Character {
     @Override
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
+        
+        if (ai instanceof ZombieAI){
+            spriteBatch.end();
+            shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(1, 1, 0, 1);
+            shapeRenderer.x(((ZombieAI)ai).targetPoint, 10);
+            shapeRenderer.end();
+            spriteBatch.begin();
+        }
+        
     }
 }

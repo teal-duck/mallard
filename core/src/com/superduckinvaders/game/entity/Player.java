@@ -306,10 +306,7 @@ public class Player extends Character {
         // Use the right texture set.
         TextureSet textureSet = isFlying() ? Assets.playerFlying : Assets.playerNormal;
         
-        //System.out.printf("%s %s", getX(), getY());
-        
-        Vector2 pos = getBottomLeft();
-        
+        Vector2 pos = getPosition();
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), pos.x, pos.y);
     }
 

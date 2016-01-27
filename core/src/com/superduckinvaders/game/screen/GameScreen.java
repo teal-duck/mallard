@@ -95,6 +95,7 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void render(float delta) {
+        
         round.update(delta);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -130,8 +131,9 @@ public class GameScreen extends BaseScreen {
         
         spriteBatch.end();
         
-        debugMatrix=new Matrix4(camera.combined);
+        debugMatrix=new Matrix4(camera.combined.scl(Entity.PIXELS_PER_METRE));
         debugRenderer.render(round.world, debugMatrix);
+        
 
         uiBatch.begin();
         // TODO: finish UI

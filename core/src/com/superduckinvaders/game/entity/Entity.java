@@ -103,15 +103,13 @@ public abstract class Entity {
     }
     
     public Vector2 getPosition() {
-        return body.getPosition().scl(PIXELS_PER_METRE);
-    }
-    
-    public Vector2 getBottomLeft(){
-        return getPosition().sub(width/2, height/2);
+        return body.getPosition()
+        .scl(PIXELS_PER_METRE)
+        .sub(getWidth()/2f, getHeight()/2f);
     }
     
     public Vector2 getCentre(){
-        return getPosition();
+        return body.getPosition();
     }
 
     /**

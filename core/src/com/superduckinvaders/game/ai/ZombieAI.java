@@ -115,7 +115,18 @@ public class ZombieAI extends AI {
         if ((currentOffset >= deltaOffsetLimit || distanceToTargetTile < 10) && (int) distanceFromPlayer < 1280 / 4) {
             deltaOffsetLimit = PATHFINDING_RATE + (MathUtils.random() % PATHFINDING_RATE_OFFSET);
             currentOffset = 0;
-            target = FindPath(mob);
+            List<SearchNode> path = FindPath(mob);
+            SearchNode targetNode;
+            switch (path.size()) {
+                case 1:
+                    targetNode = path.get(path.size() - 1);
+                    break;
+                default:
+                    targetNode = path.get(path.size() - 2);
+                    break;
+            }
+            
+            target = targetNode.coord;
             // if (targetPoint != null) {
                 // targetPoint = targetPoint.scl(3).add(target.vector()).scl(0.25f);
             // }
@@ -155,7 +166,7 @@ public class ZombieAI extends AI {
      * @param mob Mob that a path is being generated for
      * @return Returns a Coordinate for the path finding
      */
-    private Coordinate FindPath(Mob mob) {
+    private List<SearchNode> FindPath(Mob mob) {
         Vector2 mobPos = mob.getCentre();
         Coordinate startCoord = roundToTile(mobPos);
         Coordinate finalCoord = roundToTile(playerPos);
@@ -171,7 +182,8 @@ public class ZombieAI extends AI {
         PriorityQueue<Coordinate> fringe = new PriorityQueue<Coordinate>();
         HashMap<Coordinate, SearchNode> visitedStates = new HashMap<Coordinate, SearchNode>();
         fringe.add(startCoord);
-        visitedStates.put(startCoord, new SearchNode(null, 0));
+        SearchNode startNode = new SearchNode(null, startCoord, 0);
+        visitedStates.put(startCoord, startNode);
 
         while (!fringe.isEmpty()) {
 
@@ -193,23 +205,24 @@ public class ZombieAI extends AI {
                 boolean isEmpty = !round.collidePoint(currentPerm.x, currentPerm.y);
                 // if (currentPerm.inSameTile(finalCoord) || !round.rayCast(new Vector2(currentPerm.x, currentPerm.y), playerPos)) {
                 if (currentPerm.inSameTile(finalCoord)) {
-                    visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration + 1));
+                    visitedStates.put(currentPerm, new SearchNode(currentState, currentPerm, currentState.iteration + 1));
                     finalCoord = currentPerm;
                     finalFound = true;
                     break;
                 }
                 if (isEmpty && !visitedStates.containsKey(currentPerm)) {
                     fringe.add(currentPerm);
-                    visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration + 1));
+                    visitedStates.put(currentPerm, new SearchNode(currentState, currentPerm, currentState.iteration + 1));
                 }
             }
             if (finalFound) break;
         }
+        List<SearchNode> path = new ArrayList<SearchNode>();
         if (!finalFound) {
-            return startCoord;
+            path.add(startNode);
+            return path;
         } else {
             SearchNode resultNode = null;
-            List<SearchNode> path = new ArrayList<SearchNode>();
             path.add(visitedStates.get(finalCoord));
             while (path.get(path.size() - 1) != visitedStates.get(startCoord)) {
                 SearchNode pred = path.get(path.size() - 1).predecessor;
@@ -218,21 +231,16 @@ public class ZombieAI extends AI {
                 }
                 path.add(pred);
             }
-            switch (path.size()) {
-                case 1:
-                    resultNode = path.get(path.size() - 1);
-                    break;
-                default:
-                    resultNode = path.get(path.size() - 2);
-                    break;
-            }
+            // 
+            
+            return path;
             //for loop below will terminate after at most 4 iterations
-            for (Coordinate key : visitedStates.keySet()) {
-                if (visitedStates.get(key) == resultNode)
-                    return key;
-            }
+            // for (Coordinate key : visitedStates.keySet()) {
+                // if (visitedStates.get(key) == resultNode)
+                    // return key;
+            // }
         }
-        return startCoord;
+        //return startCoord;
     }
     
     public Coordinate roundToTile(Vector2 pos){
@@ -348,6 +356,7 @@ public class ZombieAI extends AI {
          * The iteration this node is a part of.
          */
         public int iteration;
+        public Coordinate coord;
 
         /**
          * Initialises this SearchNode.
@@ -355,8 +364,9 @@ public class ZombieAI extends AI {
          * @param predecessor the predecessor node
          * @param iteration   the iteration of this node
          */
-        public SearchNode(SearchNode predecessor, int iteration) {
+        public SearchNode(SearchNode predecessor, Coordinate coord, int iteration) {
             this.predecessor = predecessor;
+            this.coord = coord;
             this.iteration = iteration;
         }
     }

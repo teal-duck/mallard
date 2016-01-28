@@ -33,44 +33,18 @@ public class Projectile extends Entity {
      * @param damage  how much damage the projectile deals
      * @param owner   the owner of the projectile (i.e. the one who fired it)
      */
-    public Projectile(Round parent, float x, float y, float targetX, float targetY, float speed, int damage, Entity owner) {
-        this(parent, x, y, targetX, targetY, speed, 0, 0, damage, owner);
-    }
-
-    /**
-     * Initialises this Projectile.
-     *
-     * @param parent          the round this Projectile belongs to
-     * @param x               the initial x coordinate
-     * @param y               the initial y coordinate
-     * @param targetX         the target x coordinate
-     * @param targetY         the target y coordinate
-     * @param speed           how fast the projectile moves
-     * @param velocityXOffset the offset to the initial X velocity
-     * @param velocityYOffset the offset to the initial Y velocity
-     * @param damage          how much damage the projectile deals
-     * @param owner           the owner of the projectile (i.e. the one who fired it)
-     */
-    public Projectile(Round parent, float x, float y, float targetX, float targetY, float speed, float velocityXOffset, float velocityYOffset, int damage, Entity owner) {
-        super(parent, x, y);
+    public Projectile(Round parent, Vector2 pos, Vector2 velocity, int damage, Entity owner) {
+        super(parent, pos);
         
         this.width = Assets.projectile.getRegionWidth();
         this.height = Assets.projectile.getRegionHeight();
-
-        // Angle between initial position and target.
-        float angle = angleTo(targetX, targetY);
-
-        velocityX = Math.round(Math.cos(angle) * speed);
-        velocityY = Math.round(Math.sin(angle) * speed);
-
-        // Projectile should only move faster if we're moving in the same direction.
-        velocityX += (Math.signum(velocityX) == Math.signum(velocityXOffset) ? velocityXOffset : 0);
-        velocityY += (Math.signum(velocityY) == Math.signum(velocityYOffset) ? velocityYOffset : 0);
-
+        
         this.damage = damage;
         this.owner = owner;
         
-        createDynamicBody(WORLD_BITS, WORLD_BITS, NO_GROUP, false);
+        createDynamicBody(WORLD_BITS, (short) (WORLD_BITS | MOB_BITS), NO_GROUP, false);
+        body.setBullet(true);
+        setVelocity(velocity);
     }
 
     /**
@@ -81,13 +55,6 @@ public class Projectile extends Entity {
     @Override
     public void update(float delta) {
         super.update(delta);
-
-        // Do manual collision checking in order to remove projectile.
-        float deltaX = velocityX * delta;
-        float deltaY = velocityY * delta;
-        
-        float x = getX();
-        float y = getY();
 
         // Check for collisions with blocked tiles and the map boundary.
         // if (collidesX(deltaX) || collidesY(deltaY) || x + deltaX < 0 || x + getWidth() + deltaX > parent.getMapWidth() || y + deltaY < 0 || y + getHeight() + deltaY > parent.getMapHeight()) {

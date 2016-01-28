@@ -43,7 +43,7 @@ public class Mob extends Character {
         this.speed = speed;
         this.ai = ai;
         
-        createDynamicBody(WORLD_BITS, WORLD_BITS, MOB_GROUP, false);
+        createDynamicBody(WORLD_BITS, ALL_BITS, MOB_GROUP, false);
     }
 
     public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {

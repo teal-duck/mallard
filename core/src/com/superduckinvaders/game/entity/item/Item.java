@@ -19,7 +19,7 @@ public class Item extends Entity {
     public Item(Round parent, float x, float y, TextureRegion texture) {
         super(parent, x, y);
         this.texture = texture;
-        createStaticBody(WORLD_BITS, ALL_BITS, NO_GROUP, true);
+        createStaticBody(WORLD_BITS, PLAYER_BITS, NO_GROUP, true);
     }
 
     @Override

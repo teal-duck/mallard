@@ -90,7 +90,7 @@ public class Player extends Character {
      */
     public Player(Round parent, float x, float y) {
         super(parent, x, y, PLAYER_HEALTH);
-        createDynamicBody(WORLD_BITS, ALL_BITS, NO_GROUP, false);
+        createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
     }
 
     /**
@@ -246,8 +246,8 @@ public class Player extends Character {
                     Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
 
                     // Face target when firing gun.
-                    facing = directionTo(target.x, target.y);
-                    fireAt(target.x, target.y, 300, 100);
+                    //facing = directionTo(target.x, target.y);
+                    fireAt(new Vector2(target.x, target.y), 30f, 100);
                 } else {
                     // TODO: tweak melee range
                     melee(100, 100);

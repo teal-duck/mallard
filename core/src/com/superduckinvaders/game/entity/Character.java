@@ -108,8 +108,13 @@ public abstract class Character extends Entity {
      * @param speed  how fast the projectile moves
      * @param damage how much damage the projectile deals
      */
-    protected void fireAt(float x, float y, int speed, int damage) {
-        parent.createProjectile(getX() + getWidth() / 2, getY() + getHeight() / 2, x, y, speed, velocityX, velocityY, damage, this);
+     
+    protected void fireAt(Vector2 target, float speed, int damage) {
+        Vector2 pos = getCentre();
+        
+        parent.createProjectile(pos,
+                new Vector2(target).sub(pos).scl(speed).add(getVelocity()),
+                damage, this);
     }
 
     /**

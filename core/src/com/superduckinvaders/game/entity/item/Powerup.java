@@ -1,7 +1,7 @@
 package com.superduckinvaders.game.entity.item;
 
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.Player;
+import com.superduckinvaders.game.entity.*;
 
 /**
  * Represents a powerup on the floor.
@@ -24,16 +24,16 @@ public class Powerup extends Item {
         this.powerup = powerup;
         this.time = time;
     }
+    
+    @Override
+    public void onCollision(Entity other){
+        if (other instanceof Player) {
+            ((Player)other).setPowerup(powerup, time);
+            removed = true;
+        }
+    }
 
     @Override
     public void update(float delta) {
-        Player player = parent.getPlayer();
-        
-        /*
-        if (this.intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) {
-            player.setPowerup(powerup, time);
-            removed = true;
-        }
-        */
     }
 }

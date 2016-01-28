@@ -78,6 +78,26 @@ public final class Round {
         this.map = map;
         
         world = new World(Vector2.Zero, true);
+        
+        world.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                Object a = contact.getFixtureA().getBody().getUserData();
+                Object b = contact.getFixtureB().getBody().getUserData();
+                if (a instanceof Entity && b instanceof Entity){
+                    Entity ea = (Entity)a;
+                    Entity eb = (Entity)b;
+                    ea.onCollision(eb);
+                    eb.onCollision(ea);
+                }
+            }
+            @Override
+            public void endContact(Contact contact) {}
+            @Override
+            public void postSolve(Contact arg0, ContactImpulse arg1) {}
+            @Override
+            public void preSolve(Contact arg0, Manifold arg1) {}
+        });
 
         // Choose which obstacles to use.
         obstaclesLayer = chooseObstacles();
@@ -366,8 +386,8 @@ public final class Round {
      * @param damage          how much damage the projectile deals
      * @param owner           the owner of the projectile (i.e. the one who fired it)
      */
-    public void createProjectile(float x, float y, float targetX, float targetY, float speed, float velocityXOffset, float velocityYOffset, int damage, Entity owner) {
-        entities.add(new Projectile(this, x, y, targetX, targetY, speed, velocityXOffset, velocityYOffset, damage, owner));
+    public void createProjectile(Vector2 pos, Vector2 velocity,  int damage, Entity owner) {
+        entities.add(new Projectile(this, pos, velocity, damage, owner));
     }
 
     /**
@@ -429,7 +449,9 @@ public final class Round {
                 if (entity instanceof Mob && ((Mob) entity).isDead()) {
                     player.addScore((int) (10 * (player.getPowerup() == Player.Powerup.SCORE_MULTIPLIER ? Player.PLAYER_SCORE_MULTIPLIER : 1)));
                 }
-
+                if (entity.body != null) {
+                    world.destroyBody(entity.body);
+                }
                 entities.remove(i);
             } else if (entity.distanceTo(player.getX(), player.getY()) < UPDATE_DISTANCE){
                 // Don't bother updating entities that aren't on screen.

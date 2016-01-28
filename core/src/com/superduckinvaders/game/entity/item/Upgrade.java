@@ -1,7 +1,7 @@
 package com.superduckinvaders.game.entity.item;
 
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.Player;
+import com.superduckinvaders.game.entity.*;
 
 /**
  * Created by olivermcclellan on 16/01/2016.
@@ -19,15 +19,17 @@ public class Upgrade extends Item {
 
         this.upgrade = upgrade;
     }
+    
+    
+    @Override
+    public void onCollision(Entity other){
+        if (other instanceof Player) {
+            ((Player)other).setUpgrade(upgrade);
+            removed = true;
+        }
+    }
 
     @Override
     public void update(float delta) {
-        Player player = parent.getPlayer();
-        /*
-        if (this.intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) {
-            player.setUpgrade(upgrade);
-            removed = true;
-        }
-        */
     }
 }

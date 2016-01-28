@@ -12,8 +12,9 @@ import com.badlogic.gdx.math.Vector2;
  */
 public abstract class Entity {
     public static final short WORLD_BITS = 0x1;
-    public static final short MOB_BITS   = 0x2;
-    public static final short ALL_BITS   = WORLD_BITS | MOB_BITS;
+    public static final short PLAYER_BITS   = 0x2;
+    public static final short MOB_BITS   = 0x4;
+    public static final short ALL_BITS   = WORLD_BITS | PLAYER_BITS |MOB_BITS;
     public static final short NO_GROUP  = 0;
     public static final short MOB_GROUP  = -1;
 
@@ -27,7 +28,7 @@ public abstract class Entity {
      */
     protected float x, y;
     protected float width, height;
-    Body body;
+    public Body body;
     public static final float METRES_PER_PIXEL = 1/16f;
     public static final float PIXELS_PER_METRE = 1/METRES_PER_PIXEL;
 
@@ -57,6 +58,10 @@ public abstract class Entity {
      * @param x      the initial x coordinate
      * @param y      the initial y coordinate
      */
+    public Entity(Round parent, Vector2 pos) {
+        this(parent, pos.x, pos.y);
+    
+    }
     public Entity(Round parent, float x, float y) {
         this.parent = parent;
         this.x = x;
@@ -247,6 +252,9 @@ public abstract class Entity {
      * Ensures that this MobileEntity stays within the map area.
      */
     protected void checkBounds() {
+    }
+    
+    public void onCollision(Entity other) {
     }
     
     /**

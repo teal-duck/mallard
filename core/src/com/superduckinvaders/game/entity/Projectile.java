@@ -46,6 +46,16 @@ public class Projectile extends Entity {
         body.setBullet(true);
         setVelocity(velocity);
     }
+    
+    @Override
+    public void onCollision(Entity other){
+        //parent.createParticle(x, y, 0.6f, Assets.explosionAnimation);
+        removed = true;
+        if (other instanceof Character && other != owner) {
+            ((Character) other).damage(damage);
+        }
+    }
+    
 
     /**
      * Updates the state of this Projectile.
@@ -54,31 +64,6 @@ public class Projectile extends Entity {
      */
     @Override
     public void update(float delta) {
-        super.update(delta);
-
-        // Check for collisions with blocked tiles and the map boundary.
-        // if (collidesX(deltaX) || collidesY(deltaY) || x + deltaX < 0 || x + getWidth() + deltaX > parent.getMapWidth() || y + deltaY < 0 || y + getHeight() + deltaY > parent.getMapHeight()) {
-            // // Create explosion particle effect.
-            // parent.createParticle(x, y, 0.6f, Assets.explosionAnimation);
-
-            // removed = true;
-            // return;
-        // }
-
-        // Otherwise check with collisions with every other entity.
-        for (Entity entity : parent.getEntities()) {
-            // Don't damage my owner.
-            if (entity == owner) {
-                continue;
-            }
-            /*
-            // If entity is character and we have hit it, damage it and then delete myself.
-            if (entity instanceof Character && entity.intersects(x, y, getWidth(), getHeight())) {
-                ((Character) entity).damage(damage);
-                removed = true;
-            }
-            */
-        }
     }
 
     /**

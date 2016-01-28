@@ -186,12 +186,47 @@ public final class Round {
     }
     
     public boolean rayCast(Vector2 pos1, Vector2 pos2){
-        RayCastCB r = new RayCastCB();
+        return rayCast(pos1, pos2, Entity.WORLD_BITS);
+    }
+    public boolean rayCast(Vector2 pos1, Vector2 pos2, short maskBits){
+        RayCastCB r = new RayCastCB(maskBits);
         //new vectors as they may be modified
         world.rayCast(r,
                 new Vector2(pos1).scl(Entity.METRES_PER_PIXEL),
                 new Vector2(pos2).scl(Entity.METRES_PER_PIXEL));
         return r.collidesEnvironment;
+    }
+    
+    public boolean isClearTo(Entity entity, Vector2 target){
+        Vector2 pos = entity.getCentre();
+        
+        float width  = entity.getWidth();
+        float height = entity.getHeight();
+        Vector2 corner = new Vector2(width/2, height/2);
+        
+        Vector2 direction = new Vector2(target).sub(pos).nor();
+        Vector2 perp = direction.rotate90(0); //modifies direction
+        
+        float min = 0;
+        float max = 99999;
+        
+        for (int i = 0; i < 4; i++){
+            float dist = new Vector2(corner).dot(perp);
+            min = Math.min(min, dist);
+            max = Math.max(max, dist);
+            corner.rotate90(0);
+        }
+        
+        Vector2 offset1 = new Vector2(perp).scl(min);
+        Vector2 offset2 = new Vector2(perp).scl(max);
+        
+        return rayCast(new Vector2(offset1).add(pos),
+                    new Vector2(offset1).add(target)) ||
+               rayCast(new Vector2(offset2).add(pos),
+                    new Vector2(offset2).add(target));
+        
+        
+        
     }
 
     /**
@@ -518,14 +553,17 @@ public final class Round {
     class RayCastCB implements RayCastCallback {
         public float fraction;
         public boolean collidesEnvironment=false;
+        public short maskBits;
         
-        public RayCastCB(){
+        public RayCastCB(short maskBits){
             fraction = 1f;
+            this.maskBits = maskBits;
             
         }
         @Override
         public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction){
-            if (!(fixture.getUserData() instanceof Player)){
+            //if (!(fixture.getUserData() instanceof Player)){
+            if ((fixture.getFilterData().categoryBits & maskBits) != 0){
                 this.collidesEnvironment = true;
                 this.fraction = fraction;
                 return 0f;

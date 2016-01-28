@@ -17,12 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * AI that follows and attacks the player within a certain range.
  */
-public class ZombieAI extends AI {
-
-    /**
-     * How many seconds between attacks?
-     */
-    public static final float ATTACK_DELAY = 1;
+public class PathfindingAI extends AI {
     /**
      * How many iterations to use in the pathfinding algorithm.
      */
@@ -56,29 +51,25 @@ public class ZombieAI extends AI {
      */
     private float currentOffset = 0;
     /**
-     * How far away from the player this ZombieAI can attack.
+     * How far away from the player this PathfindingAI can attack.
      */
-    private int attackRange;
-    /**
-     * How long before we can attack again.
-     */
-    private float attackTimer = 0;
-    
+    private int targetRange;
+
     public Coordinate target;
     public Vector2 targetPoint;
 
     /**
-     * Initialises this ZombieAI.
+     * Initialises this PathfindingAI.
      *
      * @param round       the round the Mob this AI controls is a part of
-     * @param attackRange how far away from the player can this ZombieAI attack
+     * @param targetRange how close to the player this PathfindingAI tries to get
      */
-    public ZombieAI(Round round, int attackRange) {
+    public PathfindingAI(Round round, int targetRange) {
         super(round);
 
         this.tileWidth = round.getTileWidth();
         this.tileHeight = round.getTileHeight();
-        this.attackRange = attackRange;
+        this.targetRange = targetRange;
         
     }
     
@@ -89,12 +80,12 @@ public class ZombieAI extends AI {
         Vector2 dst = new Vector2(targetPoint);
         Vector2 velocity = dst.sub(mob.getCentre())
                                .nor().scl(mob.getSpeed());
-        mob.setVelocity(velocity);
+        mob.setVelocityClamped(velocity);
     }
 
 
     /**
-     * Updates this ZombieAI.
+     * Updates this PathfindingAI.
      *
      * @param mob   pointer to the Mob using this AI
      * @param delta time since the previous update
@@ -103,24 +94,21 @@ public class ZombieAI extends AI {
     public void update(Mob mob, float delta) {
         playerPos = round.getPlayer().getCentre();
 
-        float distanceFromPlayer = mob.distanceTo(playerPos);
-        float distanceToTargetTile;
-        
-        if (target != null){
-            distanceToTargetTile = mob.getCentre().sub(targetPoint).len();
-        }
-        else {
-            distanceToTargetTile = 0f;
-        }
+        float distanceToPlayer = mob.distanceTo(playerPos);
+        float distanceToTargetTile = (target != null) ? mob.getCentre().sub(targetPoint).len() : 0f;
         
         currentOffset += delta;
-        if ((currentOffset >= deltaOffsetLimit || distanceToTargetTile < 2) && (int) distanceFromPlayer < 1280 / 4) {
+        if ((currentOffset >= deltaOffsetLimit || distanceToTargetTile < 2) && (int) distanceToPlayer < 1280 / 4) {
             deltaOffsetLimit = PATHFINDING_RATE + (MathUtils.random() % PATHFINDING_RATE_OFFSET);
             currentOffset = 0;
             target = FindPath(mob);
-            targetPoint = target.vector();
         }
-        applyVelocity(mob);
+        
+        // targetPoint = (target != null) ? target.vector() : new Vector2(playerPos).setLength(1f);
+        if (target != null) {
+            targetPoint = target.vector();
+            applyVelocity(mob);
+        }
     }
 
     /**
@@ -132,13 +120,20 @@ public class ZombieAI extends AI {
      */
     private Coordinate FindPath(Mob mob) {
         Vector2 mobPos = mob.getCentre();
+        Vector2 mobSize = mob.getSize();
         Coordinate startCoord = roundToTile(mobPos);
         Coordinate finalCoord = roundToTile(playerPos);
         boolean finalFound = false;
         
-        if (round.isClearTo(mob, playerPos)){
-            currentOffset = deltaOffsetLimit;
-            return new Coordinate(playerPos);
+        
+        if (round.pathIsClear(mobPos, mobSize, playerPos)){
+            if (new Vector2(playerPos).sub(mobPos).len() < targetRange){
+                return null;
+            }
+            else {
+                currentOffset = deltaOffsetLimit;
+                return new Coordinate(playerPos);
+            }
         }
         
 
@@ -165,7 +160,8 @@ public class ZombieAI extends AI {
 
             for (Coordinate currentPerm : perm) {
                 boolean isEmpty = !round.collidePoint(currentPerm.x, currentPerm.y);
-                // if (currentPerm.inSameTile(finalCoord) || !round.rayCast(new Vector2(currentPerm.x, currentPerm.y), playerPos)) {
+                // if (currentPerm.inSameTile(finalCoord) || round.pathIsClear(new Vector2(currentPerm.x, currentPerm.y), mobSize, playerPos)) {
+                // if (currentPerm.inSameTile(finalCoord) || new Vector2(currentPerm.x, currentPerm.y).sub(playerPos).len() < targetRange) {
                 if (currentPerm.inSameTile(finalCoord)) {
                     visitedStates.put(currentPerm, new SearchNode(currentState, currentPerm, currentState.iteration + 1));
                     finalCoord = currentPerm;
@@ -180,7 +176,7 @@ public class ZombieAI extends AI {
             if (finalFound) break;
         }
         if (!finalFound) {
-            return startCoord;
+            return null;
         } else {
             SearchNode resultNode = null;
             List<SearchNode> path = new ArrayList<SearchNode>();
@@ -192,24 +188,18 @@ public class ZombieAI extends AI {
                 }
                 path.add(pred);
             }
-            int index = path.size();
+            int index = path.size()-1;
             while (index > 0) {
                 SearchNode tempNode = path.get(index-1);
-                if(!round.isClearTo(mob, tempNode.coord.vector())){
+                if(!round.pathIsClear(mobPos, mobSize, tempNode.coord.vector())){
                     break;
                 }
                 index--;
             }
             resultNode = path.get(index);
-            
-            //for loop below will terminate after at most 4 iterations -- why?
-            //for (Coordinate key : visitedStates.keySet()) {
-                //if (visitedStates.get(key) == resultNode)
-                    //return key;
-            //}
+
             return resultNode.coord;
         }
-        //return startCoord;
     }
     
     public Coordinate roundToTile(Vector2 pos){

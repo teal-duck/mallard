@@ -91,6 +91,7 @@ public class Player extends Character {
     public Player(Round parent, float x, float y) {
         super(parent, x, y, PLAYER_HEALTH);
         createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
+        // body.setLinearDamping(10f);
     }
 
     /**
@@ -288,8 +289,7 @@ public class Player extends Character {
         else {
             flyingTimer = Math.min((flyingTimer+(delta*0.2f)), PLAYER_FLIGHT_TIME);
         }
-        
-        setVelocity(targetVelocity);
+        setVelocity(targetVelocity, 4f);
         
 
         // Update movement.

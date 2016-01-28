@@ -14,7 +14,8 @@ public abstract class Entity {
     public static final short WORLD_BITS = 0x1;
     public static final short PLAYER_BITS   = 0x2;
     public static final short MOB_BITS   = 0x4;
-    public static final short ALL_BITS   = WORLD_BITS | PLAYER_BITS |MOB_BITS;
+    public static final short PROJECTILE_BITS   = 0x8;
+    public static final short ALL_BITS   = WORLD_BITS | PLAYER_BITS | MOB_BITS | PROJECTILE_BITS;
     public static final short NO_GROUP  = 0;
     public static final short MOB_GROUP  = -1;
 
@@ -31,11 +32,6 @@ public abstract class Entity {
     public Body body;
     public static final float METRES_PER_PIXEL = 1/16f;
     public static final float PIXELS_PER_METRE = 1/METRES_PER_PIXEL;
-
-    /**
-     * The x and y velocity of this MobileEntity in pixels per second.
-     */
-    protected float velocityX = 0, velocityY = 0;
 
     /**
      * Whether or not to remove this Entity on the next frame.
@@ -82,6 +78,7 @@ public abstract class Entity {
         float height = getHeight();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
+        // bodyDef.linearDamping = 20f;
         bodyDef.position.set((x+(width/2))*METRES_PER_PIXEL,
                              (y+(height/2))*METRES_PER_PIXEL);
 
@@ -151,21 +148,19 @@ public abstract class Entity {
     }
     
     public void setVelocity(Vector2 targetVelocity) {
+        setVelocity(targetVelocity, 0f);
+    }
+    public void setVelocityClamped(Vector2 targetVelocity) {
+        setVelocity(targetVelocity, 4f);
+    }
+    public void setVelocity(Vector2 targetVelocity, float limit) {
         Vector2 deltaVelocity = targetVelocity.sub(body.getLinearVelocity());
+        if (limit>0){
+            deltaVelocity.clamp(0, limit);
+        }
         Vector2 impulse = deltaVelocity.scl(body.getMass());
         body.applyLinearImpulse(impulse, body.getWorldCenter(), true);
     }
-
-    /**
-     * Returns true if the specified rectangle intersects this Entity.
-     *
-     * @param x      the x coordinate of the rectangle's bottom left corner
-     * @param y      the y coordinate of the rectangle's bottom left corner
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @return whether the specified rectangle intersects this Entity
-     */
-    public boolean intersects(float x, float y, int width, int height) {return false;}
 
     /**
      * Returns the distance between this Entity and the specified coordinates.
@@ -238,6 +233,10 @@ public abstract class Entity {
      */
     public float getHeight() {
         return this.height;
+    }
+    
+    public Vector2 getSize() {
+        return new Vector2(getWidth(), getHeight());
     }
 
     /**

@@ -43,7 +43,8 @@ public class Mob extends Character {
         this.speed = speed;
         this.ai = ai;
         
-        createDynamicBody(WORLD_BITS, ALL_BITS, MOB_GROUP, false);
+        createDynamicBody(MOB_BITS, ALL_BITS, MOB_GROUP, false);
+        this.body.setLinearDamping(20f);
     }
 
     public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {
@@ -121,8 +122,8 @@ public class Mob extends Character {
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
         
-        if (ai instanceof ZombieAI){
-            ZombieAI.Coordinate coord = ((ZombieAI)ai).target;
+        if (ai instanceof PathfindingAI){
+            PathfindingAI.Coordinate coord = ((PathfindingAI)ai).target;
             if (coord != null){
                 spriteBatch.end();
                 shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));

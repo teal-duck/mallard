@@ -13,7 +13,7 @@ import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.Mob;
 
-public class ZombieAITest {
+public class PathfindingAITest {
 	protected static DuckGame duckGame;
 	protected static Round testRound;
 	

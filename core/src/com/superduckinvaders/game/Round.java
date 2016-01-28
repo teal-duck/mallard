@@ -5,7 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.superduckinvaders.game.ai.ZombieAI;
+import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.Character;
@@ -195,11 +195,9 @@ public final class Round {
         return r.collidesEnvironment;
     }
     
-    public boolean isClearTo(Entity entity, Vector2 target){
-        Vector2 pos = entity.getCentre();
-        
-        float width  = entity.getWidth();
-        float height = entity.getHeight();
+    public boolean pathIsClear(Vector2 pos, Vector2 size, Vector2 target){
+        float width  = size.x;
+        float height = size.y;
         Vector2[] corners = {new Vector2( width/2,  height/2),
                              new Vector2(-width/2,  height/2),
                              new Vector2(-width/2, -height/2),
@@ -261,7 +259,7 @@ public final class Round {
      * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
      */
     public Mob createMob(float x, float y, int health, TextureSet textureSet, int speed) {
-        Mob mob = new Mob(this, x, y, health, textureSet, speed, new ZombieAI(this, 32));
+        Mob mob = new MeleeMob(this, x, y, health, textureSet, speed);
         entities.add(mob);
         return mob;
     }
@@ -561,11 +559,13 @@ public final class Round {
         }
         @Override
         public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction){
-            //if (){
-            if ((fixture.getFilterData().categoryBits & maskBits) != 0 && !(fixture.getUserData() instanceof Character)){
+            if ((fixture.getFilterData().categoryBits & maskBits) != 0){
                 this.collidesEnvironment = true;
                 this.fraction = fraction;
-                return 0f;
+                return fraction;
+            }
+            else {
+                
             }
             /* this reduces the length of the ray to the currently found intersection
              * this is done because fixtures are not necessarily reported in

@@ -34,6 +34,4 @@ public abstract class AI {
      * @param delta time since the previous update
      */
     public abstract void update(Mob mob, float delta);
-    
-    
 }

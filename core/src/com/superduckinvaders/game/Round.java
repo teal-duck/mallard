@@ -18,6 +18,7 @@ import com.superduckinvaders.game.objective.Objective;
 import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
 import com.superduckinvaders.game.screen.WinScreen;
+import com.superduckinvaders.game.objective.SurviveObjective;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,17 +86,19 @@ public final class Round {
         int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
-
+/*
         // Determine where to spawn the objective.
         int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
         int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
 
+
         Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
         setObjective(new CollectObjective(this, objective));
-
+        */
+        setObjective (new SurviveObjective(this));
         entities = new ArrayList<Entity>(128);
         entities.add(player);
-        entities.add(objective);
+        //entities.add(objective);
 
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
@@ -222,7 +225,7 @@ public final class Round {
     public boolean isTileBlocked(int x, int y) {
         int tileX = x / getTileWidth();
         int tileY = y / getTileHeight();
-        
+
         return getCollisionLayer().getCell(tileX, tileY) != null || (getObstaclesLayer() != null && getObstaclesLayer().getCell(tileX, tileY) != null);
     }
 

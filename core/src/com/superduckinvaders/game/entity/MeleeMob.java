@@ -14,6 +14,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
 public class MeleeMob extends Mob {
+    public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
+        super(parent, x, y, health, textureSet, speed, ai);
+    }
     public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed) {
         super(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 0));
     }
@@ -22,7 +25,7 @@ public class MeleeMob extends Mob {
     public void onCollision(Entity other){
         if (other instanceof Player){
             Player player = (Player)other;
-            player.damage(1);
+            meleeAttack(player, 1);
             
             Vector2 knockback = player.getPosition().sub(getPosition()).setLength(30f);
             player.setVelocity(knockback);

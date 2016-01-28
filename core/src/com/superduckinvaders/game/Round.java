@@ -246,7 +246,7 @@ public final class Round {
     }
     
     private Mob spawnZombieMob(float x, float y){
-        return createMob(x, y, 100, Assets.badGuyNormal, 5);
+        return createMob(x, y, 3, Assets.badGuyNormal, 5);
     }
     
     /**
@@ -259,7 +259,7 @@ public final class Round {
      * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
      */
     public Mob createMob(float x, float y, int health, TextureSet textureSet, int speed) {
-        Mob mob = new MeleeMob(this, x, y, health, textureSet, speed);
+        Mob mob = new RangedMob(this, x, y, health, textureSet, speed);
         entities.add(mob);
         return mob;
     }

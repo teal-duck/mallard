@@ -248,10 +248,10 @@ public class Player extends Character {
 
                     // Face target when firing gun.
                     //facing = directionTo(target.x, target.y);
-                    fireAt(new Vector2(target.x, target.y), 30f, 100);
+                    fireAt(new Vector2(target.x, target.y), 1);
                 } else {
                     // TODO: tweak melee range
-                    melee(100, 100);
+                    //meleeAttack(some_mob, 1);
                 }
             }
         }

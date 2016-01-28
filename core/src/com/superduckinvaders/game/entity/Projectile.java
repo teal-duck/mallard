@@ -42,7 +42,8 @@ public class Projectile extends Entity {
         this.damage = damage;
         this.owner = owner;
         
-        createDynamicBody(PROJECTILE_BITS, (short) (WORLD_BITS | MOB_BITS), NO_GROUP, false);
+        // createDynamicBody(PROJECTILE_BITS, (short) (WORLD_BITS | MOB_BITS), NO_GROUP, false);
+        createDynamicBody(PROJECTILE_BITS, (short) ~owner.categoryBits, NO_GROUP, false);
         body.setBullet(true);
         setVelocity(velocity);
     }

@@ -5,6 +5,8 @@ import com.superduckinvaders.game.assets.TextureSet;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.math.Vector2;
 
+import java.lang.Math;
+
 /**
  * Represents a character in the game.
  */
@@ -30,7 +32,13 @@ public abstract class Character extends Entity {
      */
     private final Vector2 reference = new Vector2(0f, -1f);
     private final Vector2 bias = new Vector2(1.5f, 1);
-
+    
+    
+    public static float ATTACK_COOLDOWN=2f;
+    public float attackTimer;
+    
+    public float projectileSpeed = 20f;
+    
     /**
      * Initialises this Character.
      *
@@ -109,48 +117,33 @@ public abstract class Character extends Entity {
      * @param damage how much damage the projectile deals
      */
      
-    protected void fireAt(Vector2 target, float speed, int damage) {
+    // protected void fireAt(Vector2 target, float speed, int damage) {
+    protected void fireAt(Vector2 target, int damage) {
         Vector2 pos = getCentre();
-        
+        Vector2 velocity = new Vector2(target).sub(pos).setLength(projectileSpeed).add(getPhysicsVelocity());
+        velocity.setLength(Math.max(projectileSpeed, velocity.len()));
         parent.createProjectile(pos,
-                new Vector2(target).sub(pos).scl(speed).add(getVelocity()),
+                velocity,
                 damage, this);
     }
 
     /**
      * Causes this Character to use a melee attack.
      *
-     * @param range  how far the attack reaches in pixels
+     * @param other --
      * @param damage how much damage the attack deals
      */
-    protected void melee(float range, int damage) {
-        // Don't let mobs melee other mobs (for now).
-        if (this instanceof Mob) {
-            Player player = parent.getPlayer();
-
-            if (distanceTo(player.getX(), player.getY()) <= range && directionTo(player.getX(), player.getY()) == facing) {
-                player.damage(damage);
-            }
-        } else {
-            // Attack the closest Character within the range.
-            Character closest = null;
-
-            for (Entity entity : parent.getEntities()) {
-                // Disregard entity if it's me or it isn't a Character.
-                if (this == entity || !(entity instanceof Character)) {
-                    continue;
-                }
-
-                float x = entity.getX(), y = entity.getY();
-                if (distanceTo(x, y) <= range && directionTo(x, y) == facing && (closest == null || distanceTo(x, y) < distanceTo(closest.getX(), closest.getY()))) {
-                    closest = (Character) entity;
-                }
-            }
-
-            // Can't attack if nothing in range.
-            if (closest != null) {
-                closest.damage(damage);
-            }
+    protected void meleeAttack(Character other, int damage) {
+        if (attackTimer > ATTACK_COOLDOWN){
+            other.damage(damage);
+            attackTimer = 0f;
+        }
+    }
+    
+    protected void rangedAttack(Character other, int damage) {
+        if (attackTimer > ATTACK_COOLDOWN && !parent.rayCast(getCentre(), other.getCentre())){
+                attackTimer = 0f;
+                fireAt(other.getCentre(), damage);
         }
     }
 
@@ -161,7 +154,7 @@ public abstract class Character extends Entity {
      */
     @Override
     public void update(float delta) {
-        
+        attackTimer += delta;
         Vector2 velocity = getVelocity();
         
         if (!velocity.isZero()){

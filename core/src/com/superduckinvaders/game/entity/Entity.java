@@ -18,6 +18,8 @@ public abstract class Entity {
     public static final short ALL_BITS   = WORLD_BITS | PLAYER_BITS | MOB_BITS | PROJECTILE_BITS;
     public static final short NO_GROUP  = 0;
     public static final short MOB_GROUP  = -1;
+    
+    public short categoryBits = PLAYER_BITS;
 
     /**
      * The round that this Entity is in.
@@ -145,6 +147,10 @@ public abstract class Entity {
     
     public Vector2 getVelocity() {
         return body.getLinearVelocity().scl(PIXELS_PER_METRE);
+    }
+    
+    public Vector2 getPhysicsVelocity() {
+        return body.getLinearVelocity();
     }
     
     public void setVelocity(Vector2 targetVelocity) {

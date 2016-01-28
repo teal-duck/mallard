@@ -43,6 +43,8 @@ public class Mob extends Character {
         this.speed = speed;
         this.ai = ai;
         
+        this.categoryBits = MOB_BITS;
+        
         createDynamicBody(MOB_BITS, ALL_BITS, MOB_GROUP, false);
         this.body.setLinearDamping(20f);
     }

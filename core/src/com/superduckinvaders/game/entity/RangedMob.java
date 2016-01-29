@@ -22,7 +22,7 @@ public class RangedMob extends MeleeMob {
         super(parent, x, y, health, textureSet, speed, ai);
     }
     public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed) {
-        super(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 20));
+        super(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 200));
     }
     
     @Override

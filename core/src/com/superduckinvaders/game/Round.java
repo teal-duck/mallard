@@ -64,6 +64,7 @@ public final class Round {
     
     public World world;
     Mob debugMob;
+    ArrayList<Obstacle> obstacleEntities;
 
     /**
      * Initialises a new Round with the specified map.
@@ -105,12 +106,19 @@ public final class Round {
         float tw = collision.getTileWidth();
         float th = collision.getTileHeight();
         
-        for (int x = 0 ; x<collision.getWidth() ; x++){
-            for (int y = 0 ; y<collision.getHeight() ; y++){
-                if (null != collision.getCell(x, y)){
-                    float tileX = x*tw;
-                    float tileY = y*th;
-                    new Obstacle(this, tileX, tileY, tw, th);
+        obstacleEntities = new ArrayList<Obstacle>();
+        
+        TiledMapTileLayer[] layers = {collision, obstaclesLayer};
+        
+        for (TiledMapTileLayer layer : layers){
+            
+            for (int x = 0 ; x<layer.getWidth() ; x++){
+                for (int y = 0 ; y<layer.getHeight() ; y++){
+                    if (null != layer.getCell(x, y)){
+                        float tileX = x*tw;
+                        float tileY = y*th;
+                        obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
+                    }
                 }
             }
         }

@@ -13,7 +13,7 @@ public class CollectItem extends Item {
     }
     
     @Override
-    public void onCollision(Entity other){
+    public void onCollision(PhysicsEntity other){
         if (other instanceof Player) {
             removed = true;
         }

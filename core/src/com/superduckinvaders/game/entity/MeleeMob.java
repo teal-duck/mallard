@@ -22,7 +22,7 @@ public class MeleeMob extends Mob {
     }
     
     @Override
-    public void onCollision(Entity other){
+    public void onCollision(PhysicsEntity other){
         if (other instanceof Player){
             Player player = (Player)other;
             meleeAttack(player, 1);

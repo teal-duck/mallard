@@ -26,7 +26,7 @@ public class Powerup extends Item {
     }
     
     @Override
-    public void onCollision(Entity other){
+    public void onCollision(PhysicsEntity other){
         if (other instanceof Player) {
             ((Player)other).setPowerup(powerup, time);
             removed = true;

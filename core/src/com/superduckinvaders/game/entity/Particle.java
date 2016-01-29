@@ -7,7 +7,7 @@ import com.superduckinvaders.game.Round;
 /**
  * Represents a particle effect using an Animation.
  */
-public class Particle extends Entity {
+public class Particle extends PhysicsEntity {
 
     /**
      * How long this Particle will remain on the screen.

@@ -82,11 +82,6 @@ public class Mob extends Character {
         return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionHeight();
     }
     
-    
-    @Override
-    public void onCollision(Entity other){
-    }
-    
     /**
      * change where the given mob moves to according to its speed and a new direction vector
      * @param dirX x component of the direction vector

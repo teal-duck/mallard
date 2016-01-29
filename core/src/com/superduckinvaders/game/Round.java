@@ -83,9 +83,9 @@ public final class Round {
             public void beginContact(Contact contact) {
                 Object a = contact.getFixtureA().getBody().getUserData();
                 Object b = contact.getFixtureB().getBody().getUserData();
-                if (a instanceof Entity && b instanceof Entity){
-                    Entity ea = (Entity)a;
-                    Entity eb = (Entity)b;
+                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
+                    PhysicsEntity ea = (PhysicsEntity)a;
+                    PhysicsEntity eb = (PhysicsEntity)b;
                     ea.onCollision(eb);
                     eb.onCollision(ea);
                 }
@@ -179,27 +179,27 @@ public final class Round {
         return collidePoint(new Vector2(x, y));
     }
     public boolean collidePoint(Vector2 p) {
-        p.scl(Entity.METRES_PER_PIXEL);
+        p.scl(PhysicsEntity.METRES_PER_PIXEL);
         Query q = new QueryPoint(world, p);
         return q.query();
     }
     
     public boolean collideArea(Vector2 pos, Vector2 size) {
-        pos.scl(Entity.METRES_PER_PIXEL);
-        size.scl(Entity.METRES_PER_PIXEL);
+        pos.scl(PhysicsEntity.METRES_PER_PIXEL);
+        size.scl(PhysicsEntity.METRES_PER_PIXEL);
         Query q = new QueryArea(world, pos, size);
         return q.query();
     }
     
     public boolean rayCast(Vector2 pos1, Vector2 pos2){
-        return rayCast(pos1, pos2, Entity.WORLD_BITS);
+        return rayCast(pos1, pos2, PhysicsEntity.WORLD_BITS);
     }
     public boolean rayCast(Vector2 pos1, Vector2 pos2, short maskBits){
         RayCastCB r = new RayCastCB(maskBits);
         //new vectors as they may be modified
         world.rayCast(r,
-                new Vector2(pos1).scl(Entity.METRES_PER_PIXEL),
-                new Vector2(pos2).scl(Entity.METRES_PER_PIXEL));
+                new Vector2(pos1).scl(PhysicsEntity.METRES_PER_PIXEL),
+                new Vector2(pos2).scl(PhysicsEntity.METRES_PER_PIXEL));
         return r.collidesEnvironment;
     }
     
@@ -426,7 +426,7 @@ public final class Round {
      * @param damage          how much damage the projectile deals
      * @param owner           the owner of the projectile (i.e. the one who fired it)
      */
-    public void createProjectile(Vector2 pos, Vector2 velocity,  int damage, Entity owner) {
+    public void createProjectile(Vector2 pos, Vector2 velocity,  int damage, PhysicsEntity owner) {
         entities.add(new Projectile(this, pos, velocity, damage, owner));
     }
 
@@ -489,9 +489,7 @@ public final class Round {
                 if (entity instanceof Mob && ((Mob) entity).isDead()) {
                     player.addScore((int) (10 * (player.getPowerup() == Player.Powerup.SCORE_MULTIPLIER ? Player.PLAYER_SCORE_MULTIPLIER : 1)));
                 }
-                if (entity.body != null) {
-                    world.destroyBody(entity.body);
-                }
+                entity.dispose();
                 entities.remove(i);
             } else if (entity.distanceTo(player.getX(), player.getY()) < UPDATE_DISTANCE){
                 // Don't bother updating entities that aren't on screen.
@@ -525,7 +523,7 @@ public final class Round {
         }
         
         public boolean reportFixture(Fixture fixture){
-            if (fixture.testPoint(p)) { // if ((fixture.getFilterData().categoryBits | Entity.WORLD_BITS) != 0 && 
+            if (fixture.testPoint(p)) { // if ((fixture.getFilterData().categoryBits | PhysicsEntity.WORLD_BITS) != 0 && 
                 result = true; // we collided
                 return false; // ends the query
             }

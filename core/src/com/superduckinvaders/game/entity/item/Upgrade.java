@@ -22,7 +22,7 @@ public class Upgrade extends Item {
     
     
     @Override
-    public void onCollision(Entity other){
+    public void onCollision(PhysicsEntity other){
         if (other instanceof Player) {
             ((Player)other).setUpgrade(upgrade);
             removed = true;

@@ -9,12 +9,12 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * Represents a projectile.
  */
-public class Projectile extends Entity {
+public class Projectile extends PhysicsEntity {
 
     /**
      * The owner of this Projectile (i.e. the Entity that fired it).
      */
-    private Entity owner;
+    private PhysicsEntity owner;
 
     /**
      * How much damage this Projectile does to what it hits.
@@ -33,7 +33,7 @@ public class Projectile extends Entity {
      * @param damage  how much damage the projectile deals
      * @param owner   the owner of the projectile (i.e. the one who fired it)
      */
-    public Projectile(Round parent, Vector2 pos, Vector2 velocity, int damage, Entity owner) {
+    public Projectile(Round parent, Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
         super(parent, pos);
         
         this.width = Assets.projectile.getRegionWidth();
@@ -49,7 +49,7 @@ public class Projectile extends Entity {
     }
     
     @Override
-    public void onCollision(Entity other){
+    public void onCollision(PhysicsEntity other){
         //parent.createParticle(x, y, 0.6f, Assets.explosionAnimation);
         removed = true;
         if (other instanceof Character && other != owner) {

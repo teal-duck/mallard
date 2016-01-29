@@ -10,8 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.entity.Entity;
-import com.superduckinvaders.game.entity.Player;
+import com.superduckinvaders.game.entity.*;
 
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -131,7 +130,7 @@ public class GameScreen extends BaseScreen {
         
         spriteBatch.end();
         
-        debugMatrix=new Matrix4(camera.combined.scl(Entity.PIXELS_PER_METRE));
+        debugMatrix=new Matrix4(camera.combined.scl(PhysicsEntity.PIXELS_PER_METRE));
         debugRenderer.render(round.world, debugMatrix);
         
 

@@ -10,7 +10,7 @@ import java.lang.Math;
 /**
  * Represents a character in the game.
  */
-public abstract class Character extends Entity {
+public abstract class Character extends PhysicsEntity {
 
     /**
      * The direction the Character is facing.

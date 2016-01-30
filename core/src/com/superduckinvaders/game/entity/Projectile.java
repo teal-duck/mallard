@@ -50,7 +50,7 @@ public class Projectile extends PhysicsEntity {
     
     @Override
     public void onCollision(PhysicsEntity other){
-        //parent.createParticle(x, y, 0.6f, Assets.explosionAnimation);
+        parent.createParticle(getCentre(), 0.6f, Assets.explosionAnimation);
         removed = true;
         if (other instanceof Character && other != owner) {
             ((Character) other).damage(damage);

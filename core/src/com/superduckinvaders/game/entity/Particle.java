@@ -7,12 +7,12 @@ import com.superduckinvaders.game.Round;
 /**
  * Represents a particle effect using an Animation.
  */
-public class Particle extends PhysicsEntity {
+public class Particle extends Entity {
 
     /**
      * How long this Particle will remain on the screen.
      */
-    private float initialDuration, duration;
+    private float elapsed, duration;
 
     /**
      * The animation to use for this Particle.
@@ -31,7 +31,8 @@ public class Particle extends PhysicsEntity {
     public Particle(Round parent, float x, float y, float duration, Animation animation) {
         super(parent, x, y);
 
-        this.initialDuration = this.duration = duration;
+        this.duration = duration;
+        this.elapsed = 0f;
         this.animation = animation;
     }
 
@@ -42,10 +43,8 @@ public class Particle extends PhysicsEntity {
      */
     @Override
     public void update(float delta) {
-        // Do not call super() as particles don't move or collide.
-        duration -= delta;
-
-        if (duration <= 0) {
+        elapsed += delta;
+        if (elapsed > duration) {
             removed = true;
         }
     }
@@ -73,6 +72,6 @@ public class Particle extends PhysicsEntity {
      */
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(animation.getKeyFrame((float) (initialDuration - duration)), getX(), getY());
+        spriteBatch.draw(animation.getKeyFrame(elapsed), getX(), getY());
     }
 }

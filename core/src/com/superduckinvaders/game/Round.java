@@ -438,6 +438,9 @@ public final class Round {
      * @param duration  how long the particle effect should last for
      * @param animation the animation to use for the particle effect
      */
+    public void createParticle(Vector2 position, float duration, Animation animation) {
+        createParticle(position.x, position.y, duration, animation);
+    }
     public void createParticle(float x, float y, float duration, Animation animation) {
         entities.add(new Particle(this, x - animation.getKeyFrame(0).getRegionWidth() / 2, y - animation.getKeyFrame(0).getRegionHeight() / 2, duration, animation));
     }

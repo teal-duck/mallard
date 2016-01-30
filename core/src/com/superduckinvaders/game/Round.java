@@ -10,9 +10,7 @@ import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.*;
-import com.superduckinvaders.game.entity.item.Item;
-import com.superduckinvaders.game.entity.item.Powerup;
-import com.superduckinvaders.game.entity.item.Upgrade;
+import com.superduckinvaders.game.entity.item.*;
 import com.superduckinvaders.game.objective.CollectObjective;
 import com.superduckinvaders.game.objective.Objective;
 
@@ -128,7 +126,7 @@ public final class Round {
         int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
         int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
 
-        Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
+        CollectItem objective = new CollectItem(this, objectiveX, objectiveY);
         setObjective(new CollectObjective(this, objective));
 
         entities = new ArrayList<Entity>(128);
@@ -202,28 +200,29 @@ public final class Round {
         
         float width  = entity.getWidth();
         float height = entity.getHeight();
-        Vector2 corner = new Vector2(width/2, height/2);
+        Vector2[] corners = {new Vector2( width/2,  height/2),
+                             new Vector2(-width/2,  height/2),
+                             new Vector2(-width/2, -height/2),
+                             new Vector2( width/2, -height/2)
+                         };
         
         Vector2 direction = new Vector2(target).sub(pos).nor();
         Vector2 perp = direction.rotate90(0); //modifies direction
         
-        float min = 0;
-        float max = 99999;
+        float max = 0;
         
-        for (int i = 0; i < 4; i++){
-            float dist = new Vector2(corner).dot(perp);
-            min = Math.min(min, dist);
+        for (Vector2 corner : corners){
+            float dist = corner.dot(perp);
             max = Math.max(max, dist);
-            corner.rotate90(0);
         }
         
-        Vector2 offset1 = new Vector2(perp).scl(min);
-        Vector2 offset2 = new Vector2(perp).scl(max);
+        Vector2 offset1 = new Vector2(perp).scl(max);
+        Vector2 offset2 = new Vector2(perp).scl(-max);
         
-        return rayCast(new Vector2(offset1).add(pos),
+        return !(rayCast(new Vector2(offset1).add(pos),
                     new Vector2(offset1).add(target)) ||
                rayCast(new Vector2(offset2).add(pos),
-                    new Vector2(offset2).add(target));
+                    new Vector2(offset2).add(target)));
         
         
         
@@ -562,8 +561,8 @@ public final class Round {
         }
         @Override
         public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction){
-            //if (!(fixture.getUserData() instanceof Player)){
-            if ((fixture.getFilterData().categoryBits & maskBits) != 0){
+            //if (){
+            if ((fixture.getFilterData().categoryBits & maskBits) != 0 && !(fixture.getUserData() instanceof Character)){
                 this.collidesEnvironment = true;
                 this.fraction = fraction;
                 return 0f;

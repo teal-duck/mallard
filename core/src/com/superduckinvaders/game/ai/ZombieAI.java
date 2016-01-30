@@ -30,7 +30,7 @@ public class ZombieAI extends AI {
     /**
      * How often to update the AI.
      */
-    public final static float PATHFINDING_RATE = (float) 2f;
+    public final static float PATHFINDING_RATE = (float) 0.4f;
     /**
      * The random offset to be added or taken from the base pathfinding rate.
      */
@@ -83,7 +83,9 @@ public class ZombieAI extends AI {
     }
     
     public void applyVelocity(Mob mob){
-        
+        if (targetPoint == null) {
+            return;
+        }
         Vector2 dst = new Vector2(targetPoint);
         Vector2 velocity = dst.sub(mob.getCentre())
                                .nor().scl(mob.getSpeed());
@@ -134,16 +136,16 @@ public class ZombieAI extends AI {
         Coordinate finalCoord = roundToTile(playerPos);
         boolean finalFound = false;
         
-        if (!round.isClearTo(mob, playerPos)){
+        if (round.isClearTo(mob, playerPos)){
             currentOffset = deltaOffsetLimit;
-            return finalCoord;
+            return new Coordinate(playerPos);
         }
         
 
         PriorityQueue<Coordinate> fringe = new PriorityQueue<Coordinate>();
         HashMap<Coordinate, SearchNode> visitedStates = new HashMap<Coordinate, SearchNode>();
         fringe.add(startCoord);
-        visitedStates.put(startCoord, new SearchNode(null, 0));
+        visitedStates.put(startCoord, new SearchNode(null, startCoord, 0));
 
         while (!fringe.isEmpty()) {
 
@@ -165,14 +167,14 @@ public class ZombieAI extends AI {
                 boolean isEmpty = !round.collidePoint(currentPerm.x, currentPerm.y);
                 // if (currentPerm.inSameTile(finalCoord) || !round.rayCast(new Vector2(currentPerm.x, currentPerm.y), playerPos)) {
                 if (currentPerm.inSameTile(finalCoord)) {
-                    visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration + 1));
+                    visitedStates.put(currentPerm, new SearchNode(currentState, currentPerm, currentState.iteration + 1));
                     finalCoord = currentPerm;
                     finalFound = true;
                     break;
                 }
                 if (isEmpty && !visitedStates.containsKey(currentPerm)) {
                     fringe.add(currentPerm);
-                    visitedStates.put(currentPerm, new SearchNode(currentState, currentState.iteration + 1));
+                    visitedStates.put(currentPerm, new SearchNode(currentState, currentPerm, currentState.iteration + 1));
                 }
             }
             if (finalFound) break;
@@ -190,21 +192,24 @@ public class ZombieAI extends AI {
                 }
                 path.add(pred);
             }
-            switch (path.size()) {
-                case 1:
-                    resultNode = path.get(path.size() - 1);
+            int index = path.size();
+            while (index > 0) {
+                SearchNode tempNode = path.get(index-1);
+                if(!round.isClearTo(mob, tempNode.coord.vector())){
                     break;
-                default:
-                    resultNode = path.get(path.size() - 2);
-                    break;
+                }
+                index--;
             }
-            //for loop below will terminate after at most 4 iterations
-            for (Coordinate key : visitedStates.keySet()) {
-                if (visitedStates.get(key) == resultNode)
-                    return key;
-            }
+            resultNode = path.get(index);
+            
+            //for loop below will terminate after at most 4 iterations -- why?
+            //for (Coordinate key : visitedStates.keySet()) {
+                //if (visitedStates.get(key) == resultNode)
+                    //return key;
+            //}
+            return resultNode.coord;
         }
-        return startCoord;
+        //return startCoord;
     }
     
     public Coordinate roundToTile(Vector2 pos){
@@ -236,6 +241,10 @@ public class ZombieAI extends AI {
          * @param x the x coordinate
          * @param y the y coordinate
          */
+        public Coordinate(Vector2 point) {
+            this(point.x, point.y);
+            
+        }
         public Coordinate(float x, float y) {
             this((int)x, (int)y);
         }
@@ -316,6 +325,7 @@ public class ZombieAI extends AI {
          * The predecessor node in the search tree.
          */
         public SearchNode predecessor;
+        public Coordinate coord;
         /**
          * The iteration this node is a part of.
          */
@@ -327,8 +337,9 @@ public class ZombieAI extends AI {
          * @param predecessor the predecessor node
          * @param iteration   the iteration of this node
          */
-        public SearchNode(SearchNode predecessor, int iteration) {
+        public SearchNode(SearchNode predecessor, Coordinate coord, int iteration) {
             this.predecessor = predecessor;
+            this.coord = coord;
             this.iteration = iteration;
         }
     }

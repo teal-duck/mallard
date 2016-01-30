@@ -80,6 +80,10 @@ public class Mob extends Character {
     }
     
     
+    @Override
+    public void onCollision(Entity other){
+    }
+    
     /**
      * change where the given mob moves to according to its speed and a new direction vector
      * @param dirX x component of the direction vector

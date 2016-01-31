@@ -245,11 +245,12 @@ public final class Round {
      * @param maxY the maximum y distance from the player to spawn the mobs
      */
     private void spawnRandomMobs(int amount, int minX, int minY, int maxX, int maxY) {
-        for (int i = amount; i < amount; i++) {
+        for (int i = 0; i < amount;) {
             int x = MathUtils.random(0, getMapWidth());
             int y = MathUtils.random(0, getMapHeight());
             if (!collidePoint(x, y))
                 spawnZombieMob(getPlayer().getX() + x, getPlayer().getY() + y);
+                i++;
         }
     }
     
@@ -575,9 +576,6 @@ public final class Round {
                 this.collidesEnvironment = true;
                 this.fraction = fraction;
                 return fraction;
-            }
-            else {
-                
             }
             /* this reduces the length of the ray to the currently found intersection
              * this is done because fixtures are not necessarily reported in

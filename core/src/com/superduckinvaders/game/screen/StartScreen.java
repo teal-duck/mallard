@@ -20,21 +20,16 @@ import com.superduckinvaders.game.assets.Assets;
 public class StartScreen extends BaseScreen {
 
     /**
-     * The DuckGame this StartScreen belongs to.
-     */
-    private DuckGame parent;
-
-    /**
      * Stage for containing the button.
      */
     private Stage stage;
 
     /**
      * Initialises this StartScreen.
-     * @param parent the game the screen is associated with
+     * @param game the game the screen is associated with
      */
-    public StartScreen(DuckGame parent) {
-        this.parent = parent;
+    public StartScreen(DuckGame game) {
+        super(game);
     }
 
     /**
@@ -55,7 +50,7 @@ public class StartScreen extends BaseScreen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.setScreen(new GameScreen(new Round(parent, Assets.levelOneMap)));
+                getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), Assets.levelOneMap)));
             }
         });
 
@@ -77,38 +72,8 @@ public class StartScreen extends BaseScreen {
      */
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        super.render(delta);
         stage.draw();
-    }
-
-    /**
-     * Not used since the game window cannot be resized.
-     */
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void pause() {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void resume() {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void hide() {
     }
 
     /**
@@ -116,5 +81,7 @@ public class StartScreen extends BaseScreen {
      */
     @Override
     public void dispose() {
+        Gdx.input.setInputProcessor(null);
+        stage.dispose();
     }
 }

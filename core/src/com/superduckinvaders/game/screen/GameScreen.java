@@ -46,12 +46,14 @@ public class GameScreen extends BaseScreen {
     /**
      * Initialises this GameScreen for the specified round.
      *
+     * @param game  the main game class
      * @param round the round to be displayed
      */
-    public GameScreen(Round round) {
+    public GameScreen(DuckGame game, Round round) {
+        super(game);
         round.gameScreen = this;
         this.round = round;
-        debugRenderer=new Box2DDebugRenderer();
+        debugRenderer = new Box2DDebugRenderer();
     }
 
     /**
@@ -77,14 +79,11 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(null);
-
         camera = new OrthographicCamera(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT);
         camera.zoom -= 0.5;
 
         spriteBatch = new SpriteBatch();
-        uiBatch = new SpriteBatch();
-
+        uiBatch     = new SpriteBatch();
         mapRenderer = new OrthogonalTiledMapRenderer(round.getMap(), spriteBatch);
     }
 
@@ -95,55 +94,72 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void render(float delta) {
-        
-        round.update(delta);
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        super.render(delta);
+        round.update(delta);  // TODO(avinash): If round calls dispose, stop here.
 
         // Centre the camera on the player.
-        camera.position.set(round.getPlayer().getX() + round.getPlayer().getWidth() / 2, round.getPlayer().getY() + round.getPlayer().getHeight() / 2, 0);
+        camera.position.set(
+                round.getPlayer().getX() + round.getPlayer().getWidth() / 2,
+                round.getPlayer().getY() + round.getPlayer().getHeight() / 2,
+                0
+        );
         camera.update();
-        
         spriteBatch.setProjectionMatrix(camera.combined);
-        spriteBatch.begin();
 
+        spriteBatch.begin();
+        this.drawGame();
+        spriteBatch.end();
+
+        this.drawDebug();
+
+        uiBatch.begin();
+        this.drawUI();
+        uiBatch.end();
+    }
+
+    /**
+     * Draw the game level.
+     */
+    private void drawGame() {
         // Render base and collision layers.
         mapRenderer.setView(camera);
-        
         mapRenderer.renderTileLayer(round.getBaseLayer());
         mapRenderer.renderTileLayer(round.getCollisionLayer());
 
         // Render randomly-chosen obstacles layer.
-        if (round.getObstaclesLayer() != null) {
+        if (round.getObstaclesLayer() != null)
             mapRenderer.renderTileLayer(round.getObstaclesLayer());
-        }
 
         // Draw all entities.
-        for (Entity entity : round.getEntities()) {
+        for (Entity entity : round.getEntities())
             entity.render(spriteBatch);
-        }
 
         // Render overhang layer (draws over the player).
-        if (round.getOverhangLayer() != null) {
+        if (round.getOverhangLayer() != null)
             mapRenderer.renderTileLayer(round.getOverhangLayer());
-        }
-        
-        spriteBatch.end();
-        
-        debugMatrix=new Matrix4(camera.combined.scl(PhysicsEntity.PIXELS_PER_METRE));
-        debugRenderer.render(round.world, debugMatrix);
-        
+    }
 
-        uiBatch.begin();
-        // TODO: finish UI
+    /**
+     * Draws a debug layer with helpful collision squares and stuff.
+     */
+    private void drawDebug() {
+        debugMatrix = camera.combined.cpy().scl(PhysicsEntity.PIXELS_PER_METRE);
+        debugRenderer.render(round.world, debugMatrix);
+    }
+
+    /**
+     * Draw the static UI.
+     * TODO(mallard): Finish UI.
+     * TODO(avinash): Use Stage2D, like we are for the static screens?
+     */
+    private void drawUI() {
         Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         Assets.font.draw(uiBatch, "Objective: " + round.getObjective().getObjectiveString(), 10, 710);
         Assets.font.draw(uiBatch, "Score: " + round.getPlayer().getScore(), 10, 680);
         Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 650);
 
         // Draw stamina bar (for flight);
-		uiBatch.draw(Assets.staminaEmpty, 1080, 10);
+        uiBatch.draw(Assets.staminaEmpty, 1080, 10);
         if (round.getPlayer().getFlyingTimer() > 0) {
             float remainingFlight = round.getPlayer().getFlyingTimer();
             float barFraction = Math.min(1,  (remainingFlight / Player.PLAYER_FLIGHT_TIME));
@@ -151,54 +167,21 @@ public class GameScreen extends BaseScreen {
         } else {
             Assets.staminaFull.setRegionWidth(0);
         }
-		uiBatch.draw(Assets.staminaFull, 1080, 10);
+        uiBatch.draw(Assets.staminaFull, 1080, 10);
 
         // Draw powerup bar.
-		uiBatch.draw(Assets.powerupEmpty, 1080, 50);
+        uiBatch.draw(Assets.powerupEmpty, 1080, 50);
         Assets.powerupFull.setRegionWidth((int) Math.max(0, round.getPlayer().getPowerupTime() / round.getPlayer().getPowerupInitialTime() * 192));
         uiBatch.draw(Assets.powerupFull, 1080, 50);
 
-        int x = 0;
-        while(x < round.getPlayer().getMaximumHealth()) {
-        	if(x+2 <= round.getPlayer().getCurrentHealth())
-        		uiBatch.draw(Assets.heartFull, x * 18 + 10, 10);
-        	else if(x+1 <= round.getPlayer().getCurrentHealth())
-        		uiBatch.draw(Assets.heartHalf, x * 18 + 10, 10);
-        	else
-        		uiBatch.draw(Assets.heartEmpty, x * 18 + 10, 10);
-        	x += 2;
+        for (int x = 0; x < round.getPlayer().getMaximumHealth(); x += 2) {
+            if(x+2 <= round.getPlayer().getCurrentHealth())
+                uiBatch.draw(Assets.heartFull, x * 18 + 10, 10);
+            else if(x+1 <= round.getPlayer().getCurrentHealth())
+                uiBatch.draw(Assets.heartHalf, x * 18 + 10, 10);
+            else
+                uiBatch.draw(Assets.heartEmpty, x * 18 + 10, 10);
         }
-
-        uiBatch.end();
-    }
-
-    /**
-     * Not used since the game window cannot be resized.
-     */
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void pause() {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void resume() {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void hide() {
-
     }
 
     /**
@@ -206,9 +189,10 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void dispose() {
+        Gdx.input.setInputProcessor(null);
+        debugRenderer.dispose();
         mapRenderer.dispose();
         spriteBatch.dispose();
         uiBatch.dispose();
     }
-
 }

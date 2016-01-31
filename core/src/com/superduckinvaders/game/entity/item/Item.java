@@ -3,9 +3,9 @@ package com.superduckinvaders.game.entity.item;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.Entity;
+import com.superduckinvaders.game.entity.PhysicsEntity;
 
-public class Item extends Entity {
+public class Item extends PhysicsEntity {
 
     /**
      * The texture for this Item.
@@ -13,19 +13,19 @@ public class Item extends Entity {
     protected TextureRegion texture;
 
     // TODO: finish me
-    public Item(Round parent, double x, double y, TextureRegion texture) {
+    public Item(Round parent, float x, float y, TextureRegion texture) {
         super(parent, x, y);
-
         this.texture = texture;
+        createStaticBody(WORLD_BITS, PLAYER_BITS, NO_GROUP, true);
     }
 
     @Override
-    public int getWidth() {
+    public float getWidth() {
         return texture.getRegionWidth();
     }
 
     @Override
-    public int getHeight() {
+    public float getHeight() {
         return texture.getRegionHeight();
     }
 
@@ -36,7 +36,7 @@ public class Item extends Entity {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(texture, (int) x, (int) y);
+        spriteBatch.draw(texture, getX(), getY());
     }
 
 }

@@ -2,10 +2,13 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.ai.DummyAI;
+import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.TextureSet;
 
 public class Mob extends Character {
@@ -28,14 +31,21 @@ public class Mob extends Character {
     /**
      * speed of the mob in pixels per second
      */
-    private int speed;
+    private float speed;
+    
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-    public Mob(Round parent, double x, double y, int health, TextureSet textureSet, int speed, AI ai) {
+    public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
         super(parent, x, y, health);
 
         this.textureSet = textureSet;
         this.speed = speed;
         this.ai = ai;
+        
+        this.categoryBits = MOB_BITS;
+        
+        createDynamicBody(MOB_BITS, ALL_BITS, MOB_GROUP, false);
+        this.body.setLinearDamping(20f);
     }
 
     public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {
@@ -49,13 +59,26 @@ public class Mob extends Character {
     public void setAI(AI ai) {
         this.ai = ai;
     }
-
+    
     /**
      * Sets the speed of the mob
      * @param newSpeed the updated speed
      */
-    public void setSpeed(int newSpeed){
-        this.speed = newSpeed;
+    public void setSpeed(float speed){
+        this.speed = speed;
+    }
+    public float getSpeed(){
+        return this.speed;
+    }
+    
+    @Override
+    public float getWidth() {
+        return textureSet.getHeight();
+    }
+
+    @Override
+    public float getHeight() {
+        return textureSet.getHeight();
     }
     
     /**
@@ -63,27 +86,6 @@ public class Mob extends Character {
      * @param dirX x component of the direction vector
      * @param dirY y component of the direction vector
      */
-    public void setVelocity(int dirX, int dirY){
-    	if(dirX == 0 && dirY==0){
-    		velocityX=0;
-    		velocityY=0;
-    		return;
-    	}
-    	double magnitude = Math.sqrt(dirX*dirX + dirY*dirY);
-    	velocityX = (dirX*speed)/magnitude;
-    	velocityY = (dirY*speed)/magnitude;
-
-    }
-    
-    @Override
-    public int getWidth() {
-        return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionHeight();
-    }
 
     @Override
     public void update(float delta) {
@@ -105,7 +107,7 @@ public class Mob extends Character {
             }
 
             if (powerup != null) {
-                parent.createPowerup(x, y, powerup, 10);
+                parent.createPowerup(getX(), getY(), powerup, 10);
             }
         }
 
@@ -114,6 +116,19 @@ public class Mob extends Character {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(textureSet.getTexture(facing, stateTime), (int) x, (int) y);
+        spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
+        
+        if (ai instanceof PathfindingAI) {
+            PathfindingAI.Coordinate coord = ((PathfindingAI)ai).target;
+            if (coord != null) {
+                spriteBatch.end();
+                shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                shapeRenderer.setColor(1, 1, 0, 1);
+                shapeRenderer.x(coord.vector(), 10);
+                shapeRenderer.end();
+                spriteBatch.begin();
+            }            
+        }
     }
 }

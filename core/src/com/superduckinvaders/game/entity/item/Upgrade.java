@@ -1,6 +1,7 @@
 package com.superduckinvaders.game.entity.item;
 
 import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.entity.PhysicsEntity;
 import com.superduckinvaders.game.entity.Player;
 
 /**
@@ -14,19 +15,22 @@ public class Upgrade extends Item {
     private Player.Upgrade upgrade;
 
 
-    public Upgrade(Round parent, double x, double y, Player.Upgrade upgrade) {
+    public Upgrade(Round parent, float x, float y, Player.Upgrade upgrade) {
         super(parent, x, y, Player.Upgrade.getTextureForUpgrade(upgrade));
 
         this.upgrade = upgrade;
     }
+    
+    
+    @Override
+    public void onCollision(PhysicsEntity other){
+        if (other instanceof Player) {
+            ((Player)other).setUpgrade(upgrade);
+            removed = true;
+        }
+    }
 
     @Override
     public void update(float delta) {
-        Player player = parent.getPlayer();
-
-        if (this.intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) {
-            player.setUpgrade(upgrade);
-            removed = true;
-        }
     }
 }

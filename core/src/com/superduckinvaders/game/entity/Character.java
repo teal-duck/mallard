@@ -1,17 +1,18 @@
 package com.superduckinvaders.game.entity;
 
+import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.TextureSet;
 
 /**
  * Represents a character in the game.
  */
-public abstract class Character extends Entity {
+public abstract class Character extends PhysicsEntity {
 
     /**
      * The direction the Character is facing.
      */
-    protected int facing = TextureSet.FACING_FRONT;
+    protected TextureSet.FaceDirection facing = TextureSet.FaceDirection.FRONT;
 
     /**
      * The state time for the animation. Set to 0 for not moving.
@@ -22,7 +23,28 @@ public abstract class Character extends Entity {
      * Current health and the maximum health of this Character.
      */
     protected int maximumHealth, currentHealth;
+    
+    /**
+     * For use when determining player movement direction
+     */
+    private final Vector2 reference = new Vector2(0f, -1f);
+    private final Vector2 bias = new Vector2(1.5f, 1);
 
+    /**
+     * The time to wait before the next attack.
+     */
+    public static float ATTACK_COOLDOWN = 2f;
+
+    /**
+     * An attack timer to maintain the cooldown.
+     */
+    private float attackTimer;
+
+    /**
+     * The speed of the launched projectiles.
+     */
+    public float projectileSpeed = 20f;
+    
     /**
      * Initialises this Character.
      *
@@ -31,17 +53,16 @@ public abstract class Character extends Entity {
      * @param y             the initial y coordinate
      * @param maximumHealth the maximum (and initial) health of this Character
      */
-    public Character(Round parent, double x, double y, int maximumHealth) {
+    public Character(Round parent, float x, float y, int maximumHealth) {
         super(parent, x, y);
-
         this.maximumHealth = this.currentHealth = maximumHealth;
     }
 
     /**
      * Gets the direction the character is facing
-     * @return the direction this Character is facing (one of the FACING_ constants in TextureSet)
+     * @return the direction this Character is facing
      */
-    public int getFacing() {
+    public TextureSet.FaceDirection getFacing() {
         return facing;
     }
 
@@ -96,49 +117,33 @@ public abstract class Character extends Entity {
     /**
      * Causes this Character to fire a projectile at the specified coordinates.
      *
-     * @param x      the target x coordinate
-     * @param y      the target y coordinate
-     * @param speed  how fast the projectile moves
+     * @param target the location of the target
      * @param damage how much damage the projectile deals
      */
-    protected void fireAt(double x, double y, int speed, int damage) {
-        parent.createProjectile(this.x + getWidth() / 2, this.y + getHeight() / 2, x, y, speed, velocityX, velocityY, damage, this);
+    protected void fireAt(Vector2 target, int damage) {
+        Vector2 pos = getCentre();
+        Vector2 velocity = target.cpy().sub(pos).setLength(projectileSpeed).add(getPhysicsVelocity());
+        velocity.setLength(Math.max(projectileSpeed, velocity.len()));
+        parent.createProjectile(pos, velocity, damage, this);
     }
 
     /**
      * Causes this Character to use a melee attack.
      *
-     * @param range  how far the attack reaches in pixels
+     * @param other  the other character, duh
      * @param damage how much damage the attack deals
      */
-    protected void melee(double range, int damage) {
-        // Don't let mobs melee other mobs (for now).
-        if (this instanceof Mob) {
-            Player player = parent.getPlayer();
-
-            if (distanceTo(player.getX(), player.getY()) <= range && directionTo(player.getX(), player.getY()) == facing) {
-                player.damage(damage);
-            }
-        } else {
-            // Attack the closest Character within the range.
-            Character closest = null;
-
-            for (Entity entity : parent.getEntities()) {
-                // Disregard entity if it's me or it isn't a Character.
-                if (this == entity || !(entity instanceof Character)) {
-                    continue;
-                }
-
-                double x = entity.getX(), y = entity.getY();
-                if (distanceTo(x, y) <= range && directionTo(x, y) == facing && (closest == null || distanceTo(x, y) < distanceTo(closest.getX(), closest.getY()))) {
-                    closest = (Character) entity;
-                }
-            }
-
-            // Can't attack if nothing in range.
-            if (closest != null) {
-                closest.damage(damage);
-            }
+    protected void meleeAttack(Character other, int damage) {
+        if (attackTimer > ATTACK_COOLDOWN){
+            other.damage(damage);
+            attackTimer = 0f;
+        }
+    }
+    
+    protected void rangedAttack(Character other, int damage) {
+        if (attackTimer > ATTACK_COOLDOWN && !parent.rayCast(getCentre(), other.getCentre())){
+                attackTimer = 0f;
+                fireAt(other.getCentre(), damage);
         }
     }
 
@@ -149,29 +154,39 @@ public abstract class Character extends Entity {
      */
     @Override
     public void update(float delta) {
-        // Update Character facing.
-        if (velocityX < 0) {
-            facing = TextureSet.FACING_LEFT;
-        } else if (velocityX > 0) {
-            facing = TextureSet.FACING_RIGHT;
-        }
-
-        if (velocityY < 0) {
-            facing = TextureSet.FACING_FRONT;
-        } else if (velocityY > 0) {
-            facing = TextureSet.FACING_BACK;
+        attackTimer += delta;
+        Vector2 velocity = getVelocity();
+        
+        if (!velocity.isZero()){
+            float angle = velocity.scl(bias).angle(reference);
+            int index = (2 + (int)Math.rint(angle/90f)) % 4;
+            
+            // Update Character facing.
+            switch (index) {
+                case 0:
+                    facing = TextureSet.FaceDirection.BACK;
+                    break;
+                case 1:
+                    facing = TextureSet.FaceDirection.RIGHT;
+                    break;
+                case 2:
+                    facing = TextureSet.FaceDirection.FRONT;
+                    break;
+                case 3:
+                    facing = TextureSet.FaceDirection.LEFT;
+                    break;
+            }
+            
         }
 
         // Update animation state time.
-        if (velocityX != 0 || velocityY != 0) {
-            stateTime += delta;
-        } else {
+        if (velocity.isZero()) {
             stateTime = 0;
+        } else {
+            stateTime += delta;
         }
 
-        if (isDead()) {
-            removed = true;
-        }
+        if (isDead()) removed = true;
 
         super.update(delta);
     }

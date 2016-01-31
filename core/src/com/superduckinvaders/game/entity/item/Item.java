@@ -3,10 +3,7 @@ package com.superduckinvaders.game.entity.item;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.*;
-
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.math.Vector2;
+import com.superduckinvaders.game.entity.PhysicsEntity;
 
 public class Item extends PhysicsEntity {
 

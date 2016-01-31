@@ -1,23 +1,20 @@
 package com.superduckinvaders.game.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.assets.TextureSet;
-
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
+import com.superduckinvaders.game.Round;
 
 /**
  * Represents an object in the game.
  */
 public abstract class PhysicsEntity extends Entity {
-    public static final short WORLD_BITS = 0x1;
-    public static final short PLAYER_BITS   = 0x2;
-    public static final short MOB_BITS   = 0x4;
-    public static final short PROJECTILE_BITS   = 0x8;
-    public static final short ALL_BITS   = WORLD_BITS | PLAYER_BITS | MOB_BITS | PROJECTILE_BITS;
-    public static final short NO_GROUP  = 0;
-    public static final short MOB_GROUP  = -1;
+    public static final short WORLD_BITS       = 0x1;
+    public static final short PLAYER_BITS      = 0x2;
+    public static final short MOB_BITS         = 0x4;
+    public static final short PROJECTILE_BITS  = 0x8;
+    public static final short ALL_BITS         = WORLD_BITS | PLAYER_BITS | MOB_BITS | PROJECTILE_BITS;
+    public static final short NO_GROUP         = 0;
+    public static final short MOB_GROUP        = -1;
     
     public short categoryBits = PLAYER_BITS;
 

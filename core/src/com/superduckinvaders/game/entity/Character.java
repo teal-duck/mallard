@@ -1,11 +1,8 @@
 package com.superduckinvaders.game.entity;
 
+import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.TextureSet;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.math.Vector2;
-
-import java.lang.Math;
 
 /**
  * Represents a character in the game.
@@ -15,7 +12,7 @@ public abstract class Character extends PhysicsEntity {
     /**
      * The direction the Character is facing.
      */
-    protected int facing = TextureSet.FACING_FRONT;
+    protected TextureSet.FaceDirection facing = TextureSet.FaceDirection.FRONT;
 
     /**
      * The state time for the animation. Set to 0 for not moving.
@@ -28,15 +25,24 @@ public abstract class Character extends PhysicsEntity {
     protected int maximumHealth, currentHealth;
     
     /**
-     * for use when determining player movement direction
+     * For use when determining player movement direction
      */
     private final Vector2 reference = new Vector2(0f, -1f);
     private final Vector2 bias = new Vector2(1.5f, 1);
-    
-    
-    public static float ATTACK_COOLDOWN=2f;
-    public float attackTimer;
-    
+
+    /**
+     * The time to wait before the next attack.
+     */
+    public static float ATTACK_COOLDOWN = 2f;
+
+    /**
+     * An attack timer to maintain the cooldown.
+     */
+    private float attackTimer;
+
+    /**
+     * The speed of the launched projectiles.
+     */
     public float projectileSpeed = 20f;
     
     /**
@@ -54,9 +60,9 @@ public abstract class Character extends PhysicsEntity {
 
     /**
      * Gets the direction the character is facing
-     * @return the direction this Character is facing (one of the FACING_ constants in TextureSet)
+     * @return the direction this Character is facing
      */
-    public int getFacing() {
+    public TextureSet.FaceDirection getFacing() {
         return facing;
     }
 
@@ -111,26 +117,20 @@ public abstract class Character extends PhysicsEntity {
     /**
      * Causes this Character to fire a projectile at the specified coordinates.
      *
-     * @param x      the target x coordinate
-     * @param y      the target y coordinate
-     * @param speed  how fast the projectile moves
+     * @param target the location of the target
      * @param damage how much damage the projectile deals
      */
-     
-    // protected void fireAt(Vector2 target, float speed, int damage) {
     protected void fireAt(Vector2 target, int damage) {
         Vector2 pos = getCentre();
-        Vector2 velocity = new Vector2(target).sub(pos).setLength(projectileSpeed).add(getPhysicsVelocity());
+        Vector2 velocity = target.cpy().sub(pos).setLength(projectileSpeed).add(getPhysicsVelocity());
         velocity.setLength(Math.max(projectileSpeed, velocity.len()));
-        parent.createProjectile(pos,
-                velocity,
-                damage, this);
+        parent.createProjectile(pos, velocity, damage, this);
     }
 
     /**
      * Causes this Character to use a melee attack.
      *
-     * @param other --
+     * @param other  the other character, duh
      * @param damage how much damage the attack deals
      */
     protected void meleeAttack(Character other, int damage) {
@@ -162,29 +162,31 @@ public abstract class Character extends PhysicsEntity {
             int index = (2 + (int)Math.rint(angle/90f)) % 4;
             
             // Update Character facing.
-            switch (index){
-                case 0: facing = TextureSet.FACING_BACK;
-                        break;
-                case 1: facing = TextureSet.FACING_RIGHT;
-                        break;
-                case 2: facing = TextureSet.FACING_FRONT;
-                        break;
-                case 3: facing = TextureSet.FACING_LEFT;
-                        break;
+            switch (index) {
+                case 0:
+                    facing = TextureSet.FaceDirection.BACK;
+                    break;
+                case 1:
+                    facing = TextureSet.FaceDirection.RIGHT;
+                    break;
+                case 2:
+                    facing = TextureSet.FaceDirection.FRONT;
+                    break;
+                case 3:
+                    facing = TextureSet.FaceDirection.LEFT;
+                    break;
             }
             
         }
 
         // Update animation state time.
-        if (!velocity.isZero()) {
-            stateTime += delta;
-        } else {
+        if (velocity.isZero()) {
             stateTime = 0;
+        } else {
+            stateTime += delta;
         }
 
-        if (isDead()) {
-            removed = true;
-        }
+        if (isDead()) removed = true;
 
         super.update(delta);
     }

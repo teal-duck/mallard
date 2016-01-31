@@ -2,15 +2,14 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.ai.*;
-import com.superduckinvaders.game.assets.TextureSet;
-
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.math.*;
-
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
+import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.ai.AI;
+import com.superduckinvaders.game.ai.DummyAI;
+import com.superduckinvaders.game.ai.PathfindingAI;
+import com.superduckinvaders.game.assets.TextureSet;
 
 public class Mob extends Character {
 
@@ -74,12 +73,12 @@ public class Mob extends Character {
     
     @Override
     public float getWidth() {
-        return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionWidth();
+        return textureSet.getHeight();
     }
 
     @Override
     public float getHeight() {
-        return textureSet.getTexture(TextureSet.FACING_FRONT, 0).getRegionHeight();
+        return textureSet.getHeight();
     }
     
     /**
@@ -119,9 +118,9 @@ public class Mob extends Character {
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
         
-        if (ai instanceof PathfindingAI){
+        if (ai instanceof PathfindingAI) {
             PathfindingAI.Coordinate coord = ((PathfindingAI)ai).target;
-            if (coord != null){
+            if (coord != null) {
                 spriteBatch.end();
                 shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -131,6 +130,5 @@ public class Mob extends Character {
                 spriteBatch.begin();
             }            
         }
-        
     }
 }

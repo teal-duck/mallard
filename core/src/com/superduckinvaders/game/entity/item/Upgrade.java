@@ -1,7 +1,8 @@
 package com.superduckinvaders.game.entity.item;
 
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.*;
+import com.superduckinvaders.game.entity.PhysicsEntity;
+import com.superduckinvaders.game.entity.Player;
 
 /**
  * Created by olivermcclellan on 16/01/2016.

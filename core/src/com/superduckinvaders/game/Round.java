@@ -4,21 +4,20 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.superduckinvaders.game.ai.PathfindingAI;
+import com.badlogic.gdx.physics.box2d.*;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
-import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.*;
-import com.superduckinvaders.game.entity.item.*;
+import com.superduckinvaders.game.entity.item.CollectItem;
+import com.superduckinvaders.game.entity.item.Powerup;
+import com.superduckinvaders.game.entity.item.Upgrade;
 import com.superduckinvaders.game.objective.CollectObjective;
 import com.superduckinvaders.game.objective.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.math.Vector2;
 
 
 
@@ -61,10 +60,11 @@ public final class Round {
      * The current objective.
      */
     private Objective objective;
-    
+
+    /**
+     * The Box2D world that the round uses.
+     */
     public World world;
-    Mob debugMob;
-    ArrayList<Obstacle> obstacleEntities;
 
     /**
      * Initialises a new Round with the specified map.
@@ -102,21 +102,20 @@ public final class Round {
         obstaclesLayer = chooseObstacles();
         
         TiledMapTileLayer collision = getCollisionLayer();
-        
+
         float tw = collision.getTileWidth();
         float th = collision.getTileHeight();
-        
-        obstacleEntities = new ArrayList<Obstacle>();
-        
+
+        ArrayList<Obstacle> obstacleEntities = new ArrayList<Obstacle>();
+
         TiledMapTileLayer[] layers = {collision, obstaclesLayer};
-        
+
         for (TiledMapTileLayer layer : layers){
-            
-            for (int x = 0 ; x<layer.getWidth() ; x++){
-                for (int y = 0 ; y<layer.getHeight() ; y++){
-                    if (null != layer.getCell(x, y)){
-                        float tileX = x*tw;
-                        float tileY = y*th;
+            for (int x = 0; x < layer.getWidth(); x++) {
+                for (int y = 0; y < layer.getHeight(); y++) {
+                    if (layer.getCell(x, y) != null) {
+                        float tileX = x * tw;
+                        float tileY = y * th;
                         obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
                     }
                 }
@@ -145,7 +144,7 @@ public final class Round {
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
         
-        debugMob = spawnZombieMob(startX + 40, startY+50);
+        Mob debugMob = spawnZombieMob(startX + 40, startY+50);
         //spawnRandomMobs(500, 200, 200, 1000, 1000);
     }
 
@@ -158,9 +157,8 @@ public final class Round {
         int count = 0;
 
         // First count how many obstacle layers we have.
-        while (map.getLayers().get(String.format("Obstacles%d", count)) != null) {
+        while (map.getLayers().get(String.format("Obstacles%d", count)) != null)
             count++;
-        }
 
         // Choose a random layer or return null if there are no layers.
         if (count == 0) {
@@ -194,12 +192,13 @@ public final class Round {
     public boolean rayCast(Vector2 pos1, Vector2 pos2){
         return rayCast(pos1, pos2, PhysicsEntity.WORLD_BITS);
     }
-    public boolean rayCast(Vector2 pos1, Vector2 pos2, short maskBits){
+    public boolean rayCast(Vector2 pos1, Vector2 pos2, short maskBits) {
         RayCastCB r = new RayCastCB(maskBits);
-        //new vectors as they may be modified
-        world.rayCast(r,
-                new Vector2(pos1).scl(PhysicsEntity.METRES_PER_PIXEL),
-                new Vector2(pos2).scl(PhysicsEntity.METRES_PER_PIXEL));
+        world.rayCast(
+                r,
+                pos1.cpy().scl(PhysicsEntity.METRES_PER_PIXEL),
+                pos2.cpy().scl(PhysicsEntity.METRES_PER_PIXEL)
+        );
         return r.collidesEnvironment;
     }
     
@@ -212,7 +211,7 @@ public final class Round {
                              new Vector2( width/2, -height/2)
                          };
         
-        Vector2 direction = new Vector2(target).sub(pos).nor();
+        Vector2 direction = target.cpy().sub(pos).nor();
         Vector2 perp = direction.rotate90(0); //modifies direction
         
         float max = 0;
@@ -222,16 +221,11 @@ public final class Round {
             max = Math.max(max, dist);
         }
         
-        Vector2 offset1 = new Vector2(perp).scl(max);
-        Vector2 offset2 = new Vector2(perp).scl(-max);
+        Vector2 offset1 = perp.cpy().scl(max);
+        Vector2 offset2 = perp.cpy().scl(-max);
         
-        return !(rayCast(new Vector2(offset1).add(pos),
-                    new Vector2(offset1).add(target)) ||
-               rayCast(new Vector2(offset2).add(pos),
-                    new Vector2(offset2).add(target)));
-        
-        
-        
+        return !(rayCast(offset1.cpy().add(pos), offset1.cpy().add(target)) ||
+                 rayCast(offset2.cpy().add(pos), offset2.cpy().add(target)));
     }
 
     /**
@@ -243,13 +237,11 @@ public final class Round {
      * @param maxY the maximum y distance from the player to spawn the mobs
      */
     private void spawnRandomMobs(int amount, int minX, int minY, int maxX, int maxY) {
-        while(amount > 0) {
+        for (int i = amount; i < amount; i++) {
             int x = MathUtils.random(0, getMapWidth());
             int y = MathUtils.random(0, getMapHeight());
-            if (!collidePoint(x, y)){
+            if (!collidePoint(x, y))
                 spawnZombieMob(getPlayer().getX() + x, getPlayer().getY() + y);
-                amount--;
-            }
         }
     }
     
@@ -416,17 +408,12 @@ public final class Round {
     /**
      * Creates a new projectile and adds it to the list of entities.
      *
-     * @param x               the initial x coordinate
-     * @param y               the initial y coordinate
-     * @param targetX         the target x coordinate
-     * @param targetY         the target y coordinate
-     * @param speed           how fast the projectile moves
-     * @param velocityXOffset the offset to the initial X velocity
-     * @param velocityYOffset the offset to the initial Y velocity
+     * @param pos      the projectile's starting position
+     * @param velocity the projectile's velocity
      * @param damage          how much damage the projectile deals
      * @param owner           the owner of the projectile (i.e. the one who fired it)
      */
-    public void createProjectile(Vector2 pos, Vector2 velocity,  int damage, PhysicsEntity owner) {
+    public void createProjectile(Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
         entities.add(new Projectile(this, pos, velocity, damage, owner));
     }
 
@@ -438,11 +425,19 @@ public final class Round {
      * @param duration  how long the particle effect should last for
      * @param animation the animation to use for the particle effect
      */
-    public void createParticle(Vector2 position, float duration, Animation animation) {
-        createParticle(position.x, position.y, duration, animation);
-    }
     public void createParticle(float x, float y, float duration, Animation animation) {
         entities.add(new Particle(this, x - animation.getKeyFrame(0).getRegionWidth() / 2, y - animation.getKeyFrame(0).getRegionHeight() / 2, duration, animation));
+    }
+
+    /**
+     * Creates a new particle effect and adds it to the list of entities.
+     *
+     * @param position  the particle's starting position
+     * @param duration  how long the particle effect should last for
+     * @param animation the animation to use for the particle effect
+     */
+    public void createParticle(Vector2 position, float duration, Animation animation) {
+        createParticle(position.x, position.y, duration, animation);
     }
 
     /**

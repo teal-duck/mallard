@@ -2,6 +2,7 @@
 package com.superduckinvaders.game.ai;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.Mob;
 
@@ -9,8 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
-
-import com.badlogic.gdx.math.Vector2;
 
 
 
@@ -178,7 +177,7 @@ public class PathfindingAI extends AI {
         if (!finalFound) {
             return null;
         } else {
-            SearchNode resultNode = null;
+            SearchNode resultNode;
             List<SearchNode> path = new ArrayList<SearchNode>();
             path.add(visitedStates.get(finalCoord));
             while (path.get(path.size() - 1) != visitedStates.get(startCoord)) {
@@ -228,8 +227,7 @@ public class PathfindingAI extends AI {
         /**
          * Initialises this Coordinate.
          *
-         * @param x the x coordinate
-         * @param y the y coordinate
+         * @param point The point vector.
          */
         public Coordinate(Vector2 point) {
             this(point.x, point.y);

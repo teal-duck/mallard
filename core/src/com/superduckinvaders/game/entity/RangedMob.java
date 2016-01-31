@@ -1,15 +1,9 @@
 package com.superduckinvaders.game.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.ai.*;
+import com.superduckinvaders.game.ai.AI;
+import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.TextureSet;
-
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.math.*;
-
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
 

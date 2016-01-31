@@ -1,9 +1,9 @@
 package com.superduckinvaders.game.entity.item;
 
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.*;
-import com.superduckinvaders.game.objective.*;
 import com.superduckinvaders.game.assets.Assets;
+import com.superduckinvaders.game.entity.PhysicsEntity;
+import com.superduckinvaders.game.entity.Player;
 
 
 public class CollectItem extends Item {

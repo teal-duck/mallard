@@ -43,8 +43,10 @@ public final class TextureSet {
      * @param right the right facing texture
      */
     public TextureSet(TextureRegion front, TextureRegion back, TextureRegion left, TextureRegion right) {
-        this(front, back, left, right, new Animation(0, front),
-                new Animation(0, back), new Animation(0, left), new Animation(0, right));
+        this(
+                front, back, left, right,
+                new Animation(0, front), new Animation(0, back), new Animation(0, left), new Animation(0, right)
+        );
     }
 
     /**

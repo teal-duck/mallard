@@ -1,14 +1,14 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.TextureSet;
 
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.math.Vector2;
-
 /**
  * Represents an object in the game.
+ * TODO(avinash): Switch to use vectors.
  */
 public abstract class Entity {
     /**
@@ -21,7 +21,6 @@ public abstract class Entity {
      */
     protected float x, y;
     protected float width, height;
-    public Body body;
     public static final float METRES_PER_PIXEL = 1/16f;
     public static final float PIXELS_PER_METRE = 1/METRES_PER_PIXEL;
 
@@ -43,8 +42,7 @@ public abstract class Entity {
      * Initialises this Entity with the specified initial coordinates.
      *
      * @param parent the round this Entity belongs to
-     * @param x      the initial x coordinate
-     * @param y      the initial y coordinate
+     * @param pos    the initial position
      */
     public Entity(Round parent, Vector2 pos) {
         this(parent, pos.x, pos.y);
@@ -84,8 +82,7 @@ public abstract class Entity {
     /**
      * Returns the distance between this Entity and the specified coordinates.
      *
-     * @param x the x coordinate to compare with
-     * @param y the y coordinate to compare with
+     * @param dest the vector to compare with
      * @return the distance between this Entity and the coordinates, in pixels
      */
     public float distanceTo(Vector2 dest) {
@@ -96,17 +93,15 @@ public abstract class Entity {
     }
     
     public Vector2 vectorTo(Vector2 dest){
-        return new Vector2(dest).sub(getPosition());
+        return dest.cpy().sub(getPosition());
     }
 
     /**
      * Returns the angle between this Entity and the specified coordinates.
      *
-     * @param x the x coordinate to compare with
-     * @param y the y coordinate to compare with
+     * @param dest the vector to compare with
      * @return the angle between this Entity and the coordinates, in radians
      */
-     
     public float angleTo(Vector2 dest){
         return vectorTo(dest).angleRad();
     }
@@ -116,23 +111,23 @@ public abstract class Entity {
     }
 
     /**
-     * Returns the direction to the specified coordinates from this Entity (one of the FACING_ constants in TexutreSet).
+     * Returns the direction to the specified coordinates from this Entity.
      *
      * @param x the x coordinate to compare with
      * @param y the y coordinate to compare with
      * @return the direction the coordinates are in relative to this Entity
      */
-    public int directionTo(float x, float y) {
+    public TextureSet.FaceDirection directionTo(float x, float y) {
         float angle = angleTo(x, y);
 
         if (angle < Math.PI * 3 / 4 && angle >= Math.PI / 4) {
-            return TextureSet.FACING_BACK;
+            return TextureSet.FaceDirection.BACK;
         } else if (angle < Math.PI / 4 && angle >= -Math.PI / 4) {
-            return TextureSet.FACING_RIGHT;
+            return TextureSet.FaceDirection.RIGHT;
         } else if (angle < -Math.PI / 4 && angle >= -Math.PI * 3 / 4) {
-            return TextureSet.FACING_FRONT;
+            return TextureSet.FaceDirection.FRONT;
         } else {
-            return TextureSet.FACING_LEFT;
+            return TextureSet.FaceDirection.LEFT;
         }
     }
 
@@ -164,15 +159,19 @@ public abstract class Entity {
         return removed;
     }
     
-    public void dispose(){
-    }
-    
     /**
      * Updates the state of this Entity.
      *
      * @param delta how much time has passed since the last update
      */
     public void update(float delta) {
+    }
+
+    /**
+     * Disposes any disposable objects.
+     * TODO(avinash): Make this abstract?
+     */
+    public void dispose() {
     }
 
     /**

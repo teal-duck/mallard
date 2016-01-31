@@ -41,8 +41,7 @@ public class CollectObjective extends Objective {
      */
     @Override
     public void update(float delta) {
-        if (target.isRemoved()){
+        if (target.isRemoved())
             status = ObjectiveStatus.COMPLETED;
-        }
     }
 }

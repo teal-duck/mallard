@@ -67,10 +67,9 @@ public class WinScreen extends BaseScreen {
         Button backButton = new Button(new Button.ButtonStyle(drawable, drawable, drawable));
         backButton.setPosition((stage.getWidth() - backButton.getPrefWidth()) / 2, 220);
         backButton.addListener(new ClickListener() {
-
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.showStartScreen();
+                parent.setScreen(new StartScreen(parent));
             }
         });
 

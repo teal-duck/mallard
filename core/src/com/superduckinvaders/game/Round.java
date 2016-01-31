@@ -15,6 +15,9 @@ import com.superduckinvaders.game.entity.item.Powerup;
 import com.superduckinvaders.game.entity.item.Upgrade;
 import com.superduckinvaders.game.objective.CollectObjective;
 import com.superduckinvaders.game.objective.Objective;
+import com.superduckinvaders.game.screen.GameScreen;
+import com.superduckinvaders.game.screen.LoseScreen;
+import com.superduckinvaders.game.screen.WinScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +68,11 @@ public final class Round {
      * The Box2D world that the round uses.
      */
     public World world;
+
+    /**
+     * The screen this round belongs to.
+     */
+    public GameScreen gameScreen;
 
     /**
      * Initialises a new Round with the specified map.
@@ -358,7 +366,7 @@ public final class Round {
      * @return a Vector3 containing the world coordinates (x and y)
      */
     public Vector3 unproject(int x, int y) {
-        return parent.getGameScreen().unproject(x, y);
+        return gameScreen.unproject(x, y);
     }
 
     /**
@@ -474,9 +482,9 @@ public final class Round {
             objective.update(delta);
 
             if (objective.getStatus() == Objective.ObjectiveStatus.COMPLETED) {
-                parent.showWinScreen(player.getScore());
+                parent.setScreen(new WinScreen(parent, player.getScore()));
             } else if (player.isDead()) {
-                parent.showLoseScreen();
+                parent.setScreen(new LoseScreen(parent));
             }
         }
 

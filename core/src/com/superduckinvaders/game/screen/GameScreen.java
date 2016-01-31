@@ -49,6 +49,7 @@ public class GameScreen extends BaseScreen {
      * @param round the round to be displayed
      */
     public GameScreen(Round round) {
+        round.gameScreen = this;
         this.round = round;
         debugRenderer=new Box2DDebugRenderer();
     }

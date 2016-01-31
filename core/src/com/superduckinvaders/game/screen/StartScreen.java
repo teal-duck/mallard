@@ -53,9 +53,9 @@ public class StartScreen extends BaseScreen {
         Button playButton = new Button(new Button.ButtonStyle(button, button, button));
         playButton.setPosition((stage.getWidth() - playButton.getPrefWidth()) / 2, 300);
         playButton.addListener(new ClickListener() {
-
+            @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.showGameScreen(new Round(parent, Assets.levelOneMap));
+                parent.setScreen(new GameScreen(new Round(parent, Assets.levelOneMap)));
             }
         });
 

@@ -74,6 +74,8 @@ public final class Round {
      * The screen this round belongs to.
      */
     public GameScreen gameScreen;
+    
+    public Pathfinder pathfinder;
 
     /**
      * Initialises a new Round with the specified map.
@@ -134,6 +136,9 @@ public final class Round {
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
         
         Mob debugMob = spawnZombieMob(startX + 40, startY+50);
+        
+        pathfinder = new Pathfinder(this);
+        
         //spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
     }
 
@@ -490,6 +495,9 @@ public final class Round {
      */
     public void update(float delta) {
         world.step(delta, 6, 2);
+        
+        pathfinder.update();
+        
         if (objective != null) {
             objective.update(delta);
 

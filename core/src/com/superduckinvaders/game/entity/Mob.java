@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.ai.DummyAI;
@@ -119,13 +120,13 @@ public class Mob extends Character {
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
         
         if (ai instanceof PathfindingAI) {
-            PathfindingAI.Coordinate coord = ((PathfindingAI)ai).target;
-            if (coord != null) {
+            Vector2 nodePos = ((PathfindingAI)ai).nodePos;
+            if (nodePos != null) {
                 spriteBatch.end();
                 shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 shapeRenderer.setColor(1, 1, 0, 1);
-                shapeRenderer.x(coord.vector(), 10);
+                shapeRenderer.x(nodePos, 10);
                 shapeRenderer.end();
                 spriteBatch.begin();
             }            

@@ -227,24 +227,18 @@ public final class Round {
         float width  = size.x;
         float height = size.y;
         Vector2[] corners = {new Vector2( width/2,  height/2),
-                             new Vector2(-width/2,  height/2)
+                             new Vector2(-width/2,  height/2),
+                             new Vector2(-width/2,  -height/2),
+                             new Vector2(width/2,  -height/2)
                          };
-        
-        Vector2 direction = target.cpy().sub(pos).nor();
-        Vector2 perp = direction.rotate90(0); //modifies direction
-        
-        float max = 0;
+        boolean result = true;
         
         for (Vector2 corner : corners){
-            float dist = corner.dot(perp);
-            max = Math.max(max, dist);
+            result = result && !rayCast(corner.cpy().add(pos), corner.cpy().add(target));
+            
         }
         
-        Vector2 offset1 = perp.cpy().scl(max);
-        Vector2 offset2 = perp.cpy().scl(-max);
-        
-        return !(rayCast(offset1.cpy().add(pos), offset1.cpy().add(target)) ||
-                 rayCast(offset2.cpy().add(pos), offset2.cpy().add(target)));
+        return result;
     }
 
     /**

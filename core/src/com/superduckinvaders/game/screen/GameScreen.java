@@ -15,18 +15,10 @@ import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.PhysicsEntity;
 import com.superduckinvaders.game.entity.Player;
 
-import com.badlogic.gdx.utils.viewport.*;
-
 /**
  * Screen for interaction with the game.
  */
 public class GameScreen extends BaseScreen {
-
-    /**
-     * The game camera.
-     */
-    private OrthographicCamera camera;
-    private FitViewport viewport;
 
     /**
      * The renderer for the tile map.
@@ -62,6 +54,9 @@ public class GameScreen extends BaseScreen {
         super(game);
         round.gameScreen = this;
         this.round = round;
+        
+        viewport.setWorldSize(DuckGame.GAME_WIDTH / 2, DuckGame.GAME_HEIGHT /2);
+        
     }
 
     /**
@@ -87,9 +82,6 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void show() {
-        camera = new OrthographicCamera();
-        
-        viewport = new FitViewport(DuckGame.GAME_WIDTH/2, DuckGame.GAME_HEIGHT/2, camera);
         
         /* These values are to get ensure the camera never shows
          * anything outside the map by preventing its position
@@ -107,11 +99,6 @@ public class GameScreen extends BaseScreen {
         mapRenderer = new OrthogonalTiledMapRenderer(round.getMap(), spriteBatch);
         
         debugRenderer = new Box2DDebugRenderer();
-    }
-    
-    @Override
-    public void resize(int width, int height){
-        viewport.update(width, height, false);
     }
 
     /**
@@ -137,8 +124,6 @@ public class GameScreen extends BaseScreen {
                 0
         );
         camera.update();
-        
-        viewport.apply();
         
         spriteBatch.setProjectionMatrix(camera.combined);
 

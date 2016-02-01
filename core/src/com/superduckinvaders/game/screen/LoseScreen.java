@@ -38,7 +38,7 @@ public class LoseScreen extends BaseScreen {
      */
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
         Drawable drawable = new TextureRegionDrawable(Assets.button);

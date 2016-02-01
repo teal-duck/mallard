@@ -6,12 +6,21 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.superduckinvaders.game.DuckGame;
 
+import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+
 /**
  * A Base screen that holds common objects to reduce boilerplate code.
  */
 abstract public class BaseScreen extends ScreenAdapter {
 
     private DuckGame game;
+    
+    /**
+     * The game camera.
+     */
+    protected OrthographicCamera camera;
+    protected FitViewport viewport;
 
     /**
      * Start off the BaseScreen
@@ -20,6 +29,8 @@ abstract public class BaseScreen extends ScreenAdapter {
      */
     public BaseScreen(DuckGame game) {
         this.game = game;
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT, camera);
     }
 
     /**
@@ -30,10 +41,16 @@ abstract public class BaseScreen extends ScreenAdapter {
     protected DuckGame getGame() {
         return this.game;
     }
+    
+    @Override
+    public void resize(int width, int height){
+        viewport.update(width, height, false);
+    }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        viewport.apply();
     }
 }

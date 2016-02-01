@@ -134,7 +134,7 @@ public final class Round {
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
         
         Mob debugMob = spawnZombieMob(startX + 40, startY+50);
-        spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
+        //spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
     }
 
     /**
@@ -198,20 +198,26 @@ public final class Round {
         return collidePoint(new Vector2(x, y));
     }
     public boolean collidePoint(Vector2 p) {
+        return collidePoint(p, PhysicsEntity.WORLD_BITS);
+    }
+    public boolean collidePoint(Vector2 p, short maskBits) {
         p.scl(PhysicsEntity.METRES_PER_PIXEL);
-        Query q = new QueryPoint(world, p);
+        Query q = new QueryPoint(world, p, maskBits);
         return q.query();
     }
     
     public boolean collideArea(Vector2 pos, Vector2 size) {
+        return collideArea(pos, size, PhysicsEntity.WORLD_BITS);
+    }
+    public boolean collideArea(Vector2 pos, Vector2 size, short maskBits) {
         pos.scl(PhysicsEntity.METRES_PER_PIXEL);
         size.scl(PhysicsEntity.METRES_PER_PIXEL);
-        Query q = new QueryArea(world, pos, size);
+        Query q = new QueryArea(world, pos, size, maskBits);
         return q.query();
     }
     
     public boolean rayCast(Vector2 pos1, Vector2 pos2){
-        return rayCast(pos1, pos2, PhysicsEntity.WORLD_BITS);
+        return rayCast(pos1, pos2, PhysicsEntity.PLAYER_BITS);
     }
     public boolean rayCast(Vector2 pos1, Vector2 pos2, short maskBits) {
         RayCastCB r = new RayCastCB(maskBits);
@@ -220,7 +226,7 @@ public final class Round {
                 pos1.cpy().scl(PhysicsEntity.METRES_PER_PIXEL),
                 pos2.cpy().scl(PhysicsEntity.METRES_PER_PIXEL)
         );
-        return r.collidesEnvironment;
+        return r.clear;
     }
     
     public boolean pathIsClear(Vector2 pos, Vector2 size, Vector2 target){
@@ -234,7 +240,7 @@ public final class Round {
         boolean result = true;
         
         for (Vector2 corner : corners){
-            result = result && !rayCast(corner.cpy().add(pos), corner.cpy().add(target));
+            result = result && rayCast(corner.cpy().add(pos), corner.cpy().add(target));
             
         }
         
@@ -513,8 +519,10 @@ public final class Round {
     public static abstract class Query implements QueryCallback {
         public boolean result = false;
         public World world;
+        public short maskBits;
         
-        public Query(World world){
+        public Query(World world, short maskBits){
+            this.maskBits = maskBits;
             this.world=world;
         }
         public abstract boolean query();
@@ -524,8 +532,8 @@ public final class Round {
     public static class QueryPoint extends Query {
         public Vector2 p;
         
-        public QueryPoint(World world, Vector2 p){
-            super(world);
+        public QueryPoint(World world, Vector2 p, short maskBits){
+            super(world, maskBits);
             this.p = p;
         }
         
@@ -535,7 +543,7 @@ public final class Round {
         }
         
         public boolean reportFixture(Fixture fixture){
-            if (fixture.testPoint(p)) { // if ((fixture.getFilterData().categoryBits | PhysicsEntity.WORLD_BITS) != 0 && 
+            if ((fixture.getFilterData().categoryBits & maskBits) != 0 && fixture.testPoint(p)) { 
                 result = true; // we collided
                 return false; // ends the query
             }
@@ -546,8 +554,8 @@ public final class Round {
         Vector2 p1;
         Vector2 p2;
         
-        public QueryArea(World world, Vector2 pos, Vector2 size){
-            super(world);
+        public QueryArea(World world, Vector2 pos, Vector2 size, short maskBits){
+            super(world, maskBits);
             this.p1 = pos;
             this.p2 = size.add(pos);
         }
@@ -558,6 +566,7 @@ public final class Round {
         }
         
         public boolean reportFixture(Fixture fixture){
+            // TODO: check fixture categoryBits
             result = true; //AABB gave us ANY fixture, BB overlaps.
             return false;
         }
@@ -567,7 +576,7 @@ public final class Round {
     
     class RayCastCB implements RayCastCallback {
         public float fraction;
-        public boolean collidesEnvironment=false;
+        public boolean clear = true;
         public short maskBits;
         
         public RayCastCB(short maskBits){
@@ -577,10 +586,17 @@ public final class Round {
         }
         @Override
         public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction){
+            /* if multiple fixtures are found, because we return the fraction, subsequent fixtures
+             * will always be closer than the previous ones, but we may not always see more distant fixures
+             * past the first intersection found.
+             */
             if ((fixture.getFilterData().categoryBits & maskBits) != 0){
-                this.collidesEnvironment = true;
+                this.clear = true;
                 this.fraction = fraction;
-                return fraction;
+            }
+            else {
+                this.clear = false;
+                this.fraction = fraction;
             }
             /* this reduces the length of the ray to the currently found intersection
              * this is done because fixtures are not necessarily reported in

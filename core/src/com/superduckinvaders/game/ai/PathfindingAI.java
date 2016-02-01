@@ -149,30 +149,27 @@ public class PathfindingAI extends AI {
             if (currentState.iteration >= PATHFINDING_ITERATION_LIMIT) {
                 continue;
             }
+            
+            if (currentCoord.inSameTile(finalCoord)) {
+                finalCoord = currentCoord;
+                finalFound = true;
+                break;
+            }
 
             //work out N, E, S, W permutations
-            Coordinate[] perm = new Coordinate[4];
-            perm[0] = new Coordinate(currentCoord.x, currentCoord.y + tileHeight);
-            perm[1] = new Coordinate(currentCoord.x + tileWidth, currentCoord.y);
-            perm[2] = new Coordinate(currentCoord.x, currentCoord.y - tileHeight);
-            perm[3] = new Coordinate(currentCoord.x - tileWidth, currentCoord.y);
+            Coordinate[] perm = {
+                new Coordinate(currentCoord.x,             currentCoord.y + tileHeight),
+                new Coordinate(currentCoord.x + tileWidth, currentCoord.y             ),
+                new Coordinate(currentCoord.x,             currentCoord.y - tileHeight),
+                new Coordinate(currentCoord.x - tileWidth, currentCoord.y             )
+            };
 
             for (Coordinate currentPerm : perm) {
-                boolean isEmpty = !round.collidePoint(currentPerm.x, currentPerm.y);
-                // if (currentPerm.inSameTile(finalCoord) || round.pathIsClear(new Vector2(currentPerm.x, currentPerm.y), mobSize, playerPos)) {
-                // if (currentPerm.inSameTile(finalCoord) || new Vector2(currentPerm.x, currentPerm.y).sub(playerPos).len() < targetRange) {
-                if (currentPerm.inSameTile(finalCoord)) {
-                    visitedStates.put(currentPerm, new SearchNode(currentState, currentPerm, currentState.iteration + 1));
-                    finalCoord = currentPerm;
-                    finalFound = true;
-                    break;
-                }
-                if (isEmpty && !visitedStates.containsKey(currentPerm)) {
+                if (!visitedStates.containsKey(currentPerm) && !round.collidePoint(currentPerm.vector())) {
                     fringe.add(currentPerm);
                     visitedStates.put(currentPerm, new SearchNode(currentState, currentPerm, currentState.iteration + 1));
                 }
             }
-            if (finalFound) break;
         }
         if (!finalFound) {
             return null;
@@ -249,8 +246,8 @@ public class PathfindingAI extends AI {
          */
         @Override
         public int compareTo(Coordinate o) {
-            float playerDistanceA = (float)Math.sqrt(Math.pow((x - playerPos.x), 2) + Math.pow((y - playerPos.y), 2));
-            float playerDistanceB = (float)Math.sqrt(Math.pow((o.x - playerPos.x), 2) + Math.pow((o.y - playerPos.y), 2));
+            float playerDistanceA = this.vector().sub(playerPos).len();
+            float playerDistanceB =    o.vector().sub(playerPos).len();
             return new Float(playerDistanceA).compareTo(playerDistanceB);
         }
 

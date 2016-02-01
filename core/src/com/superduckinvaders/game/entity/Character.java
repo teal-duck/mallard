@@ -141,7 +141,7 @@ public abstract class Character extends PhysicsEntity {
     }
     
     protected void rangedAttack(Character other, int damage) {
-        if (attackTimer > ATTACK_COOLDOWN && !parent.rayCast(getCentre(), other.getCentre())){
+        if (attackTimer > ATTACK_COOLDOWN && parent.rayCast(getCentre(), other.getCentre())){
                 attackTimer = 0f;
                 fireAt(other.getCentre(), damage);
         }

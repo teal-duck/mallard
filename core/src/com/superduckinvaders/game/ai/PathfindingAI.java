@@ -159,9 +159,9 @@ public class PathfindingAI extends AI {
 
             for (Coordinate currentPerm : perm) {
                 boolean isEmpty = !round.collidePoint(currentPerm.x, currentPerm.y);
-                if (currentPerm.inSameTile(finalCoord) || round.pathIsClear(new Vector2(currentPerm.x, currentPerm.y), mobSize, playerPos)) {
+                // if (currentPerm.inSameTile(finalCoord) || round.pathIsClear(new Vector2(currentPerm.x, currentPerm.y), mobSize, playerPos)) {
                 // if (currentPerm.inSameTile(finalCoord) || new Vector2(currentPerm.x, currentPerm.y).sub(playerPos).len() < targetRange) {
-                // if (currentPerm.inSameTile(finalCoord)) {
+                if (currentPerm.inSameTile(finalCoord)) {
                     visitedStates.put(currentPerm, new SearchNode(currentState, currentPerm, currentState.iteration + 1));
                     finalCoord = currentPerm;
                     finalFound = true;

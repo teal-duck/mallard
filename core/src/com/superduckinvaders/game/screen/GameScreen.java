@@ -80,7 +80,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         camera = new OrthographicCamera(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT);
-        camera.zoom -= 0.5;
+        camera.zoom = 0.5f;
 
         spriteBatch = new SpriteBatch();
         uiBatch     = new SpriteBatch();
@@ -96,11 +96,30 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         round.update(delta);  // TODO(avinash): If round calls dispose, stop here.
-
+        
+        Player player = round.getPlayer();
+        
+        float playerX = player.getX() + player.getWidth() / 2;
+        float playerY = player.getY() + player.getHeight() / 2;
+        
+        
+        
+        /* These values are to get ensure the camera never shows
+         * anything outside the map by preventing its position
+         * being set closer to the edge than half of the screen
+         */
+        
+        float cameraMinX = camera.zoom * getGame().GAME_WIDTH  / 2;
+        float cameraMinY = camera.zoom * getGame().GAME_HEIGHT / 2;
+        
+        float cameraMaxX = round.getMapWidth() - cameraMinX;
+        float cameraMaxY = round.getMapHeight() - cameraMinY;
+        
+        
         // Centre the camera on the player.
         camera.position.set(
-                round.getPlayer().getX() + round.getPlayer().getWidth() / 2,
-                round.getPlayer().getY() + round.getPlayer().getHeight() / 2,
+                Math.max(cameraMinX, Math.min(playerX, cameraMaxX)),
+                Math.max(cameraMinY, Math.min(playerY, cameraMaxY)),
                 0
         );
         camera.update();

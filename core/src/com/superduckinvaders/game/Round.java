@@ -48,6 +48,7 @@ public final class Round {
      * Map layer containing randomly-chosen layer of predefined obstacles.
      */
     private TiledMapTileLayer obstaclesLayer;
+    private TiledMapTileLayer collisionLayer;
 
     /**
      * The player.
@@ -108,34 +109,15 @@ public final class Round {
 
         // Choose which obstacles to use.
         obstaclesLayer = chooseObstacles();
-        
-        TiledMapTileLayer collision = getCollisionLayer();
+        collisionLayer = getCollisionLayer();
 
-        float tw = collision.getTileWidth();
-        float th = collision.getTileHeight();
-
-        ArrayList<Obstacle> obstacleEntities = new ArrayList<Obstacle>();
-
-        TiledMapTileLayer[] layers = {collision, obstaclesLayer};
-
-        for (TiledMapTileLayer layer : layers){
-            for (int x = 0; x < layer.getWidth(); x++) {
-                for (int y = 0; y < layer.getHeight(); y++) {
-                    if (layer.getCell(x, y) != null) {
-                        float tileX = x * tw;
-                        float tileY = y * th;
-                        obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
-                    }
-                }
-            }
-        }
+        createObstacleBodies();
 
         // Determine starting coordinates for player (0, 0 default).
         int startX = Integer.parseInt(map.getProperties().get("StartX", "0", String.class)) * getTileWidth();
         int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
-        //Obstacle obstacle = new Obstacle(this, startX, startY - 40, 20, 20);
 
         // Determine where to spawn the objective.
         int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
@@ -146,14 +128,13 @@ public final class Round {
 
         entities = new ArrayList<Entity>(128);
         entities.add(player);
-        //entities.add(obstacle);
         entities.add(objective);
 
         createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
         createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
         
         Mob debugMob = spawnZombieMob(startX + 40, startY+50);
-        //spawnRandomMobs(500, 200, 200, 1000, 1000);
+        spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
     }
 
     /**
@@ -175,6 +156,38 @@ public final class Round {
             return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count - 1)));
         }
     }
+    
+    private void createObstacleBodies() {
+        float tw = collisionLayer.getTileWidth();
+        float th = collisionLayer.getTileHeight();
+
+        //ArrayList<Obstacle> obstacleEntities = new ArrayList<Obstacle>();
+
+        TiledMapTileLayer[] layers = {collisionLayer, obstaclesLayer};
+
+        for (TiledMapTileLayer layer : layers){
+            for (int x = 0; x < layer.getWidth(); x++) {
+                for (int y = 0; y < layer.getHeight(); y++) {
+                    if (layer.getCell(x, y) != null) {
+                        float tileX = x * tw;
+                        float tileY = y * th;
+                        // obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
+                        new Obstacle(this, tileX, tileY, tw, th);
+                    }
+                }
+            }
+        }
+        
+        float mapHeight = getMapHeight();
+        float mapWidth = getMapWidth();
+        
+        // 4 map edge objects
+        new Obstacle(this, -tw,      -tw,       tw,          mapHeight+tw);
+        new Obstacle(this, -tw,      -tw,       mapWidth+tw, tw          );
+        new Obstacle(this, -tw,      mapHeight, mapWidth+tw, tw          );
+        new Obstacle(this, mapWidth, -tw,       tw,          mapHeight+tw);
+    }
+    
     
     /**
      * Tests if a point resides inside a body
@@ -214,9 +227,7 @@ public final class Round {
         float width  = size.x;
         float height = size.y;
         Vector2[] corners = {new Vector2( width/2,  height/2),
-                             new Vector2(-width/2,  height/2),
-                             new Vector2(-width/2, -height/2),
-                             new Vector2( width/2, -height/2)
+                             new Vector2(-width/2,  height/2)
                          };
         
         Vector2 direction = target.cpy().sub(pos).nor();
@@ -246,10 +257,10 @@ public final class Round {
      */
     private void spawnRandomMobs(int amount, int minX, int minY, int maxX, int maxY) {
         for (int i = 0; i < amount;) {
-            int x = MathUtils.random(0, getMapWidth());
-            int y = MathUtils.random(0, getMapHeight());
+            int x = MathUtils.random(minX, maxX);
+            int y = MathUtils.random(minY, maxY);
             if (!collidePoint(x, y))
-                spawnZombieMob(getPlayer().getX() + x, getPlayer().getY() + y);
+                spawnZombieMob(x, y);
                 i++;
         }
     }

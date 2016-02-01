@@ -215,8 +215,6 @@ public class Pathfinder {
 
         public SearchNode predecessor;
         public Coordinate coord;
-        private float gcost;
-        private float hcost;
         public float cost;
         public boolean calculated = false;
         public int iteration;
@@ -231,14 +229,11 @@ public class Pathfinder {
         public float getCost(){
             if (!calculated){
                 if (predecessor == null){
-                    gcost = 0f;
-                    hcost = heuristic(coord);
+                    cost = heuristic(coord);
                 }
                 else {
-                    gcost = predecessor.gcost + tileWidth;
-                    hcost = heuristic(coord);
+                    cost = heuristic(coord);
                 }
-                cost = gcost + hcost;
                 calculated = true;
             }
             return cost;

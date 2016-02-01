@@ -40,6 +40,12 @@ public class GameScreen extends BaseScreen {
      */
     private Round round;
     
+    private float cameraMinX;
+    private float cameraMinY;
+    
+    private float cameraMaxX;
+    private float cameraMaxY;
+    
     Box2DDebugRenderer debugRenderer;
     Matrix4 debugMatrix;
 
@@ -53,7 +59,6 @@ public class GameScreen extends BaseScreen {
         super(game);
         round.gameScreen = this;
         this.round = round;
-        debugRenderer = new Box2DDebugRenderer();
     }
 
     /**
@@ -81,10 +86,23 @@ public class GameScreen extends BaseScreen {
     public void show() {
         camera = new OrthographicCamera(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT);
         camera.zoom = 0.5f;
+        
+        /* These values are to get ensure the camera never shows
+         * anything outside the map by preventing its position
+         * being set closer to the edge than half of the screen
+         */
+        
+        cameraMinX = camera.zoom * getGame().GAME_WIDTH  / 2;
+        cameraMinY = camera.zoom * getGame().GAME_HEIGHT / 2;
+        
+        cameraMaxX = round.getMapWidth() - cameraMinX;
+        cameraMaxY = round.getMapHeight() - cameraMinY;
 
         spriteBatch = new SpriteBatch();
         uiBatch     = new SpriteBatch();
         mapRenderer = new OrthogonalTiledMapRenderer(round.getMap(), spriteBatch);
+        
+        debugRenderer = new Box2DDebugRenderer();
     }
 
     /**
@@ -101,19 +119,6 @@ public class GameScreen extends BaseScreen {
         
         float playerX = player.getX() + player.getWidth() / 2;
         float playerY = player.getY() + player.getHeight() / 2;
-        
-        
-        
-        /* These values are to get ensure the camera never shows
-         * anything outside the map by preventing its position
-         * being set closer to the edge than half of the screen
-         */
-        
-        float cameraMinX = camera.zoom * getGame().GAME_WIDTH  / 2;
-        float cameraMinY = camera.zoom * getGame().GAME_HEIGHT / 2;
-        
-        float cameraMaxX = round.getMapWidth() - cameraMinX;
-        float cameraMaxY = round.getMapHeight() - cameraMinY;
         
         
         // Centre the camera on the player.

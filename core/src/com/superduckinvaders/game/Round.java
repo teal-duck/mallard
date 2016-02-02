@@ -10,9 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.*;
-import com.superduckinvaders.game.entity.item.CollectItem;
-import com.superduckinvaders.game.entity.item.Powerup;
-import com.superduckinvaders.game.entity.item.Upgrade;
+import com.superduckinvaders.game.entity.item.*;
 import com.superduckinvaders.game.objective.CollectObjective;
 import com.superduckinvaders.game.objective.Objective;
 import com.superduckinvaders.game.screen.GameScreen;
@@ -130,8 +128,8 @@ public final class Round {
         entities.add(player);
         entities.add(objective);
 
-        createUpgrade(startX + 20, startY, Player.Upgrade.GUN);
-        createPowerup(startX + 40, startY, Player.Powerup.RATE_OF_FIRE, 60);
+        createPickup(startX + 20, startY, Player.Pickup.GUN, Float.POSITIVE_INFINITY);
+        createPickup(startX + 40, startY, Player.Pickup.RATE_OF_FIRE, 60);
         
         Mob debugMob = spawnZombieMob(startX + 40, startY+50);
         //spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
@@ -461,26 +459,15 @@ public final class Round {
     }
 
     /**
-     * Creates a powerup on the floor and adds it to the list of entities.
+     * Creates a pickup on the floor and adds it to the list of entities.
      *
      * @param x       the x coordinate of the powerup
      * @param y       the y coordinate of the powerup
      * @param powerup the powerup to grant to the player
      * @param time    how long the powerup should last for
      */
-    public void createPowerup(float x, float y, Player.Powerup powerup, float time) {
-        entities.add(new Powerup(this, x, y, powerup, time));
-    }
-
-    /**
-     * Creates an upgrade on the floor and adds it to the list of entities.
-     *
-     * @param x       the x coordinate of the upgrade
-     * @param y       the y coordinate of the upgrade
-     * @param upgrade the upgrade to grant to the player
-     */
-    public void createUpgrade(float x, float y, Player.Upgrade upgrade) {
-        entities.add(new Upgrade(this, x, y, upgrade));
+    public void createPickup(float x, float y, Player.Pickup pickup, float time) {
+        entities.add(new PickupItem(this, x, y, pickup, time));
     }
 
     /**
@@ -505,7 +492,7 @@ public final class Round {
 
             if (entity.isRemoved()) {
                 if (entity instanceof Mob && ((Mob) entity).isDead()) {
-                    player.addScore((int) (10 * (player.getPowerup() == Player.Powerup.SCORE_MULTIPLIER ? Player.PLAYER_SCORE_MULTIPLIER : 1)));
+                    player.addScore((int) (10 * (player.hasPickup(Player.Pickup.SCORE_MULTIPLIER) ? Player.PLAYER_SCORE_MULTIPLIER : 1)));
                 }
                 entity.dispose();
                 entities.remove(i);

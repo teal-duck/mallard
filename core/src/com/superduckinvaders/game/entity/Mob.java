@@ -94,20 +94,20 @@ public class Mob extends Character {
         // Chance of spawning a random powerup.
         if (isDead()) {
             float random = MathUtils.random();
-            Player.Powerup powerup = null;
+            Player.Pickup pickup = null;
 
             if (random < 0.05) {
-                powerup = Player.Powerup.SCORE_MULTIPLIER;
+                pickup = Player.Pickup.SCORE_MULTIPLIER;
             } else if (random >= 0.05 && random < 0.1) {
-                powerup = Player.Powerup.INVULNERABLE;
+                pickup = Player.Pickup.INVULNERABLE;
             } else if (random >= 0.1 && random < 0.15) {
-                powerup = Player.Powerup.SUPER_SPEED;
+                pickup = Player.Pickup.SUPER_SPEED;
             } else if (random >= 0.15 && random < 0.2) {
-                powerup = Player.Powerup.RATE_OF_FIRE;
+                pickup = Player.Pickup.RATE_OF_FIRE;
             }
 
-            if (powerup != null) {
-                parent.createPowerup(getX(), getY(), powerup, 10);
+            if (pickup != null) {
+                parent.createPickup(getX(), getY(), pickup, 10);
             }
         }
 

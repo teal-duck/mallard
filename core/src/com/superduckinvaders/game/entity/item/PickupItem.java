@@ -7,29 +7,29 @@ import com.superduckinvaders.game.entity.Player;
 /**
  * Represents a powerup on the floor.
  */
-public class Powerup extends Item {
+public class PickupItem extends Item {
 
     /**
      * The powerup that this Powerup gives to the player.
      */
-    private Player.Powerup powerup;
+    private Player.Pickup pickup;
 
     /**
      * How long the powerup will last for.
      */
     private float time;
 
-    public Powerup(Round parent, float x, float y, Player.Powerup powerup, float time) {
-        super(parent, x, y, powerup.getTexture());
+    public PickupItem(Round parent, float x, float y, Player.Pickup pickup, float time) {
+        super(parent, x, y, pickup.getTexture());
 
-        this.powerup = powerup;
+        this.pickup = pickup;
         this.time = time;
     }
     
     @Override
     public void onCollision(PhysicsEntity other){
         if (other instanceof Player) {
-            ((Player)other).setPowerup(powerup, time);
+            ((Player)other).givePickup(pickup, time);
             removed = true;
         }
     }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
@@ -21,7 +22,7 @@ public class Player extends Character {
     /**
      * Player's standard movement speed in pixels per second.
      */
-    public static final int PLAYER_SPEED = 200;
+    public static final float PLAYER_SPEED = 16f;
     /**
      * Player's standard attack delay (how many seconds between attacks).
      */
@@ -29,27 +30,27 @@ public class Player extends Character {
     /**
      * How much the Player's score increases should be multiplied by if they have the score multiplier powerup.
      */
-    public static final double PLAYER_SCORE_MULTIPLIER = 5;
+    public static final float PLAYER_SCORE_MULTIPLIER = 5f;
     /**
      * How much the Player's speed should be multiplied by if they have the super speed powerup.
      */
-    public static final double PLAYER_SUPER_SPEED_MULTIPLIER = 3;
+    public static final float PLAYER_SUPER_SPEED_MULTIPLIER = 3f;
     /**
      * How much the Player's speed should me multiplied by if they are flying.
      */
-    public static final double PLAYER_FLIGHT_SPEED_MULTIPLIER = 2;
+    public static final float PLAYER_FLIGHT_SPEED_MULTIPLIER = 2f;
     /**
      * How much the Player's attack rate should be multiplied by if they have the rate of fire powerup.
      */
-    public static final double PLAYER_ATTACK_DELAY_MULTIPLIER = 0.2;
+    public static final float PLAYER_ATTACK_DELAY_MULTIPLIER = 0.2f;
     /**
      * How long the Player can fly for, in seconds.
      */
-    public static final double PLAYER_FLIGHT_TIME = 1;
+    public static final float PLAYER_FLIGHT_TIME = 1f;
     /**
      * How long after flying before the Player can fly again, in seconds.
      */
-    public static final double PLAYER_FLIGHT_COOLDOWN = 5;
+    public static final float PLAYER_FLIGHT_COOLDOWN = 5f;
 
     /**
      * Player's current score.
@@ -66,15 +67,15 @@ public class Player extends Character {
     /**
      * How much time is remaining on the Player's powerup.
      */
-    private double powerupInitial, powerupTimer = 0;
+    private float powerupInitial, powerupTimer = 0;
     /**
      * Shows if a player is flying. If less than 0, player is flying for -flyingTimer seconds. If less than PLAYER_FLIGHT_COOLDOWN, flying is on cooldown.
      */
-    private double flyingTimer = 5;
+    private float flyingTimer = 5;
     /**
      * How long it has been since the Player last attacked.
      */
-    private double attackTimer = 0;
+    private float attackTimer = 0;
 
     /**
      * Initialises this Player at the specified coordinates and with the specified initial health.
@@ -83,8 +84,10 @@ public class Player extends Character {
      * @param x      the initial x coordinate
      * @param y      the initial y coordinate
      */
-    public Player(Round parent, double x, double y) {
+    public Player(Round parent, float x, float y) {
         super(parent, x, y, PLAYER_HEALTH);
+        createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
+        // body.setLinearDamping(10f);
     }
 
     /**
@@ -110,7 +113,7 @@ public class Player extends Character {
      *
      * @return the current flying timer
      */
-    public double getFlyingTimer() {
+    public float getFlyingTimer() {
         return flyingTimer;
     }
 
@@ -145,7 +148,7 @@ public class Player extends Character {
      *
      * @return the time remaining on the powerup
      */
-    public double getPowerupTime() {
+    public float getPowerupTime() {
         return powerupTimer;
     }
 
@@ -154,7 +157,7 @@ public class Player extends Character {
      *
      * @return the initial powerup time
      */
-    public double getPowerupInitialTime() {
+    public float getPowerupInitialTime() {
         return powerupInitial;
     }
 
@@ -172,7 +175,7 @@ public class Player extends Character {
      * @param powerup the powerup to set (in the Powerup enum)
      * @param time    how long the powerup should last, in seconds
      */
-    public void setPowerup(Powerup powerup, double time) {
+    public void setPowerup(Powerup powerup, float time) {
         this.powerup = powerup;
         this.powerupInitial = this.powerupTimer = time;
     }
@@ -182,15 +185,14 @@ public class Player extends Character {
      * @return true if the Player is currently flying, false if not
      */
     public boolean isFlying() {
-        return flyingTimer <= 0;
+        return flyingTimer > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE);
     }
-
-
+    
     /**
      * @return the width of this Player
      */
     @Override
-    public int getWidth() {
+    public float getWidth() {
         return Assets.playerNormal.getWidth();
     }
 
@@ -198,7 +200,7 @@ public class Player extends Character {
      * @return the height of this Player
      */
     @Override
-    public int getHeight() {
+    public float getHeight() {
         return Assets.playerNormal.getHeight();
     }
 
@@ -229,9 +231,6 @@ public class Player extends Character {
             clearPowerup();
         }
 
-        // Update flying timer.
-        flyingTimer += delta;
-
         // Update attack timer.
         attackTimer += delta;
 
@@ -244,52 +243,50 @@ public class Player extends Character {
                     Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
 
                     // Face target when firing gun.
-                    facing = directionTo(target.x, target.y);
-                    fireAt(target.x, target.y, 300, 100);
+                    //facing = directionTo(target.x, target.y);
+                    fireAt(new Vector2(target.x, target.y), 1);
                 } else {
                     // TODO: tweak melee range
-                    melee(100, 100);
+                    //meleeAttack(some_mob, 1);
                 }
             }
         }
 
+
+        // Calculate speed at which to move the player.
+        float speed = PLAYER_SPEED * (powerup == Powerup.SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
+
+        // Left/right movement.
+        
+        Vector2 targetVelocity = new Vector2();
+        
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            targetVelocity.x += -1f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            targetVelocity.x += 1f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            targetVelocity.y = 1f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            targetVelocity.y = -1f;
+        }
+        
+        targetVelocity.setLength(speed);
+        
         // Press space to start flying, but only if flying isn't cooling down and we're moving.
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && flyingTimer >= PLAYER_FLIGHT_COOLDOWN && (velocityX != 0 || velocityY != 0)) {
-            flyingTimer = -PLAYER_FLIGHT_TIME;
-            velocityX *= PLAYER_FLIGHT_SPEED_MULTIPLIER;
-            velocityY *= PLAYER_FLIGHT_SPEED_MULTIPLIER;
-        }
-
-        // Only allow movement via keys if not flying.
-        if (!isFlying()) {
-            // Calculate speed at which to move the player.
-            double speed = PLAYER_SPEED * (powerup == Powerup.SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
-
-            // Left/right movement.
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                velocityX = -speed;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                velocityX = speed;
-            } else {
-                velocityX = 0;
-            }
-
-            // Left/right movement.
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                velocityY = speed;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                velocityY = -speed;
-            } else {
-                velocityY = 0;
-            }
-
-            // If moving diagonally, move slower.
-            // This must not be done while flying otherwise the player will slow down and stop.
-            if (velocityX != 0 && velocityY != 0) {
-                velocityX /= Math.sqrt(2);
-                velocityY /= Math.sqrt(2);
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (flyingTimer > 0){
+                flyingTimer -= delta;
+                targetVelocity.scl(PLAYER_FLIGHT_SPEED_MULTIPLIER);
             }
         }
+        else {
+            flyingTimer = Math.min((flyingTimer+(delta*0.2f)), PLAYER_FLIGHT_TIME);
+        }
+        setVelocity(targetVelocity, 4f);
+        
 
         // Update movement.
         super.update(delta);
@@ -304,39 +301,34 @@ public class Player extends Character {
     public void render(SpriteBatch spriteBatch) {
         // Use the right texture set.
         TextureSet textureSet = isFlying() ? Assets.playerFlying : Assets.playerNormal;
-
-        spriteBatch.draw(textureSet.getTexture(facing, stateTime), (int) x, (int) y);
+        
+        Vector2 pos = getPosition();
+        spriteBatch.draw(textureSet.getTexture(facing, stateTime), pos.x, pos.y);
     }
 
     /**
      * Available powerups (only last for a while).
      */
     public enum Powerup {
-        NONE,
-        SCORE_MULTIPLIER,
-        SUPER_SPEED,
-        RATE_OF_FIRE,
-        INVULNERABLE;
+        NONE              (null                        ),
+        SCORE_MULTIPLIER  (Assets.floorItemScore       ),
+        SUPER_SPEED       (Assets.floorItemSpeed       ),
+        RATE_OF_FIRE      (Assets.floorItemFireRate    ),
+        INVULNERABLE      (Assets.floorItemInvulnerable);
 
+    
+        private final TextureRegion texture;
+        Powerup(TextureRegion texture){
+            this.texture = texture;
+        }
         /**
          * Gets a texture for this powerup's floor item.
          *
          * @param powerup the powerup
          * @return the texture for the floor item
          */
-        public static TextureRegion getTextureForPowerup(Powerup powerup) {
-            switch (powerup) {
-	            case SCORE_MULTIPLIER:
-                    return Assets.floorItemScore;
-                case SUPER_SPEED:
-	                return Assets.floorItemSpeed;
-                case RATE_OF_FIRE:
-                    return Assets.floorItemFireRate;
-                case INVULNERABLE:
-                    return Assets.floorItemInvulnerable;
-                default:
-                    return null;
-            }
+        public TextureRegion getTexture() {
+            return texture;
         }
     }
 
@@ -344,22 +336,23 @@ public class Player extends Character {
      * Available upgrades (upgrades are persistent).
      */
     public enum Upgrade {
-        NONE,
-        GUN;
-
+        NONE (null               ),
+        GUN  (Assets.floorItemGun);
+        
+        private final TextureRegion texture;
+        
+        Upgrade(TextureRegion texture){
+            this.texture = texture;
+        }
+        
         /**
          * Gets a texture for this upgrade's floor item.
          *
          * @param upgrade the upgrade
          * @return the texture for the floor item
          */
-        public static TextureRegion getTextureForUpgrade(Upgrade upgrade) {
-            switch (upgrade) {
-                case GUN:
-                    return Assets.floorItemGun;
-                default:
-                    return null;
-            }
+        public TextureRegion getTexture() {
+            return texture;
         }
     }
 }

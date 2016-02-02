@@ -22,16 +22,6 @@ import com.superduckinvaders.game.assets.Assets;
 public class WinScreen extends BaseScreen {
 
     /**
-     * The DuckGame this WinScreen belongs to.
-     */
-    private DuckGame parent;
-
-    /**
-     * The sprite batch for rendering.
-     */
-    private SpriteBatch uiBatch;
-
-    /**
      * Stage for containing the button.
      */
     private Stage stage;
@@ -44,11 +34,11 @@ public class WinScreen extends BaseScreen {
     /**
      * Initialises this WinScreen to display the final score.
      *
-     * @param parent the game the screen is associated with
+     * @param game the game the screen is associated with
      * @param score the final score to display
      */
-    public WinScreen(DuckGame parent, int score) {
-        this.parent = parent;
+    public WinScreen(DuckGame game, int score) {
+        super(game);
         this.score = score;
     }
 
@@ -57,9 +47,7 @@ public class WinScreen extends BaseScreen {
      */
     @Override
     public void show() {
-        uiBatch = new SpriteBatch();
-
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
         Drawable drawable = new TextureRegionDrawable(Assets.button);
@@ -69,7 +57,7 @@ public class WinScreen extends BaseScreen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                parent.setScreen(new StartScreen(parent));
+                getGame().setScreen(new StartScreen(getGame()));
             }
         });
 
@@ -99,38 +87,8 @@ public class WinScreen extends BaseScreen {
      */
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        super.render(delta);
         stage.draw();
-    }
-
-    /**
-     * Not used since the game window cannot be resized.
-     */
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void pause() {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void resume() {
-    }
-
-    /**
-     * Not used.
-     */
-    @Override
-    public void hide() {
     }
 
     /**
@@ -138,6 +96,7 @@ public class WinScreen extends BaseScreen {
      */
     @Override
     public void dispose() {
-        uiBatch.dispose();
+        Gdx.input.setInputProcessor(null);
+        stage.dispose();
     }
 }

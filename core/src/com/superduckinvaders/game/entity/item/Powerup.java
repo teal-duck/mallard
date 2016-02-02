@@ -1,6 +1,7 @@
 package com.superduckinvaders.game.entity.item;
 
 import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.entity.PhysicsEntity;
 import com.superduckinvaders.game.entity.Player;
 
 /**
@@ -16,22 +17,24 @@ public class Powerup extends Item {
     /**
      * How long the powerup will last for.
      */
-    private double time;
+    private float time;
 
-    public Powerup(Round parent, double x, double y, Player.Powerup powerup, double time) {
-        super(parent, x, y, Player.Powerup.getTextureForPowerup(powerup));
+    public Powerup(Round parent, float x, float y, Player.Powerup powerup, float time) {
+        super(parent, x, y, powerup.getTexture());
 
         this.powerup = powerup;
         this.time = time;
     }
+    
+    @Override
+    public void onCollision(PhysicsEntity other){
+        if (other instanceof Player) {
+            ((Player)other).setPowerup(powerup, time);
+            removed = true;
+        }
+    }
 
     @Override
     public void update(float delta) {
-        Player player = parent.getPlayer();
-
-        if (this.intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) {
-            player.setPowerup(powerup, time);
-            removed = true;
-        }
     }
 }

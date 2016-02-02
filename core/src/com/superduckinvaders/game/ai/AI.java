@@ -21,10 +21,10 @@ public abstract class AI {
     public AI(Round round) {
         this.round = round;
     }
-
+    
     /**
      * Updates this AI.
-     * @param mob pointer to the Mob using this AI
+     * @param mob reference to the Mob using this AI
      * @param delta time since the previous update
      */
     public abstract void update(Mob mob, float delta);

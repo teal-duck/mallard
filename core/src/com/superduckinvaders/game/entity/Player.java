@@ -10,6 +10,9 @@ import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 
+import java.util.Map;
+import java.util.EnumMap;
+
 /**
  * Represents the player of the game.
  */
@@ -56,18 +59,10 @@ public class Player extends Character {
      * Player's current score.
      */
     private int points = 0;
-    /**
-     * Player's current powerup.
-     */
-    private Powerup powerup = Powerup.NONE;
-    /**
-     * Player's upgrade.
-     */
-    private Upgrade upgrade = Upgrade.NONE;
-    /**
-     * How much time is remaining on the Player's powerup.
-     */
-    private float powerupInitial, powerupTimer = 0;
+    
+    
+    public EnumMap<Pickup, Float> pickupMap = new EnumMap<Pickup, Float>(Pickup.class);
+    
     /**
      * Shows if a player is flying. If less than 0, player is flying for -flyingTimer seconds. If less than PLAYER_FLIGHT_COOLDOWN, flying is on cooldown.
      */
@@ -118,69 +113,6 @@ public class Player extends Character {
     }
 
     /**
-     * Gets the Player's current powerup (in the Powerup enum).
-     *
-     * @return the current powerup
-     */
-    public Powerup getPowerup() {
-        return powerup;
-    }
-    
-    /**
-     * Get the players current upgrade (in the Upgrade enum). 
-     * @return the current upgrade
-     */
-    public Upgrade getUpgrade(){
-    	return upgrade;
-    }
-
-    /**
-     * Sets the Player's current upgrade.
-     *
-     * @param upgrade the upgrade to set
-     */
-    public void setUpgrade(Upgrade upgrade) {
-        this.upgrade = upgrade;
-    }
-
-    /**
-     * Gets the time remaining on the Player's powerup.
-     *
-     * @return the time remaining on the powerup
-     */
-    public float getPowerupTime() {
-        return powerupTimer;
-    }
-
-    /**
-     * Gets the time that the current powerup initially lasted for.
-     *
-     * @return the initial powerup time
-     */
-    public float getPowerupInitialTime() {
-        return powerupInitial;
-    }
-
-    /**
-     * Clears the Player's current powerup.
-     */
-    public void clearPowerup() {
-        powerup = Powerup.NONE;
-        powerupInitial = powerupTimer = 0;
-    }
-
-    /**
-     * Sets the Player's current powerup and how long it should last.
-     *
-     * @param powerup the powerup to set (in the Powerup enum)
-     * @param time    how long the powerup should last, in seconds
-     */
-    public void setPowerup(Powerup powerup, float time) {
-        this.powerup = powerup;
-        this.powerupInitial = this.powerupTimer = time;
-    }
-
-    /**
      * Returns if the player is currently flying
      * @return true if the Player is currently flying, false if not
      */
@@ -212,9 +144,17 @@ public class Player extends Character {
     @Override
     public void damage(int health) {
         // Only apply damage if we don't have the invulnerability powerup.
-        if (powerup != Powerup.INVULNERABLE) {
+        if (!pickupMap.containsKey(Pickup.INVULNERABLE)) {
             super.damage(health);
         }
+    }
+    
+    public void givePickup(Pickup pickup, float duration){
+        pickupMap.put(pickup, duration);
+    }
+    
+    public boolean hasPickup(Pickup pickup){
+        return pickupMap.containsKey(pickup);
     }
 
     /**
@@ -224,22 +164,26 @@ public class Player extends Character {
      */
     @Override
     public void update(float delta) {
-        // Decrement powerup timer.
-        if (powerupTimer > 0) {
-            powerupTimer -= delta;
-        } else if (powerupTimer <= 0) {
-            clearPowerup();
+        // Decrement pickup timer.
+        for (Map.Entry<Pickup, Float> entry : pickupMap.entrySet()){
+            float value = entry.getValue();
+            if (value < 0) {
+                pickupMap.remove(entry.getKey());
+            }
+            else {
+                entry.setValue(value - delta);
+            }
         }
-
+        
         // Update attack timer.
         attackTimer += delta;
 
         // Left mouse to attack.
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (attackTimer >= PLAYER_ATTACK_DELAY * (getPowerup() == Powerup.RATE_OF_FIRE ? PLAYER_ATTACK_DELAY_MULTIPLIER : 1)) {
+            if (attackTimer >= PLAYER_ATTACK_DELAY * ( hasPickup(Pickup.RATE_OF_FIRE) ? PLAYER_ATTACK_DELAY_MULTIPLIER : 1)) {
                 attackTimer = 0;
 
-                if (upgrade == Upgrade.GUN) {
+                if (hasPickup(Pickup.GUN)) {
                     Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
 
                     // Face target when firing gun.
@@ -254,7 +198,7 @@ public class Player extends Character {
 
 
         // Calculate speed at which to move the player.
-        float speed = PLAYER_SPEED * (powerup == Powerup.SUPER_SPEED ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
+        float speed = PLAYER_SPEED * (hasPickup(Pickup.SUPER_SPEED) ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
 
         // Left/right movement.
         
@@ -309,8 +253,8 @@ public class Player extends Character {
     /**
      * Available powerups (only last for a while).
      */
-    public enum Powerup {
-        NONE              (null                        ),
+    public enum Pickup {
+        GUN               (Assets.floorItemGun         ),
         SCORE_MULTIPLIER  (Assets.floorItemScore       ),
         SUPER_SPEED       (Assets.floorItemSpeed       ),
         RATE_OF_FIRE      (Assets.floorItemFireRate    ),
@@ -318,41 +262,14 @@ public class Player extends Character {
 
     
         private final TextureRegion texture;
-        Powerup(TextureRegion texture){
+        
+        Pickup(TextureRegion texture){
             this.texture = texture;
         }
-        /**
-         * Gets a texture for this powerup's floor item.
-         *
-         * @param powerup the powerup
-         * @return the texture for the floor item
-         */
+        
         public TextureRegion getTexture() {
             return texture;
         }
     }
-
-    /**
-     * Available upgrades (upgrades are persistent).
-     */
-    public enum Upgrade {
-        NONE (null               ),
-        GUN  (Assets.floorItemGun);
-        
-        private final TextureRegion texture;
-        
-        Upgrade(TextureRegion texture){
-            this.texture = texture;
-        }
-        
-        /**
-         * Gets a texture for this upgrade's floor item.
-         *
-         * @param upgrade the upgrade
-         * @return the texture for the floor item
-         */
-        public TextureRegion getTexture() {
-            return texture;
-        }
-    }
+    
 }

@@ -11,9 +11,8 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.entity.Entity;
-import com.superduckinvaders.game.entity.PhysicsEntity;
-import com.superduckinvaders.game.entity.Player;
+import com.superduckinvaders.game.entity.*;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * Screen for interaction with the game.
@@ -191,9 +190,16 @@ public class GameScreen extends BaseScreen {
         uiBatch.draw(Assets.staminaFull, 1080, 10);
 
         // Draw powerup bar.
-        uiBatch.draw(Assets.powerupEmpty, 1080, 50);
-        Assets.powerupFull.setRegionWidth((int) Math.max(0, round.getPlayer().getPowerupTime() / round.getPlayer().getPowerupInitialTime() * 192));
-        uiBatch.draw(Assets.powerupFull, 1080, 50);
+        int i=0;
+        for (Player.Pickup pickup : round.getPlayer().pickupMap.keySet()){
+            TextureRegion texture = pickup.getTexture();
+            float width = texture.getRegionWidth();
+            float height = texture.getRegionHeight();
+            uiBatch.draw(texture, 1080+(50*i++), 50, width*2, height*2);
+        }
+        //uiBatch.draw(Assets.powerupEmpty, 1080, 50);
+        //Assets.powerupFull.setRegionWidth((int) Math.max(0, round.getPlayer().getPowerupTime() / round.getPlayer().getPowerupInitialTime() * 192));
+        //uiBatch.draw(Assets.powerupFull, 1080, 50);
 
         for (int x = 0; x < round.getPlayer().getMaximumHealth(); x += 2) {
             if(x+2 <= round.getPlayer().getCurrentHealth())

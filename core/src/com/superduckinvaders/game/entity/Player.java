@@ -310,31 +310,25 @@ public class Player extends Character {
      * Available powerups (only last for a while).
      */
     public enum Powerup {
-        NONE,
-        SCORE_MULTIPLIER,
-        SUPER_SPEED,
-        RATE_OF_FIRE,
-        INVULNERABLE;
+        NONE              (null                        ),
+        SCORE_MULTIPLIER  (Assets.floorItemScore       ),
+        SUPER_SPEED       (Assets.floorItemSpeed       ),
+        RATE_OF_FIRE      (Assets.floorItemFireRate    ),
+        INVULNERABLE      (Assets.floorItemInvulnerable);
 
+    
+        private final TextureRegion texture;
+        Powerup(TextureRegion texture){
+            this.texture = texture;
+        }
         /**
          * Gets a texture for this powerup's floor item.
          *
          * @param powerup the powerup
          * @return the texture for the floor item
          */
-        public static TextureRegion getTextureForPowerup(Powerup powerup) {
-            switch (powerup) {
-	            case SCORE_MULTIPLIER:
-                    return Assets.floorItemScore;
-                case SUPER_SPEED:
-	                return Assets.floorItemSpeed;
-                case RATE_OF_FIRE:
-                    return Assets.floorItemFireRate;
-                case INVULNERABLE:
-                    return Assets.floorItemInvulnerable;
-                default:
-                    return null;
-            }
+        public TextureRegion getTexture() {
+            return texture;
         }
     }
 

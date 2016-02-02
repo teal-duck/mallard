@@ -20,7 +20,7 @@ public class Powerup extends Item {
     private float time;
 
     public Powerup(Round parent, float x, float y, Player.Powerup powerup, float time) {
-        super(parent, x, y, Player.Powerup.getTextureForPowerup(powerup));
+        super(parent, x, y, powerup.getTexture());
 
         this.powerup = powerup;
         this.time = time;

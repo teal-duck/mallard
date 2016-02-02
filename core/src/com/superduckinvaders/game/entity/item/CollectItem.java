@@ -1,31 +1,20 @@
 package com.superduckinvaders.game.entity.item;
 
 import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.PhysicsEntity;
 import com.superduckinvaders.game.entity.Player;
 
-/**
- * Created by olivermcclellan on 16/01/2016.
- */
-public class Upgrade extends Item {
 
-    /**
-     * The upgrade that this Upgrade gives to the player.
-     */
-    private Player.Upgrade upgrade;
+public class CollectItem extends Item {
 
-
-    public Upgrade(Round parent, float x, float y, Player.Upgrade upgrade) {
-        super(parent, x, y, upgrade.getTexture());
-
-        this.upgrade = upgrade;
+    public CollectItem(Round parent, float x, float y) {
+        super(parent, x, y, Assets.flag);
     }
-    
     
     @Override
     public void onCollision(PhysicsEntity other){
         if (other instanceof Player) {
-            ((Player)other).setUpgrade(upgrade);
             removed = true;
         }
     }
@@ -34,3 +23,4 @@ public class Upgrade extends Item {
     public void update(float delta) {
     }
 }
+

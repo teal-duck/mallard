@@ -12,7 +12,7 @@ public class Particle extends Entity {
     /**
      * How long this Particle will remain on the screen.
      */
-    private double initialDuration, duration;
+    private float elapsed, duration;
 
     /**
      * The animation to use for this Particle.
@@ -28,10 +28,11 @@ public class Particle extends Entity {
      * @param duration  how long the particle effect should last for, in seconds
      * @param animation the animation to use for the particle effect
      */
-    public Particle(Round parent, double x, double y, double duration, Animation animation) {
+    public Particle(Round parent, float x, float y, float duration, Animation animation) {
         super(parent, x, y);
 
-        this.initialDuration = this.duration = duration;
+        this.duration = duration;
+        this.elapsed = 0f;
         this.animation = animation;
     }
 
@@ -42,10 +43,8 @@ public class Particle extends Entity {
      */
     @Override
     public void update(float delta) {
-        // Do not call super() as particles don't move or collide.
-        duration -= delta;
-
-        if (duration <= 0) {
+        elapsed += delta;
+        if (elapsed > duration) {
             removed = true;
         }
     }
@@ -54,7 +53,7 @@ public class Particle extends Entity {
      * @return the width of this Particle
      */
     @Override
-    public int getWidth() {
+    public float getWidth() {
         return animation.getKeyFrame(0).getRegionWidth();
     }
 
@@ -62,7 +61,7 @@ public class Particle extends Entity {
      * @return the height of this Particle
      */
     @Override
-    public int getHeight() {
+    public float getHeight() {
         return animation.getKeyFrame(0).getRegionHeight();
     }
 
@@ -73,6 +72,6 @@ public class Particle extends Entity {
      */
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(animation.getKeyFrame((float) (initialDuration - duration)), (int) x, (int) y);
+        spriteBatch.draw(animation.getKeyFrame(elapsed), getX(), getY());
     }
 }

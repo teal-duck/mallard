@@ -16,7 +16,7 @@ public class Upgrade extends Item {
 
 
     public Upgrade(Round parent, float x, float y, Player.Upgrade upgrade) {
-        super(parent, x, y, Player.Upgrade.getTextureForUpgrade(upgrade));
+        super(parent, x, y, upgrade.getTexture());
 
         this.upgrade = upgrade;
     }

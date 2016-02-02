@@ -336,22 +336,23 @@ public class Player extends Character {
      * Available upgrades (upgrades are persistent).
      */
     public enum Upgrade {
-        NONE,
-        GUN;
-
+        NONE (null               ),
+        GUN  (Assets.floorItemGun);
+        
+        private final TextureRegion texture;
+        
+        Upgrade(TextureRegion texture){
+            this.texture = texture;
+        }
+        
         /**
          * Gets a texture for this upgrade's floor item.
          *
          * @param upgrade the upgrade
          * @return the texture for the floor item
          */
-        public static TextureRegion getTextureForUpgrade(Upgrade upgrade) {
-            switch (upgrade) {
-                case GUN:
-                    return Assets.floorItemGun;
-                default:
-                    return null;
-            }
+        public TextureRegion getTexture() {
+            return texture;
         }
     }
 }

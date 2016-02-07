@@ -197,15 +197,13 @@ public class Player extends Character {
         attackTimer += delta;
 
         // Left mouse to attack.
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && ! isFlying()) {
             if (attackTimer >= PLAYER_ATTACK_DELAY * ( hasPickup(Pickup.RATE_OF_FIRE) ? PLAYER_ATTACK_DELAY_MULTIPLIER : 1)) {
                 attackTimer = 0;
 
                 if (hasPickup(Pickup.GUN)) {
                     Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
-
-                    // Face target when firing gun.
-                    //facing = directionTo(target.x, target.y);
+                    
                     fireAt(new Vector2(target.x, target.y), 1);
                 } else {
                     // TODO: tweak melee range

@@ -13,7 +13,9 @@ import com.superduckinvaders.game.entity.item.*;
 import com.superduckinvaders.game.entity.mob.Mob;
 import com.superduckinvaders.game.entity.mob.ZombieMob;
 import com.superduckinvaders.game.objective.CollectObjective;
+import com.superduckinvaders.game.objective.KillObjective;
 import com.superduckinvaders.game.objective.Objective;
+import com.superduckinvaders.game.objective.SurviveObjective;
 import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
 import com.superduckinvaders.game.screen.WinScreen;
@@ -123,20 +125,30 @@ public final class Round {
         int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
         int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
 
-        Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
-        setObjective(new CollectObjective(this, objective));
+
+
+//        Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
+//        setObjective(new CollectObjective(this, objective));
 
 //        setObjective (new SurviveObjective(this));
         entities = new ArrayList<Entity>(128);
         entities.add(player);
         //entities.add(objective);
 
+        Mob debugMob = addMob(new ZombieMob(this, startX + 40, startY+50));
+        setObjective(new KillObjective(
+                        this,
+                        debugMob,
+                        "Kill the Enemy!"
+                )
+        );
+
         createPickup(startX + 20, startY, Player.Pickup.GUN, Float.POSITIVE_INFINITY);
         createPickup(startX + 40, startY, Player.Pickup.RATE_OF_FIRE, 60);
         createPickup(startX - 40, startY-40, Player.Pickup.HEALTH, 0);
         createPickup(startX - 60, startY-40, Player.Pickup.LIGHTSABER, Float.POSITIVE_INFINITY);
 
-        Mob debugMob = addMob(new ZombieMob(this, startX + 40, startY+50));
+
         //spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
     }
 
@@ -472,7 +484,7 @@ public final class Round {
             }
         }
 
-        for (int i = 0; i < entities.size(); i++) {
+        for (int i = 0; i < entities.size();i++) {
             Entity entity = entities.get(i);
 
             if (entity.isRemoved()) {
@@ -480,7 +492,7 @@ public final class Round {
                     player.addScore((int) (10 * (player.hasPickup(Player.Pickup.SCORE_MULTIPLIER) ? Player.PLAYER_SCORE_MULTIPLIER : 1)));
                 }
                 entity.dispose();
-                entities.remove(i);
+                entities.remove(i--);
             } else if (entity.distanceTo(player.getX(), player.getY()) < UPDATE_DISTANCE){
                 // Don't bother updating entities that aren't on screen.
                 entity.update(delta);

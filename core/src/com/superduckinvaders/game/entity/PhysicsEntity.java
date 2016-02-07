@@ -12,7 +12,8 @@ public abstract class PhysicsEntity extends Entity {
     public static final short PLAYER_BITS      = 0x2;
     public static final short MOB_BITS         = 0x4;
     public static final short PROJECTILE_BITS  = 0x8;
-    public static final short ALL_BITS         = WORLD_BITS | PLAYER_BITS | MOB_BITS | PROJECTILE_BITS;
+    public static final short ITEM_BITS        = 0x10;
+    public static final short ALL_BITS         = WORLD_BITS | PLAYER_BITS | MOB_BITS | PROJECTILE_BITS | ITEM_BITS;
     public static final short NO_GROUP         = 0;
     public static final short MOB_GROUP        = -1;
     

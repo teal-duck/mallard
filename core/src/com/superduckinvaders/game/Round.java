@@ -135,7 +135,7 @@ public final class Round {
         createPickup(startX + 40, startY, Player.Pickup.RATE_OF_FIRE, 60);
         createPickup(startX - 40, startY-40, Player.Pickup.HEALTH, 0);
 
-        Mob debugMob = addMob(new ZombieMob(startX + 40, startY+50));
+        Mob debugMob = addMob(new ZombieMob(this, startX + 40, startY+50));
         //spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
     }
 

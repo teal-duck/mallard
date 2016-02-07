@@ -16,7 +16,7 @@ public class Item extends PhysicsEntity {
     public Item(Round parent, float x, float y, TextureRegion texture) {
         super(parent, x, y);
         this.texture = texture;
-        createStaticBody(WORLD_BITS, PLAYER_BITS, NO_GROUP, true);
+        createStaticBody(ITEM_BITS, PLAYER_BITS, NO_GROUP, true);
     }
 
     @Override

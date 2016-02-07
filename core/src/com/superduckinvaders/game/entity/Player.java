@@ -56,6 +56,8 @@ public class Player extends Character {
      */
     public static final float PLAYER_FLIGHT_COOLDOWN = 5f;
 
+    public State state = State.DEFAULT;
+
     /**
      * Player's current score.
      */
@@ -165,6 +167,17 @@ public class Player extends Character {
      */
     @Override
     public void update(float delta) {
+        if (isFlying()){
+            state = State.FLYING;
+        }
+        else if (hasPickup(Pickup.GUN)) {
+            state = State.HASGUN;
+        }
+        else {
+            state = State.DEFAULT;
+        }
+
+
         // Decrement pickup timer.
         for (Map.Entry<Pickup, Float> entry : pickupMap.entrySet()){
             float value = entry.getValue();
@@ -249,21 +262,40 @@ public class Player extends Character {
     @Override
     public void render(SpriteBatch spriteBatch) {
         // Use the right texture set.
-        TextureSet textureSet = isFlying() ? Assets.playerFlying : Assets.playerNormal;
-        
+//        TextureSet textureSet = isFlying() ? Assets.playerFlying : ( hasPickup(Pickup.GUN) ? Assets.playerGun : Assets.playerNormal);
+        TextureSet textureSet = state.getTextureSet();
+
         Vector2 pos = getPosition();
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), pos.x, pos.y);
     }
 
+    public enum State {
+        DEFAULT    (Assets.playerNormal),
+        HASGUN     (Assets.playerGun),
+        HASSABER   (Assets.playerGun), // for now, we don't have all the saber assets!
+        FLYING     (Assets.playerFlying);
+
+        private final TextureSet textureSet;
+
+        State (TextureSet textureSet){
+            this.textureSet = textureSet;
+        }
+
+        public TextureSet getTextureSet(){
+            return this.textureSet;
+        }
+    }
+
     /**
-     * Available powerups (only last for a while).
+     * Available pickups.
      */
     public enum Pickup {
         GUN               (Assets.floorItemGun         ),
+        LIGHTSABER        (Assets.floorItemSaber       ),
         SCORE_MULTIPLIER  (Assets.floorItemScore       ),
         SUPER_SPEED       (Assets.floorItemSpeed       ),
         RATE_OF_FIRE      (Assets.floorItemFireRate    ),
-        HEALTH            (Assets.floorHeart           ),
+        HEALTH            (Assets.floorItemHeart       ),
         INVULNERABLE      (Assets.floorItemInvulnerable);
 
     

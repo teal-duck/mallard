@@ -17,7 +17,7 @@ public class Assets {
     /**
      *  Player texture sets for normal and flying.
      */
-    public static TextureSet playerNormal, playerFlying;
+    public static TextureSet playerNormal, playerGun, playerFlying;
 
     /**
      *  Bad guy texture set.
@@ -67,7 +67,7 @@ public class Assets {
     /**
      *  Textures for floor items.
      */
-    public static TextureRegion floorItemGun, floorItemSpeed, floorItemInvulnerable, floorItemScore, floorItemFireRate, floorHeart;
+    public static TextureRegion floorItemGun, floorItemSaber, floorItemSpeed, floorItemInvulnerable, floorItemScore, floorItemFireRate, floorItemHeart;
 
     /**
      *  Texture for objective flag.
@@ -94,7 +94,7 @@ public class Assets {
 
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
 
-        explosionAnimation = loadAnimation("textures/explosion.png", 2, 32, 0.3f);
+        explosionAnimation = loadAnimation("textures/explosion.png", 2, 0.3f);
 
         levelOneMap = loadTiledMap("maps/map.tmx");
 
@@ -104,9 +104,6 @@ public class Assets {
         heartFull = new TextureRegion(hearts, 0, 0, 32, 28);
         heartHalf = new TextureRegion(hearts, 32, 0, 32, 28);
         heartEmpty = new TextureRegion(hearts, 64, 0, 32, 28);
-
-        Texture heartPickup = loadTexture("textures/heart_pickup.png");
-        floorHeart = new TextureRegion(heartPickup, 0, 0, 13, 12);
 
         Texture stamina = loadTexture("textures/stamina.png");
         staminaFull = new TextureRegion(stamina, 0, 0, 192, 28);
@@ -136,19 +133,35 @@ public class Assets {
         TextureRegion left = new TextureRegion(playerIdle, 28, 0, 14, 18);
         TextureRegion right = new TextureRegion(playerIdle, 42, 0, 14, 18);
 
+        // Load idle gun texture map.
+        Texture playerIdleGun = loadTexture("textures/player_idle_gun.png");
+
+        // Cut idle textures from texture map.
+
+        TextureRegion frontGun = new TextureRegion(playerIdleGun,    0, 0, 18, 18);
+        TextureRegion backGun = new TextureRegion(playerIdleGun,    18, 0, 18, 18);
+        TextureRegion leftGun = new TextureRegion(playerIdleGun,  18*2, 0, 18, 18);
+        TextureRegion rightGun = new TextureRegion(playerIdleGun, 18*3, 0, 18, 18);
+
         // Load walking animations.
-        Animation walkingFront = loadAnimation("textures/player_walking_front.png", 4, 12, 0.2f);
-        Animation walkingBack = loadAnimation("textures/player_walking_back.png", 4, 12, 0.2f);
-        Animation walkingLeft = loadAnimation("textures/player_walking_left.png", 4, 14, 0.2f);
-        Animation walkingRight = loadAnimation("textures/player_walking_right.png", 4, 14, 0.2f);
+        Animation walkingFront = loadAnimation("textures/player_walking_front.png", 4, 0.2f);
+        Animation walkingBack = loadAnimation("textures/player_walking_back.png", 4, 0.2f);
+        Animation walkingLeft = loadAnimation("textures/player_walking_left.png", 4, 0.2f);
+        Animation walkingRight = loadAnimation("textures/player_walking_right.png", 4, 0.2f);
+
+        Animation walkingFrontGun = loadAnimation("textures/player_walking_front_gun.png", 4, 0.2f);
+        Animation walkingBackGun = loadAnimation("textures/player_walking_back_gun.png", 4, 0.2f);
+        Animation walkingLeftGun = loadAnimation("textures/player_walking_left_gun.png", 4, 0.2f);
+        Animation walkingRightGun = loadAnimation("textures/player_walking_right_gun.png", 4, 0.2f);
 
         // Load flying animations.
-        Animation flyingFront = loadAnimation("textures/player_flying_front.png", 2, 18, 0.2f);
-        Animation flyingBack = loadAnimation("textures/player_flying_back.png", 2, 18, 0.2f);
-        Animation flyingLeft = loadAnimation("textures/player_flying_left.png", 2, 21, 0.2f);
-        Animation flyingRight = loadAnimation("textures/player_flying_right.png", 2, 21, 0.2f);
+        Animation flyingFront = loadAnimation("textures/player_flying_front.png", 2, 0.2f);
+        Animation flyingBack = loadAnimation("textures/player_flying_back.png", 2, 0.2f);
+        Animation flyingLeft = loadAnimation("textures/player_flying_left.png", 2, 0.2f);
+        Animation flyingRight = loadAnimation("textures/player_flying_right.png", 2, 0.2f);
 
         playerNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
+        playerGun = new TextureSet(frontGun, backGun, leftGun, rightGun, walkingFrontGun, walkingBackGun, walkingLeftGun, walkingRightGun);
         playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
     }
 
@@ -166,10 +179,10 @@ public class Assets {
         TextureRegion right = new TextureRegion(badGuyIdle, 63, 0, 21, 24);
 
         // Load walking animations.
-        Animation walkingFront = loadAnimation("textures/badguy_walking_front.png", 4, 21, 0.2f);
-        Animation walkingBack = loadAnimation("textures/badguy_walking_back.png", 4, 21, 0.2f);
-        Animation walkingLeft = loadAnimation("textures/badguy_walking_left.png", 4, 16, 0.2f);
-        Animation walkingRight = loadAnimation("textures/badguy_walking_right.png", 4, 16, 0.2f);
+        Animation walkingFront = loadAnimation("textures/badguy_walking_front.png", 4, 0.2f);
+        Animation walkingBack = loadAnimation("textures/badguy_walking_back.png", 4, 0.2f);
+        Animation walkingLeft = loadAnimation("textures/badguy_walking_left.png", 4, 0.2f);
+        Animation walkingRight = loadAnimation("textures/badguy_walking_right.png", 4, 0.2f);
 
         badGuyNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
     }
@@ -180,11 +193,13 @@ public class Assets {
     public static void loadFloorItems() {
         Texture floorItems = loadTexture("textures/floor_items.png");
 
-        floorItemGun = new TextureRegion(floorItems, 0, 0, 15, 15);
-        floorItemSpeed = new TextureRegion(floorItems, 15, 0, 15, 15);
-        floorItemInvulnerable = new TextureRegion(floorItems, 30, 0, 15, 15);
-        floorItemScore = new TextureRegion(floorItems, 45, 0, 15, 15);
-        floorItemFireRate = new TextureRegion(floorItems, 60, 0, 15, 15);
+        floorItemGun =          new TextureRegion(floorItems,    0, 0, 15, 15);
+        floorItemSaber =        new TextureRegion(floorItems,   15, 0, 15, 15);
+        floorItemSpeed =        new TextureRegion(floorItems, 15*2, 0, 15, 15);
+        floorItemInvulnerable = new TextureRegion(floorItems, 15*3, 0, 15, 15);
+        floorItemScore =        new TextureRegion(floorItems, 15*4, 0, 15, 15);
+        floorItemFireRate =     new TextureRegion(floorItems, 15*5, 0, 15, 15);
+        floorItemHeart =        new TextureRegion(floorItems, 15*6, 0, 15, 15);
     }
 
     /**
@@ -212,12 +227,14 @@ public class Assets {
      *
      * @param file          the file to load from
      * @param count         how many frames are in the file
-     * @param frameWidth    how wide each frame is in the file
      * @param frameDuration how long each frame should be shown for in seconds
      * @return the animation
      */
-    public static Animation loadAnimation(String file, int count, int frameWidth, float frameDuration) {
+    public static Animation loadAnimation(String file, int count, float frameDuration) {
         Texture texture = loadTexture(file);
+
+        int frameWidth = texture.getWidth()/count;
+
         Array<TextureRegion> keyFrames = new Array<TextureRegion>();
 
         for (int i = 0; i < count; i++) {

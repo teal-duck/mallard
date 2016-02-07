@@ -189,7 +189,7 @@ public class GameScreen extends BaseScreen {
         }
         uiBatch.draw(Assets.staminaFull, 1080, 10);
 
-        // Draw powerup bar.
+        // Draw powerups.
         int i=0;
         for (Player.Pickup pickup : round.getPlayer().pickupMap.keySet()){
             TextureRegion texture = pickup.getTexture();
@@ -197,9 +197,6 @@ public class GameScreen extends BaseScreen {
             float height = texture.getRegionHeight();
             uiBatch.draw(texture, 1080+(50*i++), 50, width*2, height*2);
         }
-        //uiBatch.draw(Assets.powerupEmpty, 1080, 50);
-        //Assets.powerupFull.setRegionWidth((int) Math.max(0, round.getPlayer().getPowerupTime() / round.getPlayer().getPowerupInitialTime() * 192));
-        //uiBatch.draw(Assets.powerupFull, 1080, 50);
 
         for (int x = 0; x < round.getPlayer().getMaximumHealth(); x += 2) {
             if(x+2 <= round.getPlayer().getCurrentHealth())

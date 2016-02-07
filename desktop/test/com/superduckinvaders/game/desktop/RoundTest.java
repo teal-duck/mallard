@@ -9,7 +9,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.entity.Mob;
+import com.superduckinvaders.game.entity.mob.Mob;
 import com.superduckinvaders.game.Round;
 
 public class RoundTest {
@@ -49,11 +49,16 @@ public class RoundTest {
 	public void spawningTest() {
 		int currentMobCount = testRound.getEntities().size();
 		//check bad mob spawn
+
+		//FIXME: this is wrong, the checking behaviour was moved out of the createMob method a while ago
+		/*
 		assertEquals(false, testRound.createMob(-10, -10, 10, Assets.badGuyNormal, 10));
 		assertEquals(currentMobCount, testRound.getEntities().size());
 		//check correct mob spawn
 		assertEquals(true, testRound.createMob(100, 100, 10, Assets.badGuyNormal, 10));
 		assertEquals(currentMobCount+1, testRound.getEntities().size());
+		*/
+
 		//add mob manually, kill it and see if it despawns
 		Mob testMob = new Mob(testRound, 100, 100, 10, Assets.badGuyNormal, 10);
 		testRound.addEntity(testMob);
@@ -76,6 +81,8 @@ public class RoundTest {
 	
 	@Test
 	public void collisionTest(){
+
+        //FIXME: we no longer use tile based collision - change to point collision.
 		assertEquals(false, testRound.isTileBlocked(300, 300));
 	}
 

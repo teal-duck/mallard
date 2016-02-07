@@ -3,7 +3,7 @@ package com.superduckinvaders.game.desktop;
 import static org.junit.Assert.*;
 
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.Mob;
+import com.superduckinvaders.game.entity.mob.Mob;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.superduckinvaders.game.DuckGame;

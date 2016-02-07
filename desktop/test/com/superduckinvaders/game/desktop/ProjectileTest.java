@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.Mob;
+import com.superduckinvaders.game.entity.mob.Mob;
 import com.superduckinvaders.game.entity.Projectile;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;

@@ -3,7 +3,7 @@ package com.superduckinvaders.game.desktop;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import com.superduckinvaders.game.entity.Mob;
+import com.superduckinvaders.game.entity.mob.Mob;
 public class CharacterTest {
 
 	/**

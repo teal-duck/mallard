@@ -1,5 +1,5 @@
 
-package com.superduckinvaders.game.entity;
+package com.superduckinvaders.game.entity.mob;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,6 +10,8 @@ import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.ai.DummyAI;
 import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.TextureSet;
+import com.superduckinvaders.game.entity.Character;
+import com.superduckinvaders.game.entity.Player;
 
 public class Mob extends Character {
 
@@ -80,12 +82,6 @@ public class Mob extends Character {
     public float getHeight() {
         return textureSet.getHeight();
     }
-    
-    /**
-     * change where the given mob moves to according to its speed and a new direction vector
-     * @param dirX x component of the direction vector
-     * @param dirY y component of the direction vector
-     */
 
     @Override
     public void update(float delta) {
@@ -93,19 +89,7 @@ public class Mob extends Character {
 
         // Chance of spawning a random powerup.
         if (isDead()) {
-            float random = MathUtils.random();
-            Player.Pickup pickup = null;
-
-            if (random < 0.05) {
-                pickup = Player.Pickup.SCORE_MULTIPLIER;
-            } else if (random >= 0.05 && random < 0.1) {
-                pickup = Player.Pickup.INVULNERABLE;
-            } else if (random >= 0.1 && random < 0.15) {
-                pickup = Player.Pickup.SUPER_SPEED;
-            } else if (random >= 0.15 && random < 0.2) {
-                pickup = Player.Pickup.RATE_OF_FIRE;
-            }
-
+            Player.Pickup pickup = Player.Pickup.random();
             if (pickup != null) {
                 parent.createPickup(getX(), getY(), pickup, 10);
             }
@@ -117,7 +101,10 @@ public class Mob extends Character {
     @Override
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
-        
+
+
+        //DEBUGGING CODE -- remove when ready
+
         if (ai instanceof PathfindingAI) {
             PathfindingAI.Coordinate coord = ((PathfindingAI)ai).target;
             if (coord != null) {
@@ -130,5 +117,7 @@ public class Mob extends Character {
                 spriteBatch.begin();
             }            
         }
+
+        //END DEBUGGING CODE
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.Round;
@@ -174,6 +175,10 @@ public class Player extends Character {
                 entry.setValue(value - delta);
             }
         }
+
+        if (hasPickup(Pickup.HEALTH)) {
+            heal(1);
+        }
         
         // Update attack timer.
         attackTimer += delta;
@@ -258,6 +263,7 @@ public class Player extends Character {
         SCORE_MULTIPLIER  (Assets.floorItemScore       ),
         SUPER_SPEED       (Assets.floorItemSpeed       ),
         RATE_OF_FIRE      (Assets.floorItemFireRate    ),
+        HEALTH            (Assets.floorHeart           ),
         INVULNERABLE      (Assets.floorItemInvulnerable);
 
     
@@ -269,6 +275,23 @@ public class Player extends Character {
         
         public TextureRegion getTexture() {
             return texture;
+        }
+
+        public static Pickup random(){
+            float random = MathUtils.random();
+            Pickup pickup = null;
+
+            if (random < 0.05) {
+                pickup = Player.Pickup.SCORE_MULTIPLIER;
+            } else if (random >= 0.05 && random < 0.1) {
+                pickup = Player.Pickup.INVULNERABLE;
+            } else if (random >= 0.1 && random < 0.15) {
+                pickup = Player.Pickup.SUPER_SPEED;
+            } else if (random >= 0.15 && random < 0.2) {
+                pickup = Player.Pickup.RATE_OF_FIRE;
+            }
+
+            return pickup;
         }
     }
     

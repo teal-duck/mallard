@@ -67,7 +67,7 @@ public class Assets {
     /**
      *  Textures for floor items.
      */
-    public static TextureRegion floorItemGun, floorItemSpeed, floorItemInvulnerable, floorItemScore, floorItemFireRate;
+    public static TextureRegion floorItemGun, floorItemSpeed, floorItemInvulnerable, floorItemScore, floorItemFireRate, floorHeart;
 
     /**
      *  Texture for objective flag.
@@ -104,6 +104,9 @@ public class Assets {
         heartFull = new TextureRegion(hearts, 0, 0, 32, 28);
         heartHalf = new TextureRegion(hearts, 32, 0, 32, 28);
         heartEmpty = new TextureRegion(hearts, 64, 0, 32, 28);
+
+        Texture heartPickup = loadTexture("textures/heart_pickup.png");
+        floorHeart = new TextureRegion(heartPickup, 0, 0, 13, 12);
 
         Texture stamina = loadTexture("textures/stamina.png");
         staminaFull = new TextureRegion(stamina, 0, 0, 192, 28);

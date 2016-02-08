@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.entity.item.*;
+import com.superduckinvaders.game.entity.mob.GunnerMob;
 import com.superduckinvaders.game.entity.mob.Mob;
 import com.superduckinvaders.game.entity.mob.ZombieMob;
 import com.superduckinvaders.game.objective.CollectObjective;
@@ -136,10 +137,18 @@ public final class Round {
         //entities.add(objective);
 
         Mob debugMob = addMob(new ZombieMob(this, startX + 40, startY+50));
+        Mob debugMob2 = addMob(new GunnerMob(this, startX - 40, startY-50));
+
+        ArrayList<Mob> targets = new ArrayList<Mob>();
+        targets.add(debugMob);
+        targets.add(debugMob2);
+
+        //FIXME:the score from the last enemy is not added.
+
         setObjective(new KillObjective(
                         this,
-                        debugMob,
-                        "Kill the Enemy!"
+                        targets,
+                        "Kill the Enemies!"
                 )
         );
 

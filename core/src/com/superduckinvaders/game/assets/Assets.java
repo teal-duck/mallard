@@ -22,7 +22,7 @@ public class Assets {
     /**
      *  Bad guy texture set.
      */
-    public static TextureSet badGuyNormal;
+    public static TextureSet rangedBadGuyNormal, badGuyNormal;
 
     /**
      *  Texture for Projectile.
@@ -184,7 +184,23 @@ public class Assets {
         Animation walkingLeft = loadAnimation("textures/badguy_walking_left.png", 4, 0.2f);
         Animation walkingRight = loadAnimation("textures/badguy_walking_right.png", 4, 0.2f);
 
+        // Load idle texture map.
+        Texture rangedBadguyIdle = loadTexture("textures/ranged_badguy_idle.png");
+
+        // Cut idle textures from texture map.
+        TextureRegion rangedFront = new TextureRegion(rangedBadguyIdle, 0, 0, 21, 24);
+        TextureRegion rangedBack = new TextureRegion(rangedBadguyIdle, 21, 0, 21, 24);
+        TextureRegion rangedLeft = new TextureRegion(rangedBadguyIdle, 42, 0, 21, 24);
+        TextureRegion rangedRight = new TextureRegion(rangedBadguyIdle, 63, 0, 21, 24);
+
+        // Load walking animations.
+        Animation rangedWalkingFront = loadAnimation("textures/ranged_badguy_walking_front.png", 4, 0.2f);
+        Animation rangedWalkingBack = loadAnimation("textures/ranged_badguy_walking_back.png", 4, 0.2f);
+        Animation rangedWalkingLeft = loadAnimation("textures/ranged_badguy_walking_left.png", 4, 0.2f);
+        Animation rangedWalkingRight = loadAnimation("textures/ranged_badguy_walking_right.png", 4, 0.2f);
+
         badGuyNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
+        rangedBadGuyNormal = new TextureSet(rangedFront, rangedBack, rangedLeft, rangedRight, rangedWalkingFront, rangedWalkingBack, rangedWalkingLeft, rangedWalkingRight);
     }
 
     /**

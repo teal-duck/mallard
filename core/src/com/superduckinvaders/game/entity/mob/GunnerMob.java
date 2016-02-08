@@ -9,6 +9,6 @@ import com.superduckinvaders.game.assets.TextureSet;
  */
 public class GunnerMob extends RangedMob {
     public GunnerMob (Round parent, float x, float y){
-        super(parent, x, y, 2, Assets.badGuyNormal, 3);
+        super(parent, x, y, 2, Assets.rangedBadGuyNormal, 3);
     }
 }

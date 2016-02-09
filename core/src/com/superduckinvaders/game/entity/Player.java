@@ -254,7 +254,7 @@ public class Player extends Character {
         else {
             flyingTimer = Math.min((flyingTimer+(delta*0.2f)), PLAYER_FLIGHT_TIME);
         }
-        setVelocity(targetVelocity, 4f);
+        setVelocity(targetVelocity, state == State.SWIMMING ? 0.5f : 4f);
         
 
         // Update movement.

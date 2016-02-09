@@ -2,6 +2,7 @@ package com.superduckinvaders.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -17,10 +18,23 @@ import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 
 
-
 public class MapScreen extends BaseScreen {
 
     private Stage stage;
+
+    public class CustomClickListener extends ClickListener{
+        public TiledMap map;
+
+        public CustomClickListener(TiledMap map){
+            this.map = map;
+        }
+
+        @Override
+        public void clicked(InputEvent event, float x, float y){
+            dispose();
+            getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), map)));
+        }
+    }
 
 
     /**
@@ -43,67 +57,88 @@ public class MapScreen extends BaseScreen {
 
         Drawable button = new TextureRegionDrawable(Assets.button);
 
-        Button levelOneButton = new Button(new Button.ButtonStyle(button, button, button));
-        levelOneButton.setPosition((stage.getWidth() - levelOneButton.getPrefWidth()) * 2 /10, 485);
-        levelOneButton.addListener(new ClickListener() {
+        Button startButton = new Button(new Button.ButtonStyle(button, button, button));
+        startButton.setPosition((stage.getWidth() - startButton.getPrefWidth()) * 45 /100, 585);
+        startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
-                getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), Assets.levelOneMap)));
-
+                getGame().setScreen(new StartScreen(getGame()));
             }
         });
+
+        Button levelOneButton = new Button(new Button.ButtonStyle(button, button, button));
+        levelOneButton.setPosition((stage.getWidth() - levelOneButton.getPrefWidth()) * 2 / 10, 485);
+        levelOneButton.addListener(new CustomClickListener(Assets.levelOneMap));
 
         Button levelTwoButton = new Button(new Button.ButtonStyle(button, button, button));
         levelTwoButton.setPosition((stage.getWidth() - levelTwoButton.getPrefWidth()) * 7 /10, 485);
-        levelTwoButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                dispose();
-                getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), Assets.levelOneMap)));
-
-            }
-        });
+        levelTwoButton.addListener(new CustomClickListener(Assets.levelOneMap));
 
         Button levelThreeButton = new Button(new Button.ButtonStyle(button, button, button));
         levelThreeButton.setPosition((stage.getWidth() - levelThreeButton.getPrefWidth()) * 2 /10, 385);
-        levelThreeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                dispose();
-                getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), Assets.levelOneMap)));
-
-            }
-        });
+        levelThreeButton.addListener(new CustomClickListener(Assets.levelOneMap));
 
         Button levelFourButton = new Button(new Button.ButtonStyle(button, button, button));
         levelFourButton.setPosition((stage.getWidth() - levelFourButton.getPrefWidth()) * 7 /10, 385);
-        levelFourButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                dispose();
-                getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), Assets.levelOneMap)));
+        levelFourButton.addListener(new CustomClickListener(Assets.levelOneMap));
 
-            }
-        });
+        Button levelFiveButton = new Button(new Button.ButtonStyle(button, button, button));
+        levelFiveButton.setPosition((stage.getWidth() - levelFiveButton.getPrefWidth()) * 2 /10, 285);
+        levelFiveButton.addListener(new CustomClickListener(Assets.levelOneMap));
+
+        Button levelSixButton = new Button(new Button.ButtonStyle(button, button, button));
+        levelSixButton.setPosition((stage.getWidth() - levelSixButton.getPrefWidth()) * 7 /10, 285);
+        levelSixButton.addListener(new CustomClickListener(Assets.levelOneMap));
+
+        Button levelSevenButton = new Button(new Button.ButtonStyle(button, button, button));
+        levelSevenButton.setPosition((stage.getWidth() - levelSevenButton.getPrefWidth()) * 2 / 10, 185);
+        levelSevenButton.addListener(new CustomClickListener(Assets.levelOneMap));
+
+        Button levelEightButton = new Button(new Button.ButtonStyle(button, button, button));
+        levelEightButton.setPosition((stage.getWidth() - levelEightButton.getPrefWidth()) * 7 /10, 185);
+        levelEightButton.addListener(new CustomClickListener(Assets.levelOneMap));
 
         Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
 
-        Label levelOneLabel = new Label("Level 1", white);
-        levelOneLabel.setPosition((stage.getWidth() - levelOneLabel.getPrefWidth())* 27 / 100, 500);
+        Label startLabel = new Label("RETURN TO START", white);
+        startLabel.setPosition((stage.getWidth() - startLabel.getPrefWidth()) * 46 / 100, 600);
+        startLabel.setTouchable(Touchable.disabled);
 
-        Label levelTwoLabel = new Label("Level 2", white);
+        Label levelOneLabel = new Label("LEVEL 1", white);
+        levelOneLabel.setPosition((stage.getWidth() - levelOneLabel.getPrefWidth()) * 27 / 100, 500);
+        levelOneLabel.setTouchable(Touchable.disabled);
+
+        Label levelTwoLabel = new Label("LEVEL 2", white);
         levelTwoLabel.setPosition((stage.getWidth() - levelTwoLabel.getPrefWidth())*65 /100, 500);
         levelTwoLabel.setTouchable(Touchable.disabled);
 
-        Label levelThreeLabel = new Label("Level 3", white);
+        Label levelThreeLabel = new Label("LEVEL 3", white);
         levelThreeLabel.setPosition((stage.getWidth() - levelThreeLabel.getPrefWidth())* 27/ 100, 400);
         levelThreeLabel.setTouchable(Touchable.disabled);
 
-        Label levelFourLabel = new Label("Level 4", white);
+        Label levelFourLabel = new Label("LEVEL 4", white);
         levelFourLabel.setPosition((stage.getWidth() - levelFourLabel.getPrefWidth())* 65 / 100, 400);
         levelFourLabel.setTouchable(Touchable.disabled);
 
+        Label levelFiveLabel = new Label("LEVEL 5", white);
+        levelFiveLabel.setPosition((stage.getWidth() - levelFiveLabel.getPrefWidth())* 27 / 100, 300);
+        levelFiveLabel.setTouchable(Touchable.disabled);
+
+        Label levelSixLabel = new Label("LEVEL 6", white);
+        levelSixLabel.setPosition((stage.getWidth() - levelSixLabel.getPrefWidth())* 65 / 100, 300);
+        levelSixLabel.setTouchable(Touchable.disabled);
+
+        Label levelSevenLabel = new Label("LEVEL 7", white);
+        levelSevenLabel.setPosition((stage.getWidth() - levelSevenLabel.getPrefWidth()) * 27 / 100, 200);
+        levelSevenLabel.setTouchable(Touchable.disabled);
+
+        Label levelEightLabel = new Label("LEVEL 8", white);
+        levelEightLabel.setPosition((stage.getWidth() - levelEightLabel.getPrefWidth())* 65 / 100, 200);
+        levelEightLabel.setTouchable(Touchable.disabled);
+
+        stage.addActor(startButton);
+        stage.addActor(startLabel);
         stage.addActor(levelOneButton);
         stage.addActor(levelOneLabel);
         stage.addActor(levelTwoButton);
@@ -112,6 +147,15 @@ public class MapScreen extends BaseScreen {
         stage.addActor(levelThreeLabel);
         stage.addActor(levelFourButton);
         stage.addActor(levelFourLabel);
+        stage.addActor(levelFiveButton);
+        stage.addActor(levelFiveLabel);
+        stage.addActor(levelSixButton);
+        stage.addActor(levelSixLabel);
+        stage.addActor(levelSevenButton);
+        stage.addActor(levelSevenLabel);
+        stage.addActor(levelEightButton);
+        stage.addActor(levelEightLabel);
+
     }
 
     /**

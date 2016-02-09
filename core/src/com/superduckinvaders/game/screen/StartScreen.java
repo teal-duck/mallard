@@ -69,11 +69,11 @@ public class StartScreen extends BaseScreen {
 
         Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
 
-        Label playLabel = new Label("Click here to play", white);
+        Label playLabel = new Label("START", white);
         playLabel.setPosition((stage.getWidth() - playLabel.getPrefWidth()) / 2, 315);
         playLabel.setTouchable(Touchable.disabled);
 
-        Label mapLabel = new Label("Level Select", white);
+        Label mapLabel = new Label("LEVEL SELECT", white);
         mapLabel.setPosition((stage.getWidth() - mapLabel.getPrefWidth()) / 2, 265);
         mapLabel.setTouchable(Touchable.disabled);
 

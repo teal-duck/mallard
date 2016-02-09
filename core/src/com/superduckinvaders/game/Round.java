@@ -241,7 +241,7 @@ public final class Round {
     }
     
     public boolean rayCast(Vector2 pos1, Vector2 pos2){
-        return rayCast(pos1, pos2, PhysicsEntity.PLAYER_BITS);
+        return rayCast(pos1, pos2, PhysicsEntity.WORLD_BITS);
     }
     public boolean rayCast(Vector2 pos1, Vector2 pos2, short maskBits) {
         RayCast.RayCastCB r = new RayCast.RayCastCB(maskBits);

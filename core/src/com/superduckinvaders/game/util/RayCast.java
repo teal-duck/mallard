@@ -25,13 +25,12 @@ public class RayCast {
              * past the first intersection found.
              */
             if ((fixture.getFilterData().categoryBits & maskBits) != 0){
-                this.clear = true;
-                this.fraction = fraction;
+                this.clear = false;
             }
             else {
-                this.clear = false;
-                this.fraction = fraction;
+                this.clear = true;
             }
+            this.fraction = fraction;
             /* this reduces the length of the ray to the currently found intersection
              * this is done because fixtures are not necessarily reported in
              * in any order, and we only care about the closest intersection

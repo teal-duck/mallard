@@ -46,7 +46,7 @@ public class Mob extends Character {
         
         this.categoryBits = MOB_BITS;
         
-        createDynamicBody(MOB_BITS, ALL_BITS, MOB_GROUP, false);
+        createDynamicBody(MOB_BITS, (short)(ALL_BITS & (~MOB_BITS)), MOB_GROUP, false);
         this.body.setLinearDamping(20f);
     }
 

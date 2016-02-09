@@ -2,6 +2,7 @@ package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 
@@ -48,7 +49,7 @@ public class Projectile extends PhysicsEntity {
     }
     
     @Override
-    public void onCollision(PhysicsEntity other){
+    public void beginContact(PhysicsEntity other, Contact contact){
         parent.createParticle(getCentre(), 0.6f, Assets.explosionAnimation);
         removed = true;
         if (other instanceof Character && other != owner) {

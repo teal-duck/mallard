@@ -39,6 +39,7 @@ project(":desktop") {
 
         testCompile "junit:junit:4.+"
         testCompile "org.mockito:mockito-core:1.+"
+        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     }
 }
 

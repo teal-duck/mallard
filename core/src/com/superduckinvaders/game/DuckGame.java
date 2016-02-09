@@ -22,10 +22,17 @@ public class DuckGame extends Game {
     /**
      * Initialises the startScreen. Called by libGDX to set up the graphics.
      */
-    private class Session{
+     public class Session{
         public int levelCounter = 1;
         public int healthCounter = 6;
 
+        public void incrementLevelCounter(){
+            levelCounter += 1;
+        }
+
+        public void setHealthCounter(int health){
+            healthCounter = health;
+        }
     }
 
     public final Session session = new Session();

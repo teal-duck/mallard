@@ -385,6 +385,10 @@ public final class Round {
         return gameScreen.unproject(x, y);
     }
 
+    public DuckGame getGame() {
+        return parent;
+    }
+
     /**
      * Gets the player in the round
      * @return this Round's player

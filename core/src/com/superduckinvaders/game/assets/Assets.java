@@ -169,11 +169,17 @@ public class Assets {
         Animation flyingBack = loadAnimation("textures/player_flying_back.png", 2, 0.2f);
         Animation flyingLeft = loadAnimation("textures/player_flying_left.png", 2, 0.2f);
         Animation flyingRight = loadAnimation("textures/player_flying_right.png", 2, 0.2f);
+        
+        // Load swimming animations.
+//        Animation swimmingFront = loadAnimation("textures/player_swimming_front.png", 4, 0.2f);
+        Animation swimmingBack = loadAnimation("textures/player_swimming_back.png", 4, 0.2f);
+        Animation swimmingLeft = loadAnimation("textures/player_swimming_left.png", 4, 0.2f);
+        Animation swimmingRight = loadAnimation("textures/player_swimming_right.png", 4, 0.2f);
 
         playerNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
         playerGun = new TextureSet(frontGun, backGun, leftGun, rightGun, walkingFrontGun, walkingBackGun, walkingLeftGun, walkingRightGun);
         playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
-        playerSwimming = new TextureSet(frontSwimming, backSwimming, leftSwimming, rightSwimming, walkingFront, walkingBack, walkingLeft, walkingRight);
+        playerSwimming = new TextureSet(frontSwimming, backSwimming, leftSwimming, rightSwimming, walkingFront, swimmingBack, swimmingLeft, swimmingRight);
     }
 
     /**

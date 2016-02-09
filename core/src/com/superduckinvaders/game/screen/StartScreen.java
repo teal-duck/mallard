@@ -50,7 +50,20 @@ public class StartScreen extends BaseScreen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                dispose();
                 getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), Assets.levelOneMap)));
+
+            }
+        });
+
+        Button mapButton = new Button(new Button.ButtonStyle(button, button, button));
+        mapButton.setPosition((stage.getWidth() - mapButton.getPrefWidth()) / 2, 250);
+        mapButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dispose();
+                getGame().setScreen(new MapScreen(getGame()));
+
             }
         });
 
@@ -60,9 +73,15 @@ public class StartScreen extends BaseScreen {
         playLabel.setPosition((stage.getWidth() - playLabel.getPrefWidth()) / 2, 315);
         playLabel.setTouchable(Touchable.disabled);
 
+        Label mapLabel = new Label("Level Select", white);
+        mapLabel.setPosition((stage.getWidth() - mapLabel.getPrefWidth()) / 2, 265);
+        mapLabel.setTouchable(Touchable.disabled);
+
         stage.addActor(logoImage);
         stage.addActor(playButton);
         stage.addActor(playLabel);
+        stage.addActor(mapButton);
+        stage.addActor(mapLabel);
     }
 
     /**

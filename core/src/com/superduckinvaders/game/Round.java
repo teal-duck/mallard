@@ -7,16 +7,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.entity.item.*;
 import com.superduckinvaders.game.entity.mob.GunnerMob;
 import com.superduckinvaders.game.entity.mob.Mob;
 import com.superduckinvaders.game.entity.mob.ZombieMob;
-import com.superduckinvaders.game.objective.CollectObjective;
 import com.superduckinvaders.game.objective.KillObjective;
 import com.superduckinvaders.game.objective.Objective;
-import com.superduckinvaders.game.objective.SurviveObjective;
 import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
 import com.superduckinvaders.game.screen.WinScreen;
@@ -47,6 +44,9 @@ public final class Round {
      * The Round's map.
      */
     private TiledMap map;
+
+    private float tileWidth;
+    private float tileHeight;
 
     /**
      * Map layer containing randomly-chosen layer of predefined obstacles.
@@ -99,12 +99,21 @@ public final class Round {
                 if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
                     PhysicsEntity ea = (PhysicsEntity)a;
                     PhysicsEntity eb = (PhysicsEntity)b;
-                    ea.onCollision(eb);
-                    eb.onCollision(ea);
+                    ea.beginContact(eb, contact);
+                    eb.beginContact(ea, contact);
                 }
             }
             @Override
-            public void endContact(Contact contact) {}
+            public void endContact(Contact contact) {
+                Object a = contact.getFixtureA().getBody().getUserData();
+                Object b = contact.getFixtureB().getBody().getUserData();
+                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
+                    PhysicsEntity ea = (PhysicsEntity)a;
+                    PhysicsEntity eb = (PhysicsEntity)b;
+                    ea.endContact(eb, contact);
+                    eb.endContact(ea, contact);
+                }
+            }
             @Override
             public void postSolve(Contact arg0, ContactImpulse arg1) {}
             @Override
@@ -115,7 +124,10 @@ public final class Round {
         obstaclesLayer = chooseObstacles();
         collisionLayer = getCollisionLayer();
 
-        createObstacleBodies();
+        tileWidth = collisionLayer.getTileWidth();
+        tileHeight = collisionLayer.getTileHeight();
+
+        createEnvironmentBodies();
 
         // Determine starting coordinates for player (0, 0 default).
         int startX = Integer.parseInt(map.getProperties().get("StartX", "0", String.class)) * getTileWidth();
@@ -180,30 +192,46 @@ public final class Round {
             return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count - 1)));
         }
     }
-    
-    private void createObstacleBodies() {
+
+    private interface Constructor {
+        Entity construct(float x, float y, float w, float h);
+    }
+
+    private void layerMap(TiledMapTileLayer layer, Constructor constructor){
+        if (layer == null){
+            return;
+        }
+
         float tw = collisionLayer.getTileWidth();
         float th = collisionLayer.getTileHeight();
 
-        //ArrayList<Obstacle> obstacleEntities = new ArrayList<Obstacle>();
-
-        TiledMapTileLayer[] layers = {collisionLayer, obstaclesLayer};
-
-        for (TiledMapTileLayer layer : layers){
-            for (int x = 0; x < layer.getWidth(); x++) {
-                for (int y = 0; y < layer.getHeight(); y++) {
-                    if (layer.getCell(x, y) != null) {
-                        float tileX = x * tw;
-                        float tileY = y * th;
-                        // obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
-                        new Obstacle(this, tileX, tileY, tw, th);
-                    }
+        for (int x = 0; x < layer.getWidth(); x++) {
+            for (int y = 0; y < layer.getHeight(); y++) {
+                if (layer.getCell(x, y) != null) {
+                    float tileX = x * tw;
+                    float tileY = y * th;
+                    // obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
+                    constructor.construct(tileX, tileY, tw, th);
                 }
             }
         }
+    }
+
+
+    private void createEnvironmentBodies() {
+        Constructor createObstacle = (float x, float y, float w, float h) -> (new Obstacle(this, x, y, w, h));
+        Constructor createWater = (float x, float y, float w, float h) -> (new WaterEntity(this, x, y, w, h));
+
+        layerMap(getCollisionLayer(), createObstacle);
+        layerMap(getObstaclesLayer(), createObstacle);
+        layerMap(getWaterLayer(),     createWater   );
+
         
         float mapHeight = getMapHeight();
         float mapWidth = getMapWidth();
+
+        //Assumes square tiles!
+        float tw = collisionLayer.getTileWidth();
         
         // 4 map edge objects
         new Obstacle(this, -tw,      -tw,       tw,          mapHeight+tw);
@@ -310,6 +338,9 @@ public final class Round {
      */
     public TiledMapTileLayer getCollisionLayer() {
         return (TiledMapTileLayer) getMap().getLayers().get("Collision");
+    }
+    public TiledMapTileLayer getWaterLayer() {
+        return (TiledMapTileLayer) getMap().getLayers().get("Water");
     }
 
     /**

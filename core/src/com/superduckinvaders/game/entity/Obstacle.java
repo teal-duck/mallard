@@ -14,8 +14,6 @@ public class Obstacle extends PhysicsEntity {
     }
     
     @Override
-    public void render(SpriteBatch spriteBatch) {
-        // spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
-    }
+    public void render(SpriteBatch spriteBatch) {}
 
 }

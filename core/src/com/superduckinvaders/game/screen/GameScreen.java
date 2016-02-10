@@ -145,6 +145,7 @@ public class GameScreen extends BaseScreen {
         mapRenderer.setView(camera);
         mapRenderer.renderTileLayer(round.getBaseLayer());
         mapRenderer.renderTileLayer(round.getCollisionLayer());
+        mapRenderer.renderTileLayer(round.getWaterLayer());
 
         // Render randomly-chosen obstacles layer.
         if (round.getObstaclesLayer() != null)

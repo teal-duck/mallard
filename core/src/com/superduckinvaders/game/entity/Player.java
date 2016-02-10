@@ -75,6 +75,8 @@ public class Player extends Character {
      */
     private float attackTimer = 0;
 
+    public int waterBlockCount = 0;
+
     /**
      * Initialises this Player at the specified coordinates and with the specified initial health.
      *
@@ -122,7 +124,11 @@ public class Player extends Character {
     public boolean isFlying() {
         return flyingTimer > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE);
     }
-    
+
+    public boolean isSwimming() {
+        return waterBlockCount > 0 && !isFlying();
+    }
+
     /**
      * @return the width of this Player
      */
@@ -169,6 +175,9 @@ public class Player extends Character {
     public void update(float delta) {
         if (isFlying()){
             state = State.FLYING;
+        }
+        else if (isSwimming()){
+            state = State.SWIMMING;
         }
         else if (hasPickup(Pickup.GUN)) {
             state = State.HASGUN;
@@ -245,12 +254,13 @@ public class Player extends Character {
         else {
             flyingTimer = Math.min((flyingTimer+(delta*0.2f)), PLAYER_FLIGHT_TIME);
         }
-        setVelocity(targetVelocity, 4f);
+        setVelocity(targetVelocity, state == State.SWIMMING ? 0.5f : 4f);
         
 
         // Update movement.
         super.update(delta);
     }
+
 
     /**
      * Renders this Player.
@@ -271,6 +281,7 @@ public class Player extends Character {
         DEFAULT    (Assets.playerNormal),
         HASGUN     (Assets.playerGun),
         HASSABER   (Assets.playerGun), // for now, we don't have all the saber assets!
+        SWIMMING     (Assets.playerSwimming),
         FLYING     (Assets.playerFlying);
 
         private final TextureSet textureSet;

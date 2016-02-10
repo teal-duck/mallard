@@ -17,7 +17,7 @@ public class Assets {
     /**
      *  Player texture sets for normal and flying.
      */
-    public static TextureSet playerNormal, playerGun, playerFlying;
+    public static TextureSet playerNormal, playerGun, playerSwimming, playerFlying;
 
     /**
      *  Bad guy texture set.
@@ -133,6 +133,16 @@ public class Assets {
         TextureRegion left = new TextureRegion(playerIdle, 28, 0, 14, 18);
         TextureRegion right = new TextureRegion(playerIdle, 42, 0, 14, 18);
 
+        // Load idle texture map.
+        Texture playerIdleSwimming = loadTexture("textures/player_swimming_idle.png");
+
+        // Cut idle textures from texture map.
+        TextureRegion frontSwimming = new TextureRegion(playerIdleSwimming, 0, 0, 21, 18);
+        TextureRegion backSwimming = new TextureRegion(playerIdleSwimming, 21, 0, 21, 18);
+        TextureRegion leftSwimming = new TextureRegion(playerIdleSwimming, 21*2, 0, 21, 18);
+        TextureRegion rightSwimming = new TextureRegion(playerIdleSwimming, 21*3, 0, 21, 18);
+        
+
         // Load idle gun texture map.
         Texture playerIdleGun = loadTexture("textures/player_idle_gun.png");
 
@@ -159,10 +169,17 @@ public class Assets {
         Animation flyingBack = loadAnimation("textures/player_flying_back.png", 2, 0.2f);
         Animation flyingLeft = loadAnimation("textures/player_flying_left.png", 2, 0.2f);
         Animation flyingRight = loadAnimation("textures/player_flying_right.png", 2, 0.2f);
+        
+        // Load swimming animations.
+        Animation swimmingFront = loadAnimation("textures/player_swimming_front.png", 4, 0.2f);
+        Animation swimmingBack = loadAnimation("textures/player_swimming_back.png", 4, 0.2f);
+        Animation swimmingLeft = loadAnimation("textures/player_swimming_left.png", 4, 0.2f);
+        Animation swimmingRight = loadAnimation("textures/player_swimming_right.png", 4, 0.2f);
 
         playerNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
         playerGun = new TextureSet(frontGun, backGun, leftGun, rightGun, walkingFrontGun, walkingBackGun, walkingLeftGun, walkingRightGun);
         playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
+        playerSwimming = new TextureSet(frontSwimming, backSwimming, leftSwimming, rightSwimming, swimmingFront, swimmingBack, swimmingLeft, swimmingRight);
     }
 
     /**

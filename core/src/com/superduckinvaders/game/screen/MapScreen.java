@@ -24,15 +24,20 @@ public class MapScreen extends BaseScreen {
 
     public class CustomClickListener extends ClickListener{
         public TiledMap map;
+        public int level;
 
-        public CustomClickListener(TiledMap map){
+        public CustomClickListener(TiledMap map, int level){
             this.map = map;
+            this.level = level;
+
         }
 
         @Override
         public void clicked(InputEvent event, float x, float y){
             dispose();
+            DuckGame.session.setLevel(level);
             getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), map)));
+
         }
     }
 
@@ -69,35 +74,35 @@ public class MapScreen extends BaseScreen {
 
         Button levelOneButton = new Button(new Button.ButtonStyle(button, button, button));
         levelOneButton.setPosition((stage.getWidth() - levelOneButton.getPrefWidth()) * 2 / 10, 485);
-        levelOneButton.addListener(new CustomClickListener(Assets.levelOneMap));
+        levelOneButton.addListener(new CustomClickListener(Assets.levelOneMap, 1));
 
         Button levelTwoButton = new Button(new Button.ButtonStyle(button, button, button));
         levelTwoButton.setPosition((stage.getWidth() - levelTwoButton.getPrefWidth()) * 7 /10, 485);
-        levelTwoButton.addListener(new CustomClickListener(Assets.levelOneMap));
+        levelTwoButton.addListener(new CustomClickListener(Assets.levelOneMap, 2));
 
         Button levelThreeButton = new Button(new Button.ButtonStyle(button, button, button));
         levelThreeButton.setPosition((stage.getWidth() - levelThreeButton.getPrefWidth()) * 2 /10, 385);
-        levelThreeButton.addListener(new CustomClickListener(Assets.levelOneMap));
+        levelThreeButton.addListener(new CustomClickListener(Assets.levelOneMap, 3));
 
         Button levelFourButton = new Button(new Button.ButtonStyle(button, button, button));
         levelFourButton.setPosition((stage.getWidth() - levelFourButton.getPrefWidth()) * 7 /10, 385);
-        levelFourButton.addListener(new CustomClickListener(Assets.levelOneMap));
+        levelFourButton.addListener(new CustomClickListener(Assets.levelOneMap, 4));
 
         Button levelFiveButton = new Button(new Button.ButtonStyle(button, button, button));
         levelFiveButton.setPosition((stage.getWidth() - levelFiveButton.getPrefWidth()) * 2 /10, 285);
-        levelFiveButton.addListener(new CustomClickListener(Assets.levelOneMap));
+        levelFiveButton.addListener(new CustomClickListener(Assets.levelOneMap, 5));
 
         Button levelSixButton = new Button(new Button.ButtonStyle(button, button, button));
         levelSixButton.setPosition((stage.getWidth() - levelSixButton.getPrefWidth()) * 7 /10, 285);
-        levelSixButton.addListener(new CustomClickListener(Assets.levelOneMap));
+        levelSixButton.addListener(new CustomClickListener(Assets.levelOneMap, 6));
 
         Button levelSevenButton = new Button(new Button.ButtonStyle(button, button, button));
         levelSevenButton.setPosition((stage.getWidth() - levelSevenButton.getPrefWidth()) * 2 / 10, 185);
-        levelSevenButton.addListener(new CustomClickListener(Assets.levelOneMap));
+        levelSevenButton.addListener(new CustomClickListener(Assets.levelOneMap, 7));
 
         Button levelEightButton = new Button(new Button.ButtonStyle(button, button, button));
         levelEightButton.setPosition((stage.getWidth() - levelEightButton.getPrefWidth()) * 7 /10, 185);
-        levelEightButton.addListener(new CustomClickListener(Assets.levelOneMap));
+        levelEightButton.addListener(new CustomClickListener(Assets.levelOneMap, 8));
 
         Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
 

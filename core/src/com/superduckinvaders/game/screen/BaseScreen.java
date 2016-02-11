@@ -41,6 +41,10 @@ abstract public class BaseScreen extends ScreenAdapter {
     protected DuckGame getGame() {
         return this.game;
     }
+
+    public Viewport getViewport() {
+        return viewport;
+    }
     
     @Override
     public void resize(int width, int height){

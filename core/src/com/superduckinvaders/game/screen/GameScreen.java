@@ -1,13 +1,20 @@
 package com.superduckinvaders.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
@@ -23,11 +30,14 @@ public class GameScreen extends BaseScreen {
      * The renderer for the tile map.
      */
     private OrthogonalTiledMapRenderer mapRenderer;
+    private ShapeRenderer shapeRenderer;
 
     /**
      * The sprite batches for rendering.
      */
     private SpriteBatch spriteBatch, uiBatch;
+    private OrthographicCamera uiCamera;
+    private Viewport uiViewport;
 
     /**
      * The Round this GameScreen renders.
@@ -36,9 +46,23 @@ public class GameScreen extends BaseScreen {
     
     private float cameraMinX;
     private float cameraMinY;
-    
     private float cameraMaxX;
     private float cameraMaxY;
+    
+    private float minimapCameraMinX;
+    private float minimapCameraMinY;
+    private float minimapCameraMaxX;
+    private float minimapCameraMaxY;
+
+    private int minimapX = 70;
+    private int minimapY = 70;
+    private int minimapWidth = 250;
+    private int minimapHeight = 250;
+
+
+    private OrthographicCamera minimapCamera;
+    private Viewport minimapViewport;
+
     
     Box2DDebugRenderer debugRenderer;
     Matrix4 debugMatrix;
@@ -53,9 +77,6 @@ public class GameScreen extends BaseScreen {
         super(game);
         round.gameScreen = this;
         this.round = round;
-        
-        viewport.setWorldSize(DuckGame.GAME_WIDTH / 2, DuckGame.GAME_HEIGHT /2);
-        
     }
 
     /**
@@ -81,6 +102,15 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void show() {
+
+        minimapCamera = new OrthographicCamera();
+        minimapCamera.zoom = 2f;
+        minimapViewport = new MinimapViewport();
+        minimapViewport.setCamera(minimapCamera);
+
+        viewport.setWorldSize(DuckGame.GAME_WIDTH / 2, DuckGame.GAME_HEIGHT / 2);
+        minimapViewport.setWorldSize(DuckGame.GAME_HEIGHT / 2, DuckGame.GAME_HEIGHT / 2);
+
         
         /* These values are to get ensure the camera never shows
          * anything outside the map by preventing its position
@@ -92,12 +122,35 @@ public class GameScreen extends BaseScreen {
         
         cameraMaxX = round.getMapWidth() - cameraMinX;
         cameraMaxY = round.getMapHeight() - cameraMinY;
+        
+        minimapCameraMinX = minimapViewport.getWorldWidth();
+        minimapCameraMinY = minimapViewport.getWorldHeight();
+        
+        minimapCameraMaxX = round.getMapWidth() - minimapCameraMinX;
+        minimapCameraMaxY = round.getMapHeight() - minimapCameraMinY;
 
         spriteBatch = new SpriteBatch();
+
+
+
+        uiCamera    = new OrthographicCamera();
+        uiCamera.setToOrtho(false);
+
         uiBatch     = new SpriteBatch();
+
+        uiViewport = new FitViewport(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT, uiCamera);
+
+        shapeRenderer = new ShapeRenderer();
         mapRenderer = new OrthogonalTiledMapRenderer(round.getMap(), spriteBatch);
         
         debugRenderer = new Box2DDebugRenderer();
+    }
+
+    @Override
+    public void resize(int width, int height){
+        super.resize(width, height);
+        uiViewport.update(width, height, false);
+        minimapViewport.update(width, height, false);
     }
 
     /**
@@ -123,8 +176,16 @@ public class GameScreen extends BaseScreen {
                 0
         );
         camera.update();
-        
         spriteBatch.setProjectionMatrix(camera.combined);
+
+        minimapCamera.position.set(
+                Math.max(minimapCameraMinX, Math.min(playerX, minimapCameraMaxX)),
+                Math.max(minimapCameraMinY, Math.min(playerY, minimapCameraMaxY)),
+                0
+        );
+        minimapCamera.update();
+        
+
 
         spriteBatch.begin();
         this.drawGame();
@@ -132,9 +193,91 @@ public class GameScreen extends BaseScreen {
 
         this.drawDebug();
 
+        uiBatch.setProjectionMatrix(uiCamera.combined);
+
+
+
+        uiViewport.apply();
         uiBatch.begin();
         this.drawUI();
         uiBatch.end();
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        shapeRenderer.setProjectionMatrix(new Matrix4(uiBatch.getProjectionMatrix()));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.6f);
+        shapeRenderer.rect(minimapX-3, minimapY-3, minimapWidth+6, minimapHeight+6);
+        shapeRenderer.end();
+
+        spriteBatch.setColor(1, 1, 1, 0.7f);
+        spriteBatch.begin();
+        drawMiniMap();
+
+        Vector2 playerPos = round.getPlayer().getPosition();
+        int width = Assets.minimapHead.getRegionWidth()*6;
+        int height = Assets.minimapHead.getRegionHeight()*6;
+
+        spriteBatch.draw(Assets.minimapHead, playerPos.x-width/2, playerPos.y-height/2, width, height);
+
+        spriteBatch.end();
+        spriteBatch.setColor(Color.WHITE);
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+
+
+
+    }
+    ///
+
+
+    public void drawMiniMap() {
+
+
+        Vector3 screenPos = uiViewport.project(new Vector3(minimapX, minimapY, 0));
+        // strange maths to accommodate non-uniform projections.
+        Vector3 screenSize = uiViewport.project(
+                    new Vector3(minimapX+minimapWidth, minimapX+minimapWidth, 0)
+                ).sub(screenPos);
+
+        minimapViewport.setScreenBounds(Math.round(screenPos.x),
+                Math.round(screenPos.y),
+                Math.round(screenSize.x),
+                Math.round(screenSize.y));
+
+        minimapViewport.apply();
+
+        mapRenderer.setView(minimapCamera);
+        drawMap();
+        drawOverhang();
+    }
+
+
+
+
+
+
+
+
+
+    private void drawMap() {
+        mapRenderer.renderTileLayer(round.getBaseLayer());
+        mapRenderer.renderTileLayer(round.getCollisionLayer());
+        mapRenderer.renderTileLayer(round.getWaterLayer());
+
+        // Render randomly-chosen obstacles layer.
+        if (round.getObstaclesLayer() != null) {
+            mapRenderer.renderTileLayer(round.getObstaclesLayer());
+        }
+    }
+
+    private void drawOverhang() {
+        // Render overhang layer (draws over the player).
+        if (round.getOverhangLayer() != null) {
+            mapRenderer.renderTileLayer(round.getOverhangLayer());
+        }
     }
 
     /**
@@ -143,21 +286,13 @@ public class GameScreen extends BaseScreen {
     private void drawGame() {
         // Render base and collision layers.
         mapRenderer.setView(camera);
-        mapRenderer.renderTileLayer(round.getBaseLayer());
-        mapRenderer.renderTileLayer(round.getCollisionLayer());
-        mapRenderer.renderTileLayer(round.getWaterLayer());
-
-        // Render randomly-chosen obstacles layer.
-        if (round.getObstaclesLayer() != null)
-            mapRenderer.renderTileLayer(round.getObstaclesLayer());
+        drawMap();
 
         // Draw all entities.
         for (Entity entity : round.getEntities())
             entity.render(spriteBatch);
 
-        // Render overhang layer (draws over the player).
-        if (round.getOverhangLayer() != null)
-            mapRenderer.renderTileLayer(round.getOverhangLayer());
+        drawOverhang();
     }
 
     /**
@@ -219,5 +354,8 @@ public class GameScreen extends BaseScreen {
         mapRenderer.dispose();
         spriteBatch.dispose();
         uiBatch.dispose();
+    }
+
+    private class MinimapViewport extends Viewport {
     }
 }

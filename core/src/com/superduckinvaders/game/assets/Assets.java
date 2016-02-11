@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Assets {
 
+    public static TextureRegion minimapHead;
+
     /**
      *  Player texture sets for normal and flying.
      */
@@ -91,6 +93,8 @@ public class Assets {
         loadPlayerTextureSets();
         loadBadGuyTextureSet();
         loadFloorItems();
+
+        minimapHead = new TextureRegion(loadTexture("textures/minimap_head.png"));
 
         projectile = new TextureRegion(loadTexture("textures/projectile.png"));
 

@@ -140,7 +140,7 @@ public final class Round {
             int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
             int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
 
-            Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
+            Item objective = new CollectItem(this, objectiveX, objectiveY);
             setObjective(new CollectObjective(this, objective));
             entities.add(objective);
 

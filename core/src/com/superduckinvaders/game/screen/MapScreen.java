@@ -78,33 +78,48 @@ public class MapScreen extends BaseScreen {
 
         Button levelTwoButton = new Button(new Button.ButtonStyle(button, button, button));
         levelTwoButton.setPosition((stage.getWidth() - levelTwoButton.getPrefWidth()) * 7 /10, 485);
-        levelTwoButton.addListener(new CustomClickListener(Assets.levelOneMap, 2));
+        if (DuckGame.session.levelCounter > 1) {
+            levelTwoButton.addListener(new CustomClickListener(Assets.levelOneMap, 2));
+        }
 
         Button levelThreeButton = new Button(new Button.ButtonStyle(button, button, button));
-        levelThreeButton.setPosition((stage.getWidth() - levelThreeButton.getPrefWidth()) * 2 /10, 385);
-        levelThreeButton.addListener(new CustomClickListener(Assets.levelOneMap, 3));
+        levelThreeButton.setPosition((stage.getWidth() - levelThreeButton.getPrefWidth()) * 2 / 10, 385);
+        if (DuckGame.session.levelCounter > 2) {
+            levelThreeButton.addListener(new CustomClickListener(Assets.levelOneMap, 3));
+        }
 
         Button levelFourButton = new Button(new Button.ButtonStyle(button, button, button));
-        levelFourButton.setPosition((stage.getWidth() - levelFourButton.getPrefWidth()) * 7 /10, 385);
-        levelFourButton.addListener(new CustomClickListener(Assets.levelOneMap, 4));
+        levelFourButton.setPosition((stage.getWidth() - levelFourButton.getPrefWidth()) * 7 / 10, 385);
+        if (DuckGame.session.levelCounter > 3) {
+            levelFourButton.addListener(new CustomClickListener(Assets.levelOneMap, 4));
+        }
 
         Button levelFiveButton = new Button(new Button.ButtonStyle(button, button, button));
-        levelFiveButton.setPosition((stage.getWidth() - levelFiveButton.getPrefWidth()) * 2 /10, 285);
-        levelFiveButton.addListener(new CustomClickListener(Assets.levelOneMap, 5));
+        levelFiveButton.setPosition((stage.getWidth() - levelFiveButton.getPrefWidth()) * 2 / 10, 285);
+        if (DuckGame.session.levelCounter > 4) {
+            levelFiveButton.addListener(new CustomClickListener(Assets.levelOneMap, 5));
+        }
 
         Button levelSixButton = new Button(new Button.ButtonStyle(button, button, button));
-        levelSixButton.setPosition((stage.getWidth() - levelSixButton.getPrefWidth()) * 7 /10, 285);
-        levelSixButton.addListener(new CustomClickListener(Assets.levelOneMap, 6));
+        levelSixButton.setPosition((stage.getWidth() - levelSixButton.getPrefWidth()) * 7 / 10, 285);
+        if (DuckGame.session.levelCounter > 5) {
+            levelSixButton.addListener(new CustomClickListener(Assets.levelOneMap, 6));
+        }
 
         Button levelSevenButton = new Button(new Button.ButtonStyle(button, button, button));
         levelSevenButton.setPosition((stage.getWidth() - levelSevenButton.getPrefWidth()) * 2 / 10, 185);
-        levelSevenButton.addListener(new CustomClickListener(Assets.levelOneMap, 7));
+        if (DuckGame.session.levelCounter > 6){
+            levelSevenButton.addListener(new CustomClickListener(Assets.levelOneMap, 7));
+        }
 
         Button levelEightButton = new Button(new Button.ButtonStyle(button, button, button));
-        levelEightButton.setPosition((stage.getWidth() - levelEightButton.getPrefWidth()) * 7 /10, 185);
-        levelEightButton.addListener(new CustomClickListener(Assets.levelOneMap, 8));
+        levelEightButton.setPosition((stage.getWidth() - levelEightButton.getPrefWidth()) * 7 / 10, 185);
+        if (DuckGame.session.levelCounter > 7) {
+            levelEightButton.addListener(new CustomClickListener(Assets.levelOneMap, 8));
+        }
 
         Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
+        Label.LabelStyle red = new Label.LabelStyle(Assets.font, Color.RED);
 
         Label startLabel = new Label("RETURN TO START", white);
         startLabel.setPosition((stage.getWidth() - startLabel.getPrefWidth()) * 46 / 100, 600);
@@ -114,31 +129,66 @@ public class MapScreen extends BaseScreen {
         levelOneLabel.setPosition((stage.getWidth() - levelOneLabel.getPrefWidth()) * 27 / 100, 500);
         levelOneLabel.setTouchable(Touchable.disabled);
 
-        Label levelTwoLabel = new Label("LEVEL 2", white);
+        Label levelTwoLabel;
+        if (DuckGame.session.levelCounter > 1) {
+            levelTwoLabel = new Label("LEVEL 2", white);
+        }else {
+            levelTwoLabel = new Label("LOCKED", red);
+        }
         levelTwoLabel.setPosition((stage.getWidth() - levelTwoLabel.getPrefWidth())*65 /100, 500);
         levelTwoLabel.setTouchable(Touchable.disabled);
 
-        Label levelThreeLabel = new Label("LEVEL 3", white);
+        Label levelThreeLabel;
+        if (DuckGame.session.levelCounter > 2) {
+        levelThreeLabel = new Label("LEVEL 3", white);
+        }else{
+            levelThreeLabel = new Label("LOCKED", red);
+        }
         levelThreeLabel.setPosition((stage.getWidth() - levelThreeLabel.getPrefWidth())* 27/ 100, 400);
         levelThreeLabel.setTouchable(Touchable.disabled);
 
-        Label levelFourLabel = new Label("LEVEL 4", white);
+        Label levelFourLabel;
+        if (DuckGame.session.levelCounter > 3) {
+            levelFourLabel = new Label("LEVEL 4", white);
+        }else{
+            levelFourLabel = new Label("LOCKED", red);
+        }
         levelFourLabel.setPosition((stage.getWidth() - levelFourLabel.getPrefWidth())* 65 / 100, 400);
         levelFourLabel.setTouchable(Touchable.disabled);
 
-        Label levelFiveLabel = new Label("LEVEL 5", white);
+        Label levelFiveLabel;
+        if (DuckGame.session.levelCounter > 4) {
+            levelFiveLabel = new Label("LEVEL 5", white);
+        }else{
+            levelFiveLabel = new Label("LOCKED", red);
+        }
         levelFiveLabel.setPosition((stage.getWidth() - levelFiveLabel.getPrefWidth())* 27 / 100, 300);
         levelFiveLabel.setTouchable(Touchable.disabled);
 
-        Label levelSixLabel = new Label("LEVEL 6", white);
+        Label levelSixLabel;
+        if (DuckGame.session.levelCounter > 5) {
+            levelSixLabel = new Label("LEVEL 6", white);
+        }else{
+            levelSixLabel = new Label("LOCKED", red);
+        }
         levelSixLabel.setPosition((stage.getWidth() - levelSixLabel.getPrefWidth())* 65 / 100, 300);
         levelSixLabel.setTouchable(Touchable.disabled);
 
-        Label levelSevenLabel = new Label("LEVEL 7", white);
+        Label levelSevenLabel;
+        if (DuckGame.session.levelCounter > 6) {
+            levelSevenLabel = new Label("LEVEL 7", white);
+        }else{
+            levelSevenLabel = new Label("LOCKED", red);
+        }
         levelSevenLabel.setPosition((stage.getWidth() - levelSevenLabel.getPrefWidth()) * 27 / 100, 200);
         levelSevenLabel.setTouchable(Touchable.disabled);
 
-        Label levelEightLabel = new Label("LEVEL 8", white);
+        Label levelEightLabel;
+        if (DuckGame.session.levelCounter > 7) {
+            levelEightLabel = new Label("LEVEL 8", white);
+        }else{
+            levelEightLabel = new Label("LOCKED", red);
+        }
         levelEightLabel.setPosition((stage.getWidth() - levelEightLabel.getPrefWidth())* 65 / 100, 200);
         levelEightLabel.setTouchable(Touchable.disabled);
 

@@ -61,6 +61,14 @@ public class WinScreen extends BaseScreen {
             }
         });
 
+        Button nextLevelButton = new Button(new Button.ButtonStyle(drawable, drawable, drawable));
+        nextLevelButton.setPosition((stage.getWidth() - backButton.getPrefWidth()) / 2, 320);
+        nextLevelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {getGame().setScreen(new MapScreen(getGame())); }
+        });
+
+
         Label.LabelStyle green = new Label.LabelStyle(Assets.font, Color.GREEN);
         Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
 
@@ -74,10 +82,16 @@ public class WinScreen extends BaseScreen {
         backLabel.setPosition((stage.getWidth() - backLabel.getPrefWidth()) / 2, 235);
         backLabel.setTouchable(Touchable.disabled);
 
+        Label nextLevelLabel= new Label("Next Level", white);
+        nextLevelLabel.setPosition((stage.getWidth() - backLabel.getPrefWidth())* 55 / 100, 335);
+        nextLevelLabel.setTouchable(Touchable.disabled);
+
         stage.addActor(backButton);
         stage.addActor(titleLabel);
         stage.addActor(scoreLabel);
         stage.addActor(backLabel);
+        stage.addActor(nextLevelButton);
+        stage.addActor(nextLevelLabel);
     }
 
     /**

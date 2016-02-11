@@ -19,9 +19,7 @@ public class DuckGame extends Game {
      */
     public static final int GAME_HEIGHT = 720;
     public static final Session session = new Session();
-    /**
-     * Initialises the startScreen. Called by libGDX to set up the graphics.
-     */
+
      public static class Session{
         public int levelCounter = 1;
         public int healthCounter = 6;
@@ -29,15 +27,15 @@ public class DuckGame extends Game {
         public void incrementLevelCounter(){
             levelCounter += 1;
         }
-
         public void setLevel(int level){levelCounter = level;}
         public void setHealthCounter(int health){
             healthCounter = health;
         }
     }
 
-
-    
+    /**
+     * Initialises the startScreen. Called by libGDX to set up the graphics.
+     */
     @Override
     public void create() {
         Assets.load();

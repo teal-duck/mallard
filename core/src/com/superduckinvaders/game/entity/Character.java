@@ -36,7 +36,7 @@ public abstract class Character extends PhysicsEntity {
 
     public static float RANGED_ATTACK_COOLDOWN = 1f;
     public static float MELEE_ATTACK_COOLDOWN = 1f;
-    public static float FIRING_DURATION = 0.5f;
+    public static float FACE_ATTACK_DIRECTION_DURATION = 0.5f;
 
 
     /**
@@ -45,7 +45,7 @@ public abstract class Character extends PhysicsEntity {
     protected float meleeAttackTimer = MELEE_ATTACK_COOLDOWN;
     protected float rangedAttackTimer = RANGED_ATTACK_COOLDOWN;
 
-    private float firingTimer = FIRING_DURATION;
+    private float faceAttackTimer = FACE_ATTACK_DIRECTION_DURATION;
 
     /**
      * The speed of the launched projectiles.
@@ -156,8 +156,6 @@ public abstract class Character extends PhysicsEntity {
         Vector2 velocity = direction.setLength(projectileSpeed).add(getPhysicsVelocity());
         velocity.setLength(Math.max(projectileSpeed, velocity.len()));
         parent.createProjectile(getCentre(), velocity, damage, this);
-        firingTimer = 0f;
-        lookDirection(velocity.cpy().nor());
     }
 
     protected void lookDirection(Vector2 direction) {
@@ -188,7 +186,7 @@ public abstract class Character extends PhysicsEntity {
      * @param damage how much damage the attack deals
      */
     protected void meleeAttack(Vector2 direction, int damage) {
-        if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN){
+        if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN && !enemiesInRange.isEmpty()){
             for (Character character : enemiesInRange) {
                 if (Math.abs(vectorTo(character.getCentre()).angle(direction)) < 45){
                     character.damage(damage);
@@ -196,13 +194,17 @@ public abstract class Character extends PhysicsEntity {
                 }
             }
             meleeAttackTimer = 0f;
+            faceAttackTimer = 0f;
+            lookDirection(direction.cpy().nor());
         }
     }
     
     protected void rangedAttack(Vector2 direction, int damage) {
         if (rangedAttackTimer > RANGED_ATTACK_COOLDOWN){
-                rangedAttackTimer = 0f;
-                fireAt(direction, damage);
+            rangedAttackTimer = 0f;
+            faceAttackTimer = 0f;
+            fireAt(direction, damage);
+            lookDirection(direction.cpy().nor());
         }
     }
 
@@ -234,10 +236,10 @@ public abstract class Character extends PhysicsEntity {
         rangedAttackTimer += delta;
         meleeAttackTimer += delta;
 
-        firingTimer += delta;
+        faceAttackTimer += delta;
         Vector2 velocity = getVelocity();
 
-        if (!velocity.isZero() && firingTimer>FIRING_DURATION){
+        if (!velocity.isZero() && faceAttackTimer > FACE_ATTACK_DIRECTION_DURATION){
             lookDirection(velocity);
         }
 

@@ -55,16 +55,18 @@ public class Player extends Character {
      * Player's current score.
      */
     private int points = 0;
-    
-    
+
+
     public EnumMap<Pickup, Float> pickupMap = new EnumMap<>(Pickup.class);
-    
+
     /**
      * Shows if a player is flying. If less than 0, player is flying for -flyingTimer seconds. If less than PLAYER_FLIGHT_COOLDOWN, flying is on cooldown.
      */
     private float flyingTimer = 5;
 
     public int waterBlockCount = 0;
+
+    protected Pickup currentWeapon = Pickup.GUN;
 
     /**
      * Initialises this Player at the specified coordinates and with the specified initial health.
@@ -149,14 +151,27 @@ public class Player extends Character {
             super.damage(health);
         }
     }
-    
+
     public void givePickup(Pickup pickup, float duration){
         pickupMap.put(pickup, duration);
     }
-    
+
     public boolean hasPickup(Pickup pickup){
         return pickupMap.containsKey(pickup);
     }
+
+    @Override
+    protected void meleeAttack(Vector2 direction, int damage) {
+        currentWeapon = Pickup.LIGHTSABER;
+        super.meleeAttack(direction, damage);
+    }
+
+    @Override
+    protected void rangedAttack(Vector2 direction, int damage) {
+        currentWeapon = Pickup.GUN;
+        super.rangedAttack(direction, damage);
+    }
+
 
     /**
      * Updates the state of this Player.
@@ -170,11 +185,11 @@ public class Player extends Character {
         }
         else if (isSwimming()){
             state = State.SWIMMING;
-        }
-        else if (hasPickup(Pickup.GUN)) {
+        }else if (currentWeapon == Pickup.GUN && hasPickup(Pickup.GUN)) {
             state = State.HOLDING_GUN;
-        }
-        else {
+        } else if (currentWeapon == Pickup.LIGHTSABER && hasPickup(Pickup.LIGHTSABER)) {
+            state = State.HOLDING_GUN;
+        } else {
             state = State.DEFAULT;
         }
 

@@ -96,24 +96,44 @@ public final class Round {
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                Object a = contact.getFixtureA().getBody().getUserData();
-                Object b = contact.getFixtureB().getBody().getUserData();
+                Fixture fixtureA = contact.getFixtureA();
+                Fixture fixtureB = contact.getFixtureB();
+                Object a = fixtureA.getBody().getUserData();
+                Object b = fixtureB.getBody().getUserData();
                 if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
                     PhysicsEntity ea = (PhysicsEntity)a;
                     PhysicsEntity eb = (PhysicsEntity)b;
-                    ea.beginContact(eb, contact);
-                    eb.beginContact(ea, contact);
+                    if (fixtureA.isSensor()){
+                        ea.beginSensorContact(eb, contact);
+                    }
+                    if (fixtureB.isSensor()){
+                        eb.beginSensorContact(ea, contact);
+                    }
+                    if (!(fixtureA.isSensor() || fixtureB.isSensor())){
+                        ea.beginCollision(eb, contact);
+                        eb.beginCollision(ea, contact);
+                    }
                 }
             }
             @Override
             public void endContact(Contact contact) {
-                Object a = contact.getFixtureA().getBody().getUserData();
-                Object b = contact.getFixtureB().getBody().getUserData();
+                Fixture fixtureA = contact.getFixtureA();
+                Fixture fixtureB = contact.getFixtureB();
+                Object a = fixtureA.getBody().getUserData();
+                Object b = fixtureB.getBody().getUserData();
                 if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
                     PhysicsEntity ea = (PhysicsEntity)a;
                     PhysicsEntity eb = (PhysicsEntity)b;
-                    ea.endContact(eb, contact);
-                    eb.endContact(ea, contact);
+                    if (fixtureA.isSensor()){
+                        ea.endSensorContact(eb, contact);
+                    }
+                    if (fixtureB.isSensor()){
+                        eb.endSensorContact(ea, contact);
+                    }
+                    if (!(fixtureA.isSensor() || fixtureB.isSensor())) {
+                        ea.endCollision(eb, contact);
+                        eb.endCollision(ea, contact);
+                    }
                 }
             }
             @Override

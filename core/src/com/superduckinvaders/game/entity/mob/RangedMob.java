@@ -22,6 +22,6 @@ public class RangedMob extends MeleeMob {
     @Override
     public void update(float delta){
         super.update(delta);
-        rangedAttack(parent.getPlayer(), 1);
+        rangedAttack(vectorTo(parent.getPlayer().getCentre()), 1);
     }
 }

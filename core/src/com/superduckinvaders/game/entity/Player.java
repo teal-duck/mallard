@@ -28,10 +28,6 @@ public class Player extends Character {
      */
     public static final float PLAYER_SPEED = 16f;
     /**
-     * Player's standard attack delay (how many seconds between attacks).
-     */
-    public static final int PLAYER_ATTACK_DELAY = 1;
-    /**
      * How much the Player's score increases should be multiplied by if they have the score multiplier powerup.
      */
     public static final float PLAYER_SCORE_MULTIPLIER = 5f;
@@ -43,18 +39,15 @@ public class Player extends Character {
      * How much the Player's speed should me multiplied by if they are flying.
      */
     public static final float PLAYER_FLIGHT_SPEED_MULTIPLIER = 2f;
+    public static final float PLAYER_SWIMMING_SPEED_MULTIPLIER = 1.5f;
     /**
      * How much the Player's attack rate should be multiplied by if they have the rate of fire powerup.
      */
-    public static final float PLAYER_ATTACK_DELAY_MULTIPLIER = 0.2f;
+    public static final float PLAYER_RANGED_ATTACK_MULTIPLIER = 5f;
     /**
      * How long the Player can fly for, in seconds.
      */
     public static final float PLAYER_FLIGHT_TIME = 1f;
-    /**
-     * How long after flying before the Player can fly again, in seconds.
-     */
-    public static final float PLAYER_FLIGHT_COOLDOWN = 5f;
 
     public State state = State.DEFAULT;
 
@@ -64,16 +57,12 @@ public class Player extends Character {
     private int points = 0;
     
     
-    public EnumMap<Pickup, Float> pickupMap = new EnumMap<Pickup, Float>(Pickup.class);
+    public EnumMap<Pickup, Float> pickupMap = new EnumMap<>(Pickup.class);
     
     /**
      * Shows if a player is flying. If less than 0, player is flying for -flyingTimer seconds. If less than PLAYER_FLIGHT_COOLDOWN, flying is on cooldown.
      */
     private float flyingTimer = 5;
-    /**
-     * How long it has been since the Player last attacked.
-     */
-    private float attackTimer = 0;
 
     public int waterBlockCount = 0;
 
@@ -86,6 +75,9 @@ public class Player extends Character {
      */
     public Player(Round parent, float x, float y) {
         super(parent, x, y, PLAYER_HEALTH);
+        enemyBits = MOB_BITS;
+        MELEE_RANGE = 40f;
+        MELEE_ATTACK_COOLDOWN = 0.2f;
         createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
         // body.setLinearDamping(10f);
     }
@@ -180,10 +172,14 @@ public class Player extends Character {
             state = State.SWIMMING;
         }
         else if (hasPickup(Pickup.GUN)) {
-            state = State.HASGUN;
+            state = State.HOLDING_GUN;
         }
         else {
             state = State.DEFAULT;
+        }
+
+        if (hasPickup(Pickup.RATE_OF_FIRE)){
+            rangedAttackTimer+=delta*(PLAYER_RANGED_ATTACK_MULTIPLIER-1);
         }
 
 
@@ -201,29 +197,32 @@ public class Player extends Character {
         if (hasPickup(Pickup.HEALTH)) {
             heal(1);
         }
-        
-        // Update attack timer.
-        attackTimer += delta;
 
-        // Left mouse to attack.
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && ! isFlying()) {
-            if (attackTimer >= PLAYER_ATTACK_DELAY * ( hasPickup(Pickup.RATE_OF_FIRE) ? PLAYER_ATTACK_DELAY_MULTIPLIER : 1)) {
-                attackTimer = 0;
 
+        if (! isFlying() && !isSwimming()) {
+            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
+                meleeAttack(vectorTo(new Vector2(target.x, target.y)), 1);
+            }
+            else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
                 if (hasPickup(Pickup.GUN)) {
+
                     Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
-                    
-                    fireAt(new Vector2(target.x, target.y), 1);
-                } else {
-                    // TODO: tweak melee range
-                    //meleeAttack(some_mob, 1);
+                    rangedAttack(vectorTo(new Vector2(target.x, target.y)), 1);
                 }
             }
         }
 
+        // Press space to start flying, but only if flying isn't cooling down and we're moving.
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (flyingTimer > 0){
+                flyingTimer -= delta;
+            }
+        }
+        else {
+            flyingTimer = Math.min((flyingTimer+(delta*0.2f)), PLAYER_FLIGHT_TIME);
+        }
 
-        // Calculate speed at which to move the player.
-        float speed = PLAYER_SPEED * (hasPickup(Pickup.SUPER_SPEED) ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
 
         // Left/right movement.
         
@@ -241,19 +240,18 @@ public class Player extends Character {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             targetVelocity.y = -1f;
         }
+
+        // Calculate speed at which to move the player.
+        float speed = PLAYER_SPEED * (hasPickup(Pickup.SUPER_SPEED) ? PLAYER_SUPER_SPEED_MULTIPLIER : 1);
+
+        if (state == State.FLYING){
+            speed *= PLAYER_FLIGHT_SPEED_MULTIPLIER;
+        }
+        else if (state == State.SWIMMING){
+            speed *= PLAYER_SWIMMING_SPEED_MULTIPLIER;
+        }
         
         targetVelocity.setLength(speed);
-        
-        // Press space to start flying, but only if flying isn't cooling down and we're moving.
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            if (flyingTimer > 0){
-                flyingTimer -= delta;
-                targetVelocity.scl(PLAYER_FLIGHT_SPEED_MULTIPLIER);
-            }
-        }
-        else {
-            flyingTimer = Math.min((flyingTimer+(delta*0.2f)), PLAYER_FLIGHT_TIME);
-        }
         setVelocity(targetVelocity, state == State.SWIMMING ? 0.5f : 4f);
         
 
@@ -278,11 +276,11 @@ public class Player extends Character {
     }
 
     public enum State {
-        DEFAULT    (Assets.playerNormal),
-        HASGUN     (Assets.playerGun),
-        HASSABER   (Assets.playerGun), // for now, we don't have all the saber assets!
-        SWIMMING     (Assets.playerSwimming),
-        FLYING     (Assets.playerFlying);
+        DEFAULT       (Assets.playerNormal),
+        HOLDING_GUN   (Assets.playerGun),
+        HOLDING_SABER (Assets.playerGun), // for now, we don't have all the saber assets!
+        SWIMMING      (Assets.playerSwimming),
+        FLYING        (Assets.playerFlying);
 
         private final TextureSet textureSet;
 

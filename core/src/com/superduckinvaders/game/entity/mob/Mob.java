@@ -40,11 +40,14 @@ public class Mob extends Character {
     public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
         super(parent, x, y, health);
 
+        MELEE_RANGE = 30f;
+
         this.textureSet = textureSet;
         this.speed = speed;
         this.ai = ai;
         
         this.categoryBits = MOB_BITS;
+        this.enemyBits = PLAYER_BITS;
         
         createDynamicBody(MOB_BITS, (short)(ALL_BITS & (~MOB_BITS)), MOB_GROUP, false);
         this.body.setLinearDamping(20f);

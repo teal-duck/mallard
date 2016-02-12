@@ -18,7 +18,7 @@ public class WaterEntity extends PhysicsEntity {
     }
 
     @Override
-    public void beginContact(PhysicsEntity other, Contact contact){
+    public void beginSensorContact(PhysicsEntity other, Contact contact){
         if (other instanceof Player){
             contact.setEnabled(false);
             ((Player) other).waterBlockCount++;
@@ -26,7 +26,7 @@ public class WaterEntity extends PhysicsEntity {
     }
 
     @Override
-    public void endContact(PhysicsEntity other, Contact contact){
+    public void endSensorContact(PhysicsEntity other, Contact contact){
         if (other instanceof Player){
             ((Player) other).waterBlockCount--;
         }

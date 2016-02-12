@@ -49,7 +49,7 @@ public class Projectile extends PhysicsEntity {
     }
     
     @Override
-    public void beginContact(PhysicsEntity other, Contact contact){
+    public void beginCollision(PhysicsEntity other, Contact contact){
         parent.createParticle(getCentre(), 0.6f, Assets.explosionAnimation);
         removed = true;
         if (other instanceof Character && other != owner) {

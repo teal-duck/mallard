@@ -80,6 +80,7 @@ public class Player extends Character {
         enemyBits = MOB_BITS;
         MELEE_RANGE = 40f;
         MELEE_ATTACK_COOLDOWN = 0.2f;
+        STUNNED_DURATION = 0f;
         createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
         // body.setLinearDamping(10f);
     }

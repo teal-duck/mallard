@@ -37,6 +37,7 @@ public abstract class Character extends PhysicsEntity {
     public static float RANGED_ATTACK_COOLDOWN = 1f;
     public static float MELEE_ATTACK_COOLDOWN = 1f;
     public static float FACE_ATTACK_DIRECTION_DURATION = 0.5f;
+    public static float STUNNED_DURATION = 2f;
 
 
     /**
@@ -46,6 +47,7 @@ public abstract class Character extends PhysicsEntity {
     protected float rangedAttackTimer = RANGED_ATTACK_COOLDOWN;
 
     private float faceAttackTimer = FACE_ATTACK_DIRECTION_DURATION;
+    private float stunnedTimer = STUNNED_DURATION;
 
     /**
      * The speed of the launched projectiles.
@@ -136,6 +138,12 @@ public abstract class Character extends PhysicsEntity {
      */
     public void damage(int health) {
         this.currentHealth -= health;
+        stunnedTimer = 0f;
+    }
+
+
+    public boolean isStunned(){
+        return stunnedTimer < STUNNED_DURATION;
     }
 
     /**
@@ -186,6 +194,9 @@ public abstract class Character extends PhysicsEntity {
      * @param damage how much damage the attack deals
      */
     protected void meleeAttack(Vector2 direction, int damage) {
+        if (isStunned()) {
+            return;
+        }
         if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN && !enemiesInRange.isEmpty()){
             for (Character character : enemiesInRange) {
                 if (Math.abs(vectorTo(character.getCentre()).angle(direction)) < 45){
@@ -200,6 +211,9 @@ public abstract class Character extends PhysicsEntity {
     }
     
     protected void rangedAttack(Vector2 direction, int damage) {
+        if (isStunned()) {
+            return;
+        }
         if (rangedAttackTimer > RANGED_ATTACK_COOLDOWN){
             rangedAttackTimer = 0f;
             faceAttackTimer = 0f;
@@ -236,6 +250,7 @@ public abstract class Character extends PhysicsEntity {
         rangedAttackTimer += delta;
         meleeAttackTimer += delta;
 
+        stunnedTimer += delta;
         faceAttackTimer += delta;
         Vector2 velocity = getVelocity();
 

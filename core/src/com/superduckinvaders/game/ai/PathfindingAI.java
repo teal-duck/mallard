@@ -55,7 +55,6 @@ public class PathfindingAI extends AI {
     private int targetRange;
 
     public Coordinate target;
-    public Vector2 targetPoint;
 
     /**
      * Initialises this PathfindingAI.
@@ -71,16 +70,6 @@ public class PathfindingAI extends AI {
         this.targetRange = targetRange;
         
     }
-    
-    public void applyVelocity(Mob mob){
-        if (targetPoint == null) {
-            return;
-        }
-        Vector2 dst = new Vector2(targetPoint);
-        Vector2 velocity = dst.sub(mob.getCentre())
-                               .nor().scl(mob.getSpeed());
-        mob.setVelocityClamped(velocity);
-    }
 
 
     /**
@@ -94,7 +83,7 @@ public class PathfindingAI extends AI {
         playerPos = round.getPlayer().getCentre();
 
         float distanceToPlayer = mob.distanceTo(playerPos);
-        float distanceToTargetTile = (target != null) ? mob.getCentre().sub(targetPoint).len() : 0f;
+        float distanceToTargetTile = (target != null) ? mob.getCentre().sub(target.vector()).len() : 0f;
         
         currentOffset += delta;
         if ((currentOffset >= deltaOffsetLimit || distanceToTargetTile < 2) && (int) distanceToPlayer < 1280 / 4) {
@@ -105,8 +94,7 @@ public class PathfindingAI extends AI {
         
         // targetPoint = (target != null) ? target.vector() : new Vector2(playerPos).setLength(1f);
         if (target != null) {
-            targetPoint = target.vector();
-            applyVelocity(mob);
+            mob.applyVelocity(target.vector());
         }
     }
 

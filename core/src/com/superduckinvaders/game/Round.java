@@ -134,16 +134,7 @@ public final class Round {
         int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
-        // Determine where to spawn the objective.
-        int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
-        int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
 
-
-
-//        Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
-//        setObjective(new CollectObjective(this, objective));
-
-//        setObjective (new SurviveObjective(this));
         entities = new ArrayList<Entity>(128);
         entities.add(player);
         //entities.add(objective);
@@ -155,14 +146,31 @@ public final class Round {
         targets.add(debugMob);
         targets.add(debugMob2);
 
+        if(parent.session.levelCounter < 3 || parent.session.levelCounter == 5 || parent.session.levelCounter == 7 ) {
+
+            // Determine where to spawn the objective.
+            int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
+            int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
+
+            Item objective = new CollectItem(this, objectiveX, objectiveY);
+            setObjective(new CollectObjective(this, objective));
+            entities.add(objective);
+
+        } else if (parent.session.levelCounter == 4 || parent.session.levelCounter == 6  ) {
+
+            setObjective (new SurviveObjective(this));
+
+        } else{
+            setObjective(new KillObjective(
+                            this,
+                            targets,
+                            "Kill the Enemies!"
+                    )
+            );
+        }
         //FIXME:the score from the last enemy is not added.
 
-        setObjective(new KillObjective(
-                        this,
-                        targets,
-                        "Kill the Enemies!"
-                )
-        );
+
 
         createPickup(startX + 20, startY, Player.Pickup.GUN, Float.POSITIVE_INFINITY);
         createPickup(startX + 40, startY, Player.Pickup.RATE_OF_FIRE, 60);
@@ -414,6 +422,10 @@ public final class Round {
      */
     public Vector3 unproject(int x, int y) {
         return gameScreen.unproject(x, y);
+    }
+
+    public DuckGame getGame() {
+        return parent;
     }
 
     /**

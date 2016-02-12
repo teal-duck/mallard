@@ -20,6 +20,7 @@ import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.superduckinvaders.game.entity.mob.Mob;
 
 /**
  * Screen for interaction with the game.
@@ -202,6 +203,12 @@ public class GameScreen extends BaseScreen {
         this.drawUI();
         uiBatch.end();
 
+        drawMiniMap();
+    }
+    ///
+
+
+    public void drawMiniMap() {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -213,28 +220,6 @@ public class GameScreen extends BaseScreen {
 
         spriteBatch.setColor(1, 1, 1, 0.7f);
         spriteBatch.begin();
-        drawMiniMap();
-
-        Vector2 playerPos = round.getPlayer().getPosition();
-        int width = Assets.minimapHead.getRegionWidth()*6;
-        int height = Assets.minimapHead.getRegionHeight()*6;
-
-        spriteBatch.draw(Assets.minimapHead, playerPos.x-width/2, playerPos.y-height/2, width, height);
-
-        spriteBatch.end();
-        spriteBatch.setColor(Color.WHITE);
-
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-
-
-
-
-    }
-    ///
-
-
-    public void drawMiniMap() {
-
 
         Vector3 screenPos = uiViewport.project(new Vector3(minimapX, minimapY, 0));
         // strange maths to accommodate non-uniform projections.
@@ -252,6 +237,33 @@ public class GameScreen extends BaseScreen {
         mapRenderer.setView(minimapCamera);
         drawMap();
         drawOverhang();
+
+
+        Vector2 playerPos = round.getPlayer().getPosition();
+        int width = Assets.minimapHead.getRegionWidth()*6;
+        int height = Assets.minimapHead.getRegionHeight()*6;
+
+        spriteBatch.draw(Assets.minimapHead, playerPos.x-width/2, playerPos.y-height/2, width, height);
+
+        spriteBatch.end();
+        spriteBatch.setColor(Color.WHITE);
+
+        shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0.9f, 0.2f, 0.2f, 0.7f);
+
+        for (Entity entity : round.getEntities()) {
+            if (entity instanceof Mob){
+                Vector2 pos = entity.getCentre();
+                shapeRenderer.circle(pos.x, pos.y, 10f);
+            }
+        }
+        shapeRenderer.end();
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+
+
     }
 
 

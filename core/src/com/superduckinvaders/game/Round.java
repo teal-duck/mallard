@@ -81,6 +81,10 @@ public final class Round {
      */
     public GameScreen gameScreen;
 
+    interface Callback {
+        void callback(PhysicsEntity entity, PhysicsEntity other, boolean sensorA, boolean sensorB);
+    }
+
     /**
      * Initialises a new Round with the specified map.
      *
@@ -91,55 +95,60 @@ public final class Round {
         this.parent = parent;
         this.map = map;
         
-        world = new World(Vector2.Zero, true);
+        world = new World(Vector2.Zero.cpy(), true);
         
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
-                Object a = fixtureA.getBody().getUserData();
-                Object b = fixtureB.getBody().getUserData();
-                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
-                    PhysicsEntity ea = (PhysicsEntity)a;
-                    PhysicsEntity eb = (PhysicsEntity)b;
-                    if (fixtureA.isSensor()){
-                        ea.beginSensorContact(eb, contact);
-                    }
-                    if (fixtureB.isSensor()){
-                        eb.beginSensorContact(ea, contact);
-                    }
-                    if (!(fixtureA.isSensor() || fixtureB.isSensor())){
-                        ea.beginCollision(eb, contact);
-                        eb.beginCollision(ea, contact);
-                    }
-                }
+                applyCallback(contact,
+                        (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> {
+                            if (sensorA) {
+                                ea.beginSensorContact(eb, contact);
+                            }
+                            else if (!sensorB){
+                                ea.beginCollision(eb, contact);
+                            }
+                        }
+                );
             }
             @Override
             public void endContact(Contact contact) {
+                applyCallback(contact,
+                        (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> {
+                            if (sensorA) {
+                                ea.endSensorContact(eb, contact);
+                            }
+                            else if (!sensorB){
+                                ea.endCollision(eb, contact);
+                            }
+                        }
+                );
+            }
+            @Override
+            public void preSolve(Contact contact, Manifold manifold) {
+                applyCallback(contact,
+                     (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> ea.preSolve(eb, contact, manifold)
+                );
+            }
+            @Override
+            public void postSolve(Contact contact, ContactImpulse contactImpulse) {
+                applyCallback(contact,
+                     (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> ea.postSolve(eb, contact, contactImpulse)
+                );
+            }
+
+            public void applyCallback(Contact contact, Callback cb) {
                 Fixture fixtureA = contact.getFixtureA();
                 Fixture fixtureB = contact.getFixtureB();
                 Object a = fixtureA.getBody().getUserData();
                 Object b = fixtureB.getBody().getUserData();
-                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
-                    PhysicsEntity ea = (PhysicsEntity)a;
-                    PhysicsEntity eb = (PhysicsEntity)b;
-                    if (fixtureA.isSensor()){
-                        ea.endSensorContact(eb, contact);
-                    }
-                    if (fixtureB.isSensor()){
-                        eb.endSensorContact(ea, contact);
-                    }
-                    if (!(fixtureA.isSensor() || fixtureB.isSensor())) {
-                        ea.endCollision(eb, contact);
-                        eb.endCollision(ea, contact);
-                    }
+                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity) {
+                    PhysicsEntity ea = (PhysicsEntity) a;
+                    PhysicsEntity eb = (PhysicsEntity) b;
+                    cb.callback(ea, eb, fixtureA.isSensor(), fixtureB.isSensor());
+                    cb.callback(eb, ea, fixtureB.isSensor(), fixtureA.isSensor());
                 }
             }
-            @Override
-            public void postSolve(Contact arg0, ContactImpulse arg1) {}
-            @Override
-            public void preSolve(Contact arg0, Manifold arg1) {}
         });
 
         // Choose which obstacles to use.

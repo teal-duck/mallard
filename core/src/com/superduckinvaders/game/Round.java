@@ -95,7 +95,7 @@ public final class Round {
         this.parent = parent;
         this.map = map;
         
-        world = new World(Vector2.Zero, true);
+        world = new World(Vector2.Zero.cpy(), true);
         
         world.setContactListener(new ContactListener() {
             @Override

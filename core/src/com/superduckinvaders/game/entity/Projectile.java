@@ -3,6 +3,8 @@ package com.superduckinvaders.game.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 
@@ -46,6 +48,19 @@ public class Projectile extends PhysicsEntity {
         createDynamicBody(PROJECTILE_BITS, (short) ~owner.categoryBits, NO_GROUP, false);
         body.setBullet(true);
         setVelocity(velocity);
+    }
+
+    public void setOwner(PhysicsEntity owner) {
+        this.owner = owner;
+        Fixture fixture = body.getFixtureList().get(0);
+        Filter filter = fixture.getFilterData();
+        filter.maskBits = (short) ~owner.categoryBits;
+        fixture.setFilterData(filter);
+
+    }
+
+    public PhysicsEntity getOwner() {
+        return owner;
     }
     
     @Override

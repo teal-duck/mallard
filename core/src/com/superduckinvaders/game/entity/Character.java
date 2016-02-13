@@ -55,7 +55,7 @@ public abstract class Character extends PhysicsEntity {
     public float projectileSpeed = 20f;
 
     protected short enemyBits = 0;
-    protected ArrayList<Character> enemiesInRange;
+    protected ArrayList<PhysicsEntity> enemiesInRange;
     
     /**
      * Initialises this Character.
@@ -198,10 +198,18 @@ public abstract class Character extends PhysicsEntity {
             return;
         }
         if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN && !enemiesInRange.isEmpty()){
-            for (Character character : enemiesInRange) {
-                if (Math.abs(vectorTo(character.getCentre()).angle(direction)) < 45){
-                    character.damage(damage);
-                    character.setVelocity(direction.cpy().setLength(40f));
+            for (PhysicsEntity entity : enemiesInRange) {
+                if (Math.abs(vectorTo(entity.getCentre()).angle(direction)) < 180) {
+                    if (entity instanceof Character) {
+                        Character character = (Character) entity;
+                        character.damage(damage);
+                        character.setVelocity(direction.cpy().setLength(40f));
+                    } else if (entity instanceof Projectile){
+                        Projectile projectile = (Projectile) entity;
+                        Vector2 newVelocity = projectile.getPhysicsVelocity().scl(-2);
+                        projectile.setOwner(this);
+                        projectile.setVelocity(newVelocity);
+                    }
                 }
             }
             meleeAttackTimer = 0f;
@@ -225,8 +233,8 @@ public abstract class Character extends PhysicsEntity {
     @Override
     public void beginSensorContact(PhysicsEntity other, Contact contact) {
         super.beginSensorContact(other, contact);
-        if (other instanceof Character) {
-            enemiesInRange.add((Character)other);
+        if (other instanceof Character || (other instanceof Projectile && ((Projectile)other).getOwner() != this)) {
+            enemiesInRange.add(other);
         }
 
     }
@@ -234,8 +242,8 @@ public abstract class Character extends PhysicsEntity {
     @Override
     public void endSensorContact(PhysicsEntity other, Contact contact) {
         super.endSensorContact(other, contact);
-        if (other instanceof Character) {
-            enemiesInRange.remove((Character)other);
+        if (enemiesInRange.contains(other)) {
+            enemiesInRange.remove(other);
         }
 
     }

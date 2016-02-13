@@ -77,7 +77,7 @@ public class Player extends Character {
      */
     public Player(Round parent, float x, float y) {
         super(parent, x, y, PLAYER_HEALTH);
-        enemyBits = MOB_BITS;
+        enemyBits = MOB_BITS | PROJECTILE_BITS;
         MELEE_RANGE = 40f;
         MELEE_ATTACK_COOLDOWN = 0.2f;
         STUNNED_DURATION = 0f;

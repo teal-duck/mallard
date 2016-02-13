@@ -134,11 +134,11 @@ public abstract class PhysicsEntity extends Entity {
     }
     
     public Vector2 getVelocity() {
-        return body.getLinearVelocity().scl(PIXELS_PER_METRE);
+        return getPhysicsVelocity().scl(PIXELS_PER_METRE);
     }
     
     public Vector2 getPhysicsVelocity() {
-        return body.getLinearVelocity();
+        return body.getLinearVelocity().cpy();
     }
     
     public void setVelocity(Vector2 targetVelocity) {

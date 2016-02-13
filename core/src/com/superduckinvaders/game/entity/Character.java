@@ -199,14 +199,15 @@ public abstract class Character extends PhysicsEntity {
         }
         if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN && !enemiesInRange.isEmpty()){
             for (PhysicsEntity entity : enemiesInRange) {
-                if (Math.abs(vectorTo(entity.getCentre()).angle(direction)) < 180) {
+                if (Math.abs(vectorTo(entity.getCentre()).angle(direction)) < 45) {
                     if (entity instanceof Character) {
                         Character character = (Character) entity;
                         character.damage(damage);
                         character.setVelocity(direction.cpy().setLength(40f));
                     } else if (entity instanceof Projectile){
                         Projectile projectile = (Projectile) entity;
-                        Vector2 newVelocity = projectile.getPhysicsVelocity().scl(-2);
+                        float speed = projectile.getPhysicsVelocity().len();
+                        Vector2 newVelocity = vectorTo(projectile.getCentre()).setLength(speed*2);
                         projectile.setOwner(this);
                         projectile.setVelocity(newVelocity);
                     }

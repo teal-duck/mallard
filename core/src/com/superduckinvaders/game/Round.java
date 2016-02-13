@@ -81,6 +81,10 @@ public final class Round {
      */
     public GameScreen gameScreen;
 
+    interface Callback {
+        void callback(PhysicsEntity entity, PhysicsEntity other);
+    }
+
     /**
      * Initialises a new Round with the specified map.
      *
@@ -96,30 +100,39 @@ public final class Round {
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                Object a = contact.getFixtureA().getBody().getUserData();
-                Object b = contact.getFixtureB().getBody().getUserData();
-                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
-                    PhysicsEntity ea = (PhysicsEntity)a;
-                    PhysicsEntity eb = (PhysicsEntity)b;
-                    ea.beginContact(eb, contact);
-                    eb.beginContact(ea, contact);
-                }
+                applyCallback(contact,
+                        (PhysicsEntity ea, PhysicsEntity eb) -> ea.beginContact(eb, contact)
+                );
             }
             @Override
             public void endContact(Contact contact) {
+                applyCallback(contact,
+                        (PhysicsEntity ea, PhysicsEntity eb) -> ea.endContact(eb, contact)
+                );
+            }
+            @Override
+            public void preSolve(Contact contact, Manifold manifold) {
+                applyCallback(contact,
+                        (PhysicsEntity ea, PhysicsEntity eb) -> ea.preSolve(eb, contact, manifold)
+                );
+            }
+            @Override
+            public void postSolve(Contact contact, ContactImpulse contactImpulse) {
+                applyCallback(contact,
+                        (PhysicsEntity ea, PhysicsEntity eb) -> ea.postSolve(eb, contact, contactImpulse)
+                );
+            }
+
+            public void applyCallback(Contact contact, Callback cb) {
                 Object a = contact.getFixtureA().getBody().getUserData();
                 Object b = contact.getFixtureB().getBody().getUserData();
                 if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
                     PhysicsEntity ea = (PhysicsEntity)a;
                     PhysicsEntity eb = (PhysicsEntity)b;
-                    ea.endContact(eb, contact);
-                    eb.endContact(ea, contact);
+                    cb.callback(ea, eb);
+                    cb.callback(eb, ea);
                 }
             }
-            @Override
-            public void postSolve(Contact arg0, ContactImpulse arg1) {}
-            @Override
-            public void preSolve(Contact arg0, Manifold arg1) {}
         });
 
         // Choose which obstacles to use.

@@ -19,7 +19,8 @@ public class Assets {
     /**
      *  Player texture sets for normal and flying.
      */
-    public static TextureSet playerNormal, playerGun, playerSwimming, playerFlying;
+    public static TextureSet playerNormal, playerGun, playerSwimming, playerFlying, playerSaber;
+    public static TextureSet playerAttackGun, playerAttackSaber;
 
     /**
      *  Bad guy texture set.
@@ -132,30 +133,13 @@ public class Assets {
         Texture playerIdle = loadTexture("textures/player_idle.png");
 
         // Cut idle textures from texture map.
-        TextureRegion front = new TextureRegion(playerIdle, 0, 0, 14, 18);
-        TextureRegion back = new TextureRegion(playerIdle, 14, 0, 14, 18);
-        TextureRegion left = new TextureRegion(playerIdle, 28, 0, 14, 18);
-        TextureRegion right = new TextureRegion(playerIdle, 42, 0, 14, 18);
+        
+        TextureRegion[] idle = TextureRegion.split(playerIdle, 14, 18)[0];
 
         // Load idle texture map.
         Texture playerIdleSwimming = loadTexture("textures/player_swimming_idle.png");
 
-        // Cut idle textures from texture map.
-        TextureRegion frontSwimming = new TextureRegion(playerIdleSwimming, 0, 0, 21, 18);
-        TextureRegion backSwimming = new TextureRegion(playerIdleSwimming, 21, 0, 21, 18);
-        TextureRegion leftSwimming = new TextureRegion(playerIdleSwimming, 21*2, 0, 21, 18);
-        TextureRegion rightSwimming = new TextureRegion(playerIdleSwimming, 21*3, 0, 21, 18);
-        
-
-        // Load idle gun texture map.
-        Texture playerIdleGun = loadTexture("textures/player_idle_gun.png");
-
-        // Cut idle textures from texture map.
-
-        TextureRegion frontGun = new TextureRegion(playerIdleGun,    0, 0, 18, 18);
-        TextureRegion backGun = new TextureRegion(playerIdleGun,    18, 0, 18, 18);
-        TextureRegion leftGun = new TextureRegion(playerIdleGun,  18*2, 0, 18, 18);
-        TextureRegion rightGun = new TextureRegion(playerIdleGun, 18*3, 0, 18, 18);
+        TextureRegion[] idleSwimming = TextureRegion.split(playerIdleSwimming, 21, 18)[0];
 
         // Load walking animations.
         Animation walkingFront = loadAnimation("textures/player_walking_front.png", 4, 0.2f);
@@ -173,17 +157,45 @@ public class Assets {
         Animation flyingBack = loadAnimation("textures/player_flying_back.png", 2, 0.2f);
         Animation flyingLeft = loadAnimation("textures/player_flying_left.png", 2, 0.2f);
         Animation flyingRight = loadAnimation("textures/player_flying_right.png", 2, 0.2f);
-        
+
         // Load swimming animations.
         Animation swimmingFront = loadAnimation("textures/player_swimming_front.png", 4, 0.2f);
         Animation swimmingBack = loadAnimation("textures/player_swimming_back.png", 4, 0.2f);
         Animation swimmingLeft = loadAnimation("textures/player_swimming_left.png", 4, 0.2f);
         Animation swimmingRight = loadAnimation("textures/player_swimming_right.png", 4, 0.2f);
 
-        playerNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
-        playerGun = new TextureSet(frontGun, backGun, leftGun, rightGun, walkingFrontGun, walkingBackGun, walkingLeftGun, walkingRightGun);
-        playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
-        playerSwimming = new TextureSet(frontSwimming, backSwimming, leftSwimming, rightSwimming, swimmingFront, swimmingBack, swimmingLeft, swimmingRight);
+        playerNormal = new TextureSet(idle[0], idle[1], idle[2], idle[3], walkingFront, walkingBack, walkingLeft, walkingRight);
+        playerFlying = new TextureSet(idle[0], idle[1], idle[2], idle[3], flyingFront, flyingBack, flyingLeft, flyingRight);
+        playerSwimming = new TextureSet(idleSwimming[0], idleSwimming[1], idleSwimming[2], idleSwimming[3], swimmingFront, swimmingBack, swimmingLeft, swimmingRight);
+
+        // Load idle gun texture map.
+        Texture playerIdleGun = loadTexture("textures/player_idle_gun.png");
+
+        // Cut idle textures from texture map.
+        TextureRegion[] Gun = TextureRegion.split(playerIdleGun, 18, 18)[0];
+
+        Texture playerIdleMelee = loadTexture("textures/player_idle_saber.png");
+
+        // Cut idle textures from texture map.
+        TextureRegion[] Melee = TextureRegion.split(playerIdleMelee, 18, 18)[0];
+
+        Texture playerAttackMelee = loadTexture("textures/player_attack_melee_all.png");
+
+        TextureRegion[][] MeleeAttacks = TextureRegion.split(playerAttackMelee, 28, 18);
+
+        Animation[] MeleeAttackAnimations = new Animation[4];
+        for (int i = 0; i < 4; i++){
+                MeleeAttackAnimations[i] = new Animation(0.08f, new Array(MeleeAttacks[i]));
+
+        };
+
+
+        playerGun   = new TextureSet(Gun[0], Gun[1], Gun[2], Gun[3], walkingFrontGun, walkingBackGun, walkingLeftGun, walkingRightGun);
+        playerSaber = new TextureSet(Melee[0], Melee[1], Melee[2], Melee[3],
+                MeleeAttackAnimations[0], MeleeAttackAnimations[1], MeleeAttackAnimations[2], MeleeAttackAnimations[3]);
+
+
+
     }
 
     /**
@@ -272,7 +284,7 @@ public class Assets {
 
         int frameWidth = texture.getWidth()/count;
 
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
 
         for (int i = 0; i < count; i++) {
             keyFrames.add(new TextureRegion(texture, i * frameWidth, 0, frameWidth, texture.getHeight()));

@@ -2,6 +2,7 @@ package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -50,6 +51,9 @@ public class Player extends Character {
     public static final float PLAYER_FLIGHT_TIME = 1f;
 
     public State state = State.DEFAULT;
+
+    private float attackAnimationTimer = 0f;
+    private Animation attackAnimation;
 
     /**
      * Player's current score.
@@ -173,6 +177,20 @@ public class Player extends Character {
         super.rangedAttack(direction, damage);
     }
 
+    private void setAttackAnimation(Animation animation){
+        this.attackAnimationTimer = 0f;
+        this.attackAnimation = animation;
+    }
+
+    private TextureRegion getAttackAnimationFrame(){
+        if (attackAnimation == null || attackAnimation.isAnimationFinished(attackAnimationTimer)){
+            return null;
+        }
+        else {
+            return attackAnimation.getKeyFrame(attackAnimationTimer);
+        }
+    }
+
 
     /**
      * Updates the state of this Player.
@@ -181,6 +199,8 @@ public class Player extends Character {
      */
     @Override
     public void update(float delta) {
+        attackAnimationTimer += delta;
+
         if (isFlying()){
             state = State.FLYING;
         }
@@ -189,7 +209,7 @@ public class Player extends Character {
         }else if (currentWeapon == Pickup.GUN && hasPickup(Pickup.GUN)) {
             state = State.HOLDING_GUN;
         } else if (currentWeapon == Pickup.LIGHTSABER && hasPickup(Pickup.LIGHTSABER)) {
-            state = State.HOLDING_GUN;
+            state = State.HOLDING_SABER;
         } else {
             state = State.DEFAULT;
         }
@@ -283,18 +303,21 @@ public class Player extends Character {
      */
     @Override
     public void render(SpriteBatch spriteBatch) {
-        // Use the right texture set.
-//        TextureSet textureSet = isFlying() ? Assets.playerFlying : ( hasPickup(Pickup.GUN) ? Assets.playerGun : Assets.playerNormal);
-        TextureSet textureSet = state.getTextureSet();
-
         Vector2 pos = getPosition();
-        spriteBatch.draw(textureSet.getTexture(facing, stateTime), pos.x, pos.y);
+        TextureRegion attackTexture = getAttackAnimationFrame();
+        if (attackTexture != null){
+            spriteBatch.draw(attackTexture, pos.x, pos.y);
+        }
+        else {
+            TextureSet textureSet = state.getTextureSet();
+            spriteBatch.draw(textureSet.getTexture(facing, stateTime), pos.x, pos.y);
+        }
     }
 
     public enum State {
         DEFAULT       (Assets.playerNormal),
         HOLDING_GUN   (Assets.playerGun),
-        HOLDING_SABER (Assets.playerGun), // for now, we don't have all the saber assets!
+        HOLDING_SABER (Assets.playerSaber),
         SWIMMING      (Assets.playerSwimming),
         FLYING        (Assets.playerFlying);
 

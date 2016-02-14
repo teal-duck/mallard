@@ -48,6 +48,12 @@ public final class TextureSet {
                 new Animation(0, front), new Animation(0, back), new Animation(0, left), new Animation(0, right)
         );
     }
+    public TextureSet(Animation front, Animation back, Animation left, Animation right) {
+        this(
+                front.getKeyFrame(0), back.getKeyFrame(0), left.getKeyFrame(0), right.getKeyFrame(0),
+                front, back, left, right
+        );
+    }
 
     /**
      * Initilaises this TextureSet with textures for facing and movement animations.

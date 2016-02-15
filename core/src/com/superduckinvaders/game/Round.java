@@ -170,8 +170,8 @@ public final class Round {
         entities.add(player);
         //entities.add(objective);
 
-        Mob debugMob = addMob(new ZombieMob(this, startX + 40, startY+50));
-        Mob debugMob2 = addMob(new GunnerMob(this, startX - 40, startY-50));
+        Mob debugMob = addMob(new ZombieMob(this, startX + 400, startY+50));
+        Mob debugMob2 = addMob(new GunnerMob(this, startX - 400, startY-50));
 
         ArrayList<Mob> targets = new ArrayList<Mob>();
         targets.add(debugMob);

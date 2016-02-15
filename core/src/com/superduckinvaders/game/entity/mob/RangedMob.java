@@ -1,5 +1,6 @@
 package com.superduckinvaders.game.entity.mob;
 
+import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.ai.PathfindingAI;
@@ -22,6 +23,9 @@ public class RangedMob extends MeleeMob {
     @Override
     public void update(float delta){
         super.update(delta);
-        rangedAttack(vectorTo(parent.getPlayer().getCentre()), 1);
+        Vector2 playerPos = parent.getPlayer().getCentre();
+        if (distanceTo(playerPos) < 1280 / 4 && parent.rayCast(getCentre(), playerPos)) {
+            rangedAttack(vectorTo(playerPos), 1);
+        }
     }
 }

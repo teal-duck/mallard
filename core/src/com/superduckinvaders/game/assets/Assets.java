@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
@@ -98,7 +100,7 @@ public class Assets {
 
         levelOneMap = loadTiledMap("maps/map.tmx");
 
-        font = loadFont("font/gamefont.fnt", "font/gamefont.png");
+        font = loadFont("Lato-Regular.ttf");
 
         TextureRegion[] hearts = TextureRegion.split(loadTexture("textures/hearts.png"), 32, 28)[0];
         heartFull  = hearts[0];
@@ -255,8 +257,15 @@ public class Assets {
      * @param imageFile the file containing the actual glyphs
      * @return the bitmap font
      */
-    public static BitmapFont loadFont(String fontFile, String imageFile) {
-        return new BitmapFont(Gdx.files.internal(fontFile), Gdx.files.internal(imageFile), false);
+    public static BitmapFont loadFont(String fontFile) {
+//        return new BitmapFont(Gdx.files.internal(fontFile), Gdx.files.internal(imageFile), false);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(fontFile));
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        parameter.size = 23;
+        font = generator.generateFont(parameter);
+        generator.dispose();
+        // font.getData().setScale(scale, scale);
+        return font;
     }
 
 

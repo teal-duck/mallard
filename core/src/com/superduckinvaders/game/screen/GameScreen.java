@@ -55,8 +55,8 @@ public class GameScreen extends BaseScreen {
     private float minimapCameraMaxX;
     private float minimapCameraMaxY;
 
-    private int minimapX = 70;
-    private int minimapY = 70;
+    private int minimapX = 20;
+    private int minimapY = 20;
     private int minimapWidth = 250;
     private int minimapHeight = 250;
 
@@ -200,30 +200,39 @@ public class GameScreen extends BaseScreen {
 
 //        this.drawDebug();
 
-        uiBatch.setProjectionMatrix(uiCamera.combined);
-
-
-
-        uiViewport.apply();
-        uiBatch.begin();
-        this.drawUI();
-        uiBatch.end();
-
-        drawMiniMap();
-    }
-    ///
-
-
-    public void drawMiniMap() {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         shapeRenderer.setProjectionMatrix(new Matrix4(uiBatch.getProjectionMatrix()));
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.6f);
+
+        //Minimap underlay
         shapeRenderer.rect(minimapX-3, minimapY-3, minimapWidth+6, minimapHeight+6);
+
+        shapeRenderer.setColor(0.1f, 0.1f, 0.1f, 0.25f);
+
+        //bottom right
+        shapeRenderer.rect(1070, 3, 207, 120);
+
+        //top left
+        shapeRenderer.rect(5, 680, 400, 33);
+        shapeRenderer.rect(5, 644, 130, 33);
+
         shapeRenderer.end();
 
+        drawMiniMap();
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        this.drawUI();
+
+
+    }
+    ///
+
+
+    public void drawMiniMap() {
         spriteBatch.setColor(1, 1, 1, 0.7f);
         spriteBatch.begin();
 
@@ -266,19 +275,8 @@ public class GameScreen extends BaseScreen {
         }
         shapeRenderer.end();
 
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-
-
 
     }
-
-
-
-
-
-
-
-
 
     private void drawMap() {
         mapRenderer.renderTileLayer(round.getBaseLayer());
@@ -327,10 +325,15 @@ public class GameScreen extends BaseScreen {
      * TODO(avinash): Use Stage2D, like we are for the static screens?
      */
     private void drawUI() {
+
+        uiBatch.setProjectionMatrix(uiCamera.combined);
+        uiViewport.apply();
+        uiBatch.begin();
+
         Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        Assets.font.draw(uiBatch, "Objective: " + round.getObjective().getObjectiveString(), 10, 710);
-        Assets.font.draw(uiBatch, "Score: " + round.getPlayer().getScore(), 10, 680);
-        Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 650);
+        Assets.font.draw(uiBatch, round.getObjective().getObjectiveString(), 10, 705);
+        Assets.font.draw(uiBatch, "Score: " + round.getPlayer().getScore(), 10, 670);
+        Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 630);
 
         // Draw stamina bar (for flight);
         uiBatch.draw(Assets.staminaEmpty, 1080, 10);
@@ -349,17 +352,24 @@ public class GameScreen extends BaseScreen {
             TextureRegion texture = pickup.getTexture();
             float width = texture.getRegionWidth();
             float height = texture.getRegionHeight();
-            uiBatch.draw(texture, 1080+(50*i++), 50, width*2, height*2);
+            uiBatch.draw(texture, 1080+(50*i++), 85, width*2, height*2);
         }
 
         for (int x = 0; x < round.getPlayer().getMaximumHealth(); x += 2) {
-            if(x+2 <= round.getPlayer().getCurrentHealth())
-                uiBatch.draw(Assets.heartFull, x * 18 + 10, 10);
-            else if(x+1 <= round.getPlayer().getCurrentHealth())
-                uiBatch.draw(Assets.heartHalf, x * 18 + 10, 10);
-            else
-                uiBatch.draw(Assets.heartEmpty, x * 18 + 10, 10);
+            TextureRegion heart;
+            if(x+2 <= round.getPlayer().getCurrentHealth()) {
+                heart = Assets.heartFull;
+            }
+            else if(x+1 <= round.getPlayer().getCurrentHealth()) {
+                heart = Assets.heartHalf;
+            }
+            else {
+                heart = Assets.heartEmpty;
+            }
+            uiBatch.draw(heart, x * 18 + 1080, 48);
         }
+
+        uiBatch.end();
     }
 
     /**

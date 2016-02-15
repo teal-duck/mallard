@@ -65,7 +65,9 @@ public class WinScreen extends BaseScreen {
         nextLevelButton.setPosition((stage.getWidth() - backButton.getPrefWidth()) / 2, 320);
         nextLevelButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {getGame().setScreen(new MapScreen(getGame())); }
+            public void clicked(InputEvent event, float x, float y) {
+                getGame().setScreen(new MapScreen(getGame()));
+            }
         });
 
 
@@ -82,9 +84,13 @@ public class WinScreen extends BaseScreen {
         backLabel.setPosition((stage.getWidth() - backLabel.getPrefWidth()) / 2, 235);
         backLabel.setTouchable(Touchable.disabled);
 
-        Label nextLevelLabel= new Label("Next Level", white);
+        Label nextLevelLabel = new Label("Next Level", white);
         nextLevelLabel.setPosition((stage.getWidth() - backLabel.getPrefWidth())* 55 / 100, 335);
         nextLevelLabel.setTouchable(Touchable.disabled);
+
+        Label test = new Label("Counter " + Integer.toString(DuckGame.session.levelCounter), white);
+        test.setPosition((stage.getWidth() - backLabel.getPrefWidth())* 55 / 100, 135);
+        test.setTouchable(Touchable.disabled);
 
         stage.addActor(backButton);
         stage.addActor(titleLabel);
@@ -92,6 +98,7 @@ public class WinScreen extends BaseScreen {
         stage.addActor(backLabel);
         stage.addActor(nextLevelButton);
         stage.addActor(nextLevelLabel);
+        stage.addActor(test);
     }
 
     /**

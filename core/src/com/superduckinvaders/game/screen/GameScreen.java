@@ -64,6 +64,9 @@ public class GameScreen extends BaseScreen {
     private OrthographicCamera minimapCamera;
     private Viewport minimapViewport;
 
+    private float accumulator = 0f;
+    private float step = 1/60f;
+
     
     Box2DDebugRenderer debugRenderer;
     Matrix4 debugMatrix;
@@ -162,8 +165,11 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        round.update(delta);  // TODO(avinash): If round calls dispose, stop here.
-        
+        accumulator+=delta;
+        while (accumulator>=step) {
+            round.update(step);  // TODO(avinash): If round calls dispose, stop here.
+            accumulator-=step;
+        }
         Player player = round.getPlayer();
         
         float playerX = player.getX() + player.getWidth() / 2;

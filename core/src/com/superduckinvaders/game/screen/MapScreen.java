@@ -35,7 +35,9 @@ public class MapScreen extends BaseScreen {
         @Override
         public void clicked(InputEvent event, float x, float y){
             dispose();
-            DuckGame.session.setLevel(level);
+            if (DuckGame.session.levelCounter < level ) {
+                DuckGame.session.setLevel(level);
+            }
             getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), map)));
 
         }

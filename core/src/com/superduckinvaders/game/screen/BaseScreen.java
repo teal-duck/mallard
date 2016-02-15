@@ -3,6 +3,7 @@ package com.superduckinvaders.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.superduckinvaders.game.DuckGame;
 
@@ -15,7 +16,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 abstract public class BaseScreen extends ScreenAdapter {
 
     private DuckGame game;
-    
     /**
      * The game camera.
      */
@@ -31,6 +31,7 @@ abstract public class BaseScreen extends ScreenAdapter {
         this.game = game;
         camera = new OrthographicCamera();
         viewport = new FitViewport(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT, camera);
+
     }
 
     /**

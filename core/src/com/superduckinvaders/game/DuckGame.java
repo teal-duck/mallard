@@ -1,7 +1,9 @@
 package com.superduckinvaders.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
@@ -18,6 +20,9 @@ public class DuckGame extends Game {
      * The height of the game window.
      */
     public static final int GAME_HEIGHT = 720;
+
+    Music theme;
+
     public static final Session session = new Session();
 
      public static class Session{
@@ -40,6 +45,10 @@ public class DuckGame extends Game {
     public void create() {
         Assets.load();
         this.setScreen(new StartScreen(this));
+        theme = Gdx.audio.newMusic(Gdx.files.internal("menuTheme.mp3"));
+
+        theme.play();
+        theme.setVolume(0.5f);
     }
 
     /**
@@ -48,5 +57,7 @@ public class DuckGame extends Game {
     @Override
     public void render() {
         super.render();
-    }
+
+}
+
 }

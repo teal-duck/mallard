@@ -502,6 +502,7 @@ public final class Round {
                 parent.setScreen(new WinScreen(parent, player.getScore()));
             } else if (player.isDead()) {
                 parent.setScreen(new LoseScreen(parent));
+
             }
         }
 

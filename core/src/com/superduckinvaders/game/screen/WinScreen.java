@@ -2,8 +2,6 @@ package com.superduckinvaders.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -12,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.assets.Assets;
 
@@ -88,17 +85,13 @@ public class WinScreen extends BaseScreen {
         nextLevelLabel.setPosition((stage.getWidth() - backLabel.getPrefWidth())* 55 / 100, 335);
         nextLevelLabel.setTouchable(Touchable.disabled);
 
-        Label test = new Label("Counter " + Integer.toString(DuckGame.session.levelCounter), white);
-        test.setPosition((stage.getWidth() - backLabel.getPrefWidth())* 55 / 100, 135);
-        test.setTouchable(Touchable.disabled);
-
         stage.addActor(backButton);
         stage.addActor(titleLabel);
         stage.addActor(scoreLabel);
         stage.addActor(backLabel);
         stage.addActor(nextLevelButton);
         stage.addActor(nextLevelLabel);
-        stage.addActor(test);
+
     }
 
     /**

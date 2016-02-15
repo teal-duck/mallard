@@ -1,8 +1,11 @@
 package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.TextureSet;
+
+import java.util.ArrayList;
 
 /**
  * Represents a character in the game.
@@ -24,29 +27,35 @@ public abstract class Character extends PhysicsEntity {
      */
     protected int maximumHealth, currentHealth;
     
+    protected float MELEE_RANGE = 30f;
     /**
      * For use when determining player movement direction
      */
     private final Vector2 reference = new Vector2(0f, -1f);
     private final Vector2 bias = new Vector2(1.1f, 1);
 
-    /**
-     * The time to wait before the next attack.
-     */
-    public static float ATTACK_COOLDOWN = 2f;
-    public static float FIRING_DURATION = 0.5f;
+    public static float RANGED_ATTACK_COOLDOWN = 1f;
+    public static float MELEE_ATTACK_COOLDOWN = 1f;
+    public static float FACE_ATTACK_DIRECTION_DURATION = 0.5f;
+    public static float STUNNED_DURATION = 2f;
+
 
     /**
      * An attack timer to maintain the cooldown.
      */
-    private float attackTimer;
+    protected float meleeAttackTimer = MELEE_ATTACK_COOLDOWN;
+    protected float rangedAttackTimer = RANGED_ATTACK_COOLDOWN;
 
-    private float firingTimer;
+    private float faceAttackTimer = FACE_ATTACK_DIRECTION_DURATION;
+    private float stunnedTimer = STUNNED_DURATION;
 
     /**
      * The speed of the launched projectiles.
      */
     public float projectileSpeed = 20f;
+
+    protected short enemyBits = 0;
+    protected ArrayList<PhysicsEntity> enemiesInRange;
     
     /**
      * Initialises this Character.
@@ -59,6 +68,28 @@ public abstract class Character extends PhysicsEntity {
     public Character(Round parent, float x, float y, int maximumHealth) {
         super(parent, x, y);
         this.maximumHealth = this.currentHealth = maximumHealth;
+        enemiesInRange = new ArrayList<>();
+    }
+
+    @Override
+    public void createBody(BodyDef.BodyType bodyType, short categoryBits, short maskBits, short groupIndex, boolean isSensor){
+        super.createBody(bodyType, categoryBits, maskBits, groupIndex, isSensor);
+
+        CircleShape meleeSensorShape = new CircleShape();
+        meleeSensorShape.setRadius(MELEE_RANGE / PIXELS_PER_METRE);
+
+        FixtureDef meleeFixtureDef = new FixtureDef();
+        meleeFixtureDef.shape = meleeSensorShape;
+        meleeFixtureDef.isSensor = true;
+
+        meleeFixtureDef.filter.categoryBits = categoryBits;
+        meleeFixtureDef.filter.maskBits = enemyBits;
+        meleeFixtureDef.filter.groupIndex = SENSOR_GROUP;
+
+        Fixture meleeFixture = body.createFixture(meleeFixtureDef);
+        meleeFixture.setUserData(this);
+
+        meleeSensorShape.dispose();
     }
 
     /**
@@ -107,6 +138,12 @@ public abstract class Character extends PhysicsEntity {
      */
     public void damage(int health) {
         this.currentHealth -= health;
+        stunnedTimer = 0f;
+    }
+
+
+    public boolean isStunned(){
+        return stunnedTimer < STUNNED_DURATION;
     }
 
     /**
@@ -120,16 +157,13 @@ public abstract class Character extends PhysicsEntity {
     /**
      * Causes this Character to fire a projectile at the specified coordinates.
      *
-     * @param target the location of the target
+     * @param direction the location of the target
      * @param damage how much damage the projectile deals
      */
-    protected void fireAt(Vector2 target, int damage) {
-        Vector2 pos = getCentre();
-        Vector2 velocity = target.cpy().sub(pos).setLength(projectileSpeed).add(getPhysicsVelocity());
+    protected void fireAt(Vector2 direction, int damage) {
+        Vector2 velocity = direction.setLength(projectileSpeed).add(getPhysicsVelocity());
         velocity.setLength(Math.max(projectileSpeed, velocity.len()));
-        parent.createProjectile(pos, velocity, damage, this);
-        firingTimer = 0f;
-        lookDirection(velocity.cpy().nor());
+        parent.createProjectile(getCentre(), velocity, damage, this);
     }
 
     protected void lookDirection(Vector2 direction) {
@@ -156,21 +190,68 @@ public abstract class Character extends PhysicsEntity {
     /**
      * Causes this Character to use a melee attack.
      *
-     * @param other  the other character, duh
+     * @param direction
      * @param damage how much damage the attack deals
      */
-    protected void meleeAttack(Character other, int damage) {
-        if (attackTimer > ATTACK_COOLDOWN){
-            other.damage(damage);
-            attackTimer = 0f;
+    protected boolean meleeAttack(Vector2 direction, int damage) {
+        if (isStunned()) {
+            return false;
         }
+//        if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN && !enemiesInRange.isEmpty()){
+        if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN){
+            for (PhysicsEntity entity : enemiesInRange) {
+                if (Math.abs(vectorTo(entity.getCentre()).angle(direction)) < 45) {
+                    if (entity instanceof Character) {
+                        Character character = (Character) entity;
+                        character.damage(damage);
+                        character.setVelocity(direction.cpy().setLength(40f));
+                    } else if (entity instanceof Projectile){
+                        Projectile projectile = (Projectile) entity;
+                        float speed = projectile.getPhysicsVelocity().len();
+                        Vector2 newVelocity = vectorTo(projectile.getCentre()).setLength(speed*2);
+                        projectile.setOwner(this);
+                        projectile.setVelocity(newVelocity);
+                    }
+                }
+            }
+            meleeAttackTimer = 0f;
+            faceAttackTimer = 0f;
+            lookDirection(direction.cpy().nor());
+            return true;
+        }
+        return false;
     }
     
-    protected void rangedAttack(Character other, int damage) {
-        if (attackTimer > ATTACK_COOLDOWN && parent.rayCast(getCentre(), other.getCentre())){
-                attackTimer = 0f;
-                fireAt(other.getCentre(), damage);
+    protected boolean rangedAttack(Vector2 direction, int damage) {
+        if (isStunned()) {
+            return false;
         }
+        if (rangedAttackTimer > RANGED_ATTACK_COOLDOWN){
+            rangedAttackTimer = 0f;
+            faceAttackTimer = 0f;
+            fireAt(direction, damage);
+            lookDirection(direction.cpy().nor());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void beginSensorContact(PhysicsEntity other, Contact contact) {
+        super.beginSensorContact(other, contact);
+        if (other instanceof Character || (other instanceof Projectile && ((Projectile)other).getOwner() != this)) {
+            enemiesInRange.add(other);
+        }
+
+    }
+
+    @Override
+    public void endSensorContact(PhysicsEntity other, Contact contact) {
+        super.endSensorContact(other, contact);
+        if (enemiesInRange.contains(other)) {
+            enemiesInRange.remove(other);
+        }
+
     }
 
     /**
@@ -180,11 +261,14 @@ public abstract class Character extends PhysicsEntity {
      */
     @Override
     public void update(float delta) {
-        attackTimer += delta;
-        firingTimer += delta;
+        rangedAttackTimer += delta;
+        meleeAttackTimer += delta;
+
+        stunnedTimer += delta;
+        faceAttackTimer += delta;
         Vector2 velocity = getVelocity();
 
-        if (!velocity.isZero() && firingTimer>FIRING_DURATION){
+        if (!velocity.isZero() && faceAttackTimer > FACE_ATTACK_DIRECTION_DURATION){
             lookDirection(velocity);
         }
 

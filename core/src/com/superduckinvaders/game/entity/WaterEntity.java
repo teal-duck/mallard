@@ -15,18 +15,18 @@ public class WaterEntity extends PhysicsEntity {
         super(parent, x, y);
         this.width = width;
         this.height = height;
-        createBody(BodyDef.BodyType.StaticBody, WATER_BITS, ALL_BITS, NO_GROUP, false);
+        createBody(BodyDef.BodyType.StaticBody, WATER_BITS, (short)(ALL_BITS ^ PROJECTILE_BITS), NO_GROUP, false);
     }
 
     @Override
-    public void beginContact(PhysicsEntity other, Contact contact){
+    public void beginCollision(PhysicsEntity other, Contact contact){
         if (other instanceof Player){
             ((Player) other).waterBlockCount++;
         }
     }
 
     @Override
-    public void endContact(PhysicsEntity other, Contact contact){
+    public void endCollision(PhysicsEntity other, Contact contact){
         if (other instanceof Player){
             ((Player) other).waterBlockCount--;
         }

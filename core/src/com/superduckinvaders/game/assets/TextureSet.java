@@ -42,10 +42,28 @@ public final class TextureSet {
      * @param left  the left facing texture
      * @param right the right facing texture
      */
+    public TextureSet(TextureRegion[] trs) {
+        this(trs[0], trs[1], trs[2], trs[3]);
+        
+    }
+    public TextureSet(Animation[] anim) {
+        this(anim[0], anim[1], anim[2], anim[3]);
+        
+    }
+    public TextureSet(TextureRegion[] trs, Animation[] anim) {
+        this(trs[0], trs[1], trs[2], trs[3], anim[0], anim[1], anim[2], anim[3]);
+
+    }
     public TextureSet(TextureRegion front, TextureRegion back, TextureRegion left, TextureRegion right) {
         this(
                 front, back, left, right,
                 new Animation(0, front), new Animation(0, back), new Animation(0, left), new Animation(0, right)
+        );
+    }
+    public TextureSet(Animation front, Animation back, Animation left, Animation right) {
+        this(
+                front.getKeyFrame(0), back.getKeyFrame(0), left.getKeyFrame(0), right.getKeyFrame(0),
+                front, back, left, right
         );
     }
 
@@ -105,5 +123,9 @@ public final class TextureSet {
         } else {
             return idleTextures.get(facing);
         }
+    }
+
+    public Animation getAnimation(FaceDirection facing) {
+        return movementAnimations.get(facing);
     }
 }

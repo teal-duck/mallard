@@ -3,8 +3,8 @@ package com.superduckinvaders.game.entity.mob;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.ai.DummyAI;
@@ -40,11 +40,14 @@ public class Mob extends Character {
     public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
         super(parent, x, y, health);
 
+        MELEE_RANGE = 30f;
+
         this.textureSet = textureSet;
         this.speed = speed;
         this.ai = ai;
         
         this.categoryBits = MOB_BITS;
+        this.enemyBits = PLAYER_BITS;
         
         createDynamicBody(MOB_BITS, (short)(ALL_BITS & (~MOB_BITS)), MOB_GROUP, false);
         this.body.setLinearDamping(20f);
@@ -64,7 +67,7 @@ public class Mob extends Character {
     
     /**
      * Sets the speed of the mob
-     * @param newSpeed the updated speed
+     * @param speed the updated speed
      */
     public void setSpeed(float speed){
         this.speed = speed;
@@ -119,5 +122,14 @@ public class Mob extends Character {
         }
 
         //END DEBUGGING CODE
+    }
+
+    public void applyVelocity(Vector2 destination){
+        Vector2 velocity = destination.sub(getCentre())
+                               .nor().scl(getSpeed());
+        if (isStunned()){
+            velocity.scl(0.4f);
+        }
+        setVelocityClamped(velocity);
     }
 }

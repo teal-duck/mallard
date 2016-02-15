@@ -19,7 +19,9 @@ public class Assets {
     /**
      *  Player texture sets for normal and flying.
      */
-    public static TextureSet playerNormal, playerGun, playerSwimming, playerFlying;
+    public static TextureSet playerNormal, playerGun, playerSwimming, playerFlying, playerSaber;
+    public static TextureSet playerStaticAttackGun, playerStaticAttackSaber;
+    public static TextureSet playerWalkingAttackGun, playerWalkingAttackSaber;
 
     /**
      *  Bad guy texture set.
@@ -40,11 +42,6 @@ public class Assets {
      *  Textures for stamina.
      */
     public static TextureRegion staminaFull, staminaEmpty;
-
-    /**
-     *  Textures for powerup.
-     */
-    public static TextureRegion powerupFull, powerupEmpty;
 
     /**
      *  Animation for explosion.
@@ -95,8 +92,7 @@ public class Assets {
         loadFloorItems();
 
         minimapHead = new TextureRegion(loadTexture("textures/minimap_head.png"));
-
-        projectile = new TextureRegion(loadTexture("textures/projectile.png"));
+        projectile  = new TextureRegion(loadTexture("textures/projectile.png")  );
 
         explosionAnimation = loadAnimation("textures/explosion.png", 2, 0.3f);
 
@@ -104,18 +100,14 @@ public class Assets {
 
         font = loadFont("font/gamefont.fnt", "font/gamefont.png");
 
-        Texture hearts = loadTexture("textures/hearts.png");
-        heartFull = new TextureRegion(hearts, 0, 0, 32, 28);
-        heartHalf = new TextureRegion(hearts, 32, 0, 32, 28);
-        heartEmpty = new TextureRegion(hearts, 64, 0, 32, 28);
+        TextureRegion[] hearts = TextureRegion.split(loadTexture("textures/hearts.png"), 32, 28)[0];
+        heartFull  = hearts[0];
+        heartHalf  = hearts[1];
+        heartEmpty = hearts[2];
 
-        Texture stamina = loadTexture("textures/stamina.png");
-        staminaFull = new TextureRegion(stamina, 0, 0, 192, 28);
-        staminaEmpty = new TextureRegion(stamina, 0, 28, 192, 28);
-
-        Texture powerup = loadTexture("textures/powerup.png");
-        powerupFull = new TextureRegion(powerup, 0, 0, 192, 28);
-        powerupEmpty = new TextureRegion(powerup, 0, 28, 192, 28);
+        TextureRegion[][] stamina = TextureRegion.split(loadTexture("textures/stamina.png"), 192, 28);
+        staminaFull  = stamina[0][0];
+        staminaEmpty = stamina[1][0];
 
         button = new TextureRegion(loadTexture("textures/button.png"));
 
@@ -129,61 +121,36 @@ public class Assets {
      */
     private static void loadPlayerTextureSets() {
         // Load idle texture map.
-        Texture playerIdle = loadTexture("textures/player_idle.png");
+        TextureRegion[][] idleAll = TextureRegion.split(loadTexture("textures/player_idle_all.png"), 28, 18);
 
-        // Cut idle textures from texture map.
-        TextureRegion front = new TextureRegion(playerIdle, 0, 0, 14, 18);
-        TextureRegion back = new TextureRegion(playerIdle, 14, 0, 14, 18);
-        TextureRegion left = new TextureRegion(playerIdle, 28, 0, 14, 18);
-        TextureRegion right = new TextureRegion(playerIdle, 42, 0, 14, 18);
-
-        // Load idle texture map.
-        Texture playerIdleSwimming = loadTexture("textures/player_swimming_idle.png");
-
-        // Cut idle textures from texture map.
-        TextureRegion frontSwimming = new TextureRegion(playerIdleSwimming, 0, 0, 21, 18);
-        TextureRegion backSwimming = new TextureRegion(playerIdleSwimming, 21, 0, 21, 18);
-        TextureRegion leftSwimming = new TextureRegion(playerIdleSwimming, 21*2, 0, 21, 18);
-        TextureRegion rightSwimming = new TextureRegion(playerIdleSwimming, 21*3, 0, 21, 18);
-        
-
-        // Load idle gun texture map.
-        Texture playerIdleGun = loadTexture("textures/player_idle_gun.png");
-
-        // Cut idle textures from texture map.
-
-        TextureRegion frontGun = new TextureRegion(playerIdleGun,    0, 0, 18, 18);
-        TextureRegion backGun = new TextureRegion(playerIdleGun,    18, 0, 18, 18);
-        TextureRegion leftGun = new TextureRegion(playerIdleGun,  18*2, 0, 18, 18);
-        TextureRegion rightGun = new TextureRegion(playerIdleGun, 18*3, 0, 18, 18);
+        TextureRegion[] idle         = idleAll[0];
+        TextureRegion[] idleSwimming = idleAll[1];
+        TextureRegion[] idleGun      = idleAll[2];
+        TextureRegion[] idleSaber    = idleAll[3];
 
         // Load walking animations.
-        Animation walkingFront = loadAnimation("textures/player_walking_front.png", 4, 0.2f);
-        Animation walkingBack = loadAnimation("textures/player_walking_back.png", 4, 0.2f);
-        Animation walkingLeft = loadAnimation("textures/player_walking_left.png", 4, 0.2f);
-        Animation walkingRight = loadAnimation("textures/player_walking_right.png", 4, 0.2f);
+        Animation[] baseWalks     = loadAnimations("textures/player_walk_base_all.png",    28, 18, 0.2f);
+        Animation[] gunWalks      = loadAnimations("textures/player_walk_gun_all.png",     28, 18, 0.2f);
+        Animation[] saberWalks    = loadAnimations("textures/player_walk_saber_all.png",   28, 18, 0.08f);
+        Animation[] flyingWalks   = loadAnimations("textures/player_flying_all.png",       28, 18, 0.2f);
+        Animation[] swimmingWalks = loadAnimations("textures/player_swimming_all.png",     28, 18, 0.2f);
+        Animation[] SaberAttacks  = loadAnimations("textures/player_walk_attack_saber_all.png", 28, 18, 0.08f);
+        Animation[] SaberAttacksStatic  = loadAnimations("textures/player_static_attack_saber_all.png", 28, 18, 0.08f);
+        Animation[] GunAttacks  = loadAnimations("textures/player_walk_attack_gun_all.png", 28, 18, 0.08f);
+        Animation[] GunAttacksStatic  = loadAnimations("textures/player_static_attack_gun_all.png", 28, 18, 0.08f);
 
-        Animation walkingFrontGun = loadAnimation("textures/player_walking_front_gun.png", 4, 0.2f);
-        Animation walkingBackGun = loadAnimation("textures/player_walking_back_gun.png", 4, 0.2f);
-        Animation walkingLeftGun = loadAnimation("textures/player_walking_left_gun.png", 4, 0.2f);
-        Animation walkingRightGun = loadAnimation("textures/player_walking_right_gun.png", 4, 0.2f);
+        playerNormal      = new TextureSet(idle,         baseWalks    );
+        playerFlying      = new TextureSet(idle,         flyingWalks  );
+        playerSwimming    = new TextureSet(idleSwimming, swimmingWalks);
+        playerGun         = new TextureSet(idleGun,      gunWalks     );
+        playerSaber       = new TextureSet(idleSaber,    saberWalks   );
+        playerStaticAttackSaber = new TextureSet(SaberAttacksStatic);
+        playerStaticAttackGun   = new TextureSet(GunAttacksStatic);
+        playerWalkingAttackSaber = new TextureSet(SaberAttacks);
+        playerWalkingAttackGun   = new TextureSet(GunAttacks);
 
-        // Load flying animations.
-        Animation flyingFront = loadAnimation("textures/player_flying_front.png", 2, 0.2f);
-        Animation flyingBack = loadAnimation("textures/player_flying_back.png", 2, 0.2f);
-        Animation flyingLeft = loadAnimation("textures/player_flying_left.png", 2, 0.2f);
-        Animation flyingRight = loadAnimation("textures/player_flying_right.png", 2, 0.2f);
-        
-        // Load swimming animations.
-        Animation swimmingFront = loadAnimation("textures/player_swimming_front.png", 4, 0.2f);
-        Animation swimmingBack = loadAnimation("textures/player_swimming_back.png", 4, 0.2f);
-        Animation swimmingLeft = loadAnimation("textures/player_swimming_left.png", 4, 0.2f);
-        Animation swimmingRight = loadAnimation("textures/player_swimming_right.png", 4, 0.2f);
 
-        playerNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
-        playerGun = new TextureSet(frontGun, backGun, leftGun, rightGun, walkingFrontGun, walkingBackGun, walkingLeftGun, walkingRightGun);
-        playerFlying = new TextureSet(front, back, left, right, flyingFront, flyingBack, flyingLeft, flyingRight);
-        playerSwimming = new TextureSet(frontSwimming, backSwimming, leftSwimming, rightSwimming, swimmingFront, swimmingBack, swimmingLeft, swimmingRight);
+
     }
 
     /**
@@ -191,52 +158,40 @@ public class Assets {
      */
     private static void loadBadGuyTextureSet() {
         // Load idle texture map.
-        Texture badGuyIdle = loadTexture("textures/badguy_idle.png");
-
-        // Cut idle textures from texture map.
-        TextureRegion front = new TextureRegion(badGuyIdle, 0, 0, 21, 24);
-        TextureRegion back = new TextureRegion(badGuyIdle, 21, 0, 21, 24);
-        TextureRegion left = new TextureRegion(badGuyIdle, 42, 0, 21, 24);
-        TextureRegion right = new TextureRegion(badGuyIdle, 63, 0, 21, 24);
+        TextureRegion[] idle = TextureRegion.split(loadTexture("textures/badguy_idle.png"), 21, 24)[0];
 
         // Load walking animations.
         Animation walkingFront = loadAnimation("textures/badguy_walking_front.png", 4, 0.2f);
-        Animation walkingBack = loadAnimation("textures/badguy_walking_back.png", 4, 0.2f);
-        Animation walkingLeft = loadAnimation("textures/badguy_walking_left.png", 4, 0.2f);
+        Animation walkingBack  = loadAnimation("textures/badguy_walking_back.png", 4, 0.2f);
+        Animation walkingLeft  = loadAnimation("textures/badguy_walking_left.png", 4, 0.2f);
         Animation walkingRight = loadAnimation("textures/badguy_walking_right.png", 4, 0.2f);
 
         // Load idle texture map.
-        Texture rangedBadguyIdle = loadTexture("textures/ranged_badguy_idle.png");
-
-        // Cut idle textures from texture map.
-        TextureRegion rangedFront = new TextureRegion(rangedBadguyIdle, 0, 0, 21, 24);
-        TextureRegion rangedBack = new TextureRegion(rangedBadguyIdle, 21, 0, 21, 24);
-        TextureRegion rangedLeft = new TextureRegion(rangedBadguyIdle, 42, 0, 21, 24);
-        TextureRegion rangedRight = new TextureRegion(rangedBadguyIdle, 63, 0, 21, 24);
+        TextureRegion[] rangedIdle = TextureRegion.split(loadTexture("textures/ranged_badguy_idle.png"), 21, 24)[0];
 
         // Load walking animations.
         Animation rangedWalkingFront = loadAnimation("textures/ranged_badguy_walking_front.png", 4, 0.2f);
-        Animation rangedWalkingBack = loadAnimation("textures/ranged_badguy_walking_back.png", 4, 0.2f);
-        Animation rangedWalkingLeft = loadAnimation("textures/ranged_badguy_walking_left.png", 4, 0.2f);
+        Animation rangedWalkingBack  = loadAnimation("textures/ranged_badguy_walking_back.png", 4, 0.2f);
+        Animation rangedWalkingLeft  = loadAnimation("textures/ranged_badguy_walking_left.png", 4, 0.2f);
         Animation rangedWalkingRight = loadAnimation("textures/ranged_badguy_walking_right.png", 4, 0.2f);
 
-        badGuyNormal = new TextureSet(front, back, left, right, walkingFront, walkingBack, walkingLeft, walkingRight);
-        rangedBadGuyNormal = new TextureSet(rangedFront, rangedBack, rangedLeft, rangedRight, rangedWalkingFront, rangedWalkingBack, rangedWalkingLeft, rangedWalkingRight);
+        badGuyNormal       = new TextureSet(idle[0], idle[1], idle[2], idle[3], walkingFront, walkingBack, walkingLeft, walkingRight);
+        rangedBadGuyNormal = new TextureSet(rangedIdle[0], rangedIdle[1], rangedIdle[2], rangedIdle[3], rangedWalkingFront, rangedWalkingBack, rangedWalkingLeft, rangedWalkingRight);
     }
 
     /**
      * Loads the texture from the floor items file.
      */
     public static void loadFloorItems() {
-        Texture floorItems = loadTexture("textures/floor_items.png");
+        TextureRegion[] items = TextureRegion.split(loadTexture("textures/floor_items.png"), 15, 15)[0];
 
-        floorItemGun =          new TextureRegion(floorItems,    0, 0, 15, 15);
-        floorItemSaber =        new TextureRegion(floorItems,   15, 0, 15, 15);
-        floorItemSpeed =        new TextureRegion(floorItems, 15*2, 0, 15, 15);
-        floorItemInvulnerable = new TextureRegion(floorItems, 15*3, 0, 15, 15);
-        floorItemScore =        new TextureRegion(floorItems, 15*4, 0, 15, 15);
-        floorItemFireRate =     new TextureRegion(floorItems, 15*5, 0, 15, 15);
-        floorItemHeart =        new TextureRegion(floorItems, 15*6, 0, 15, 15);
+        floorItemGun =          items[0];
+        floorItemSaber =        items[1];
+        floorItemSpeed =        items[2];
+        floorItemInvulnerable = items[3];
+        floorItemScore =        items[4];
+        floorItemFireRate =     items[5];
+        floorItemHeart =        items[6];
     }
 
     /**
@@ -269,16 +224,28 @@ public class Assets {
      */
     public static Animation loadAnimation(String file, int count, float frameDuration) {
         Texture texture = loadTexture(file);
-
         int frameWidth = texture.getWidth()/count;
-
-        Array<TextureRegion> keyFrames = new Array<TextureRegion>();
+        Array<TextureRegion> keyFrames = new Array<>();
 
         for (int i = 0; i < count; i++) {
             keyFrames.add(new TextureRegion(texture, i * frameWidth, 0, frameWidth, texture.getHeight()));
         }
 
         return new Animation(frameDuration, keyFrames);
+    }
+    public static Animation[] loadAnimations(String file, int frameWidth, int frameHeight, float frameDuration) {
+        Texture texture = loadTexture(file);
+
+        TextureRegion[][] frames = TextureRegion.split(
+                texture,
+                frameWidth, frameHeight);
+        int count = frames.length;
+
+        Animation[] animations = new Animation[count];
+        for (int i = 0; i < count; i++){
+            animations[i] = new Animation(frameDuration, new Array<>(frames[i]));
+        }
+        return animations;
     }
 
     /**

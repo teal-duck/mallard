@@ -14,7 +14,7 @@ public class CollectItem extends Item {
     }
     
     @Override
-    public void beginContact(PhysicsEntity other, Contact contact){
+    public void beginSensorContact(PhysicsEntity other, Contact contact){
         if (other instanceof Player) {
             removed = true;
         }

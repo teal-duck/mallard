@@ -20,7 +20,8 @@ public class Assets {
      *  Player texture sets for normal and flying.
      */
     public static TextureSet playerNormal, playerGun, playerSwimming, playerFlying, playerSaber;
-    public static TextureSet playerAttackGun, playerAttackSaber;
+    public static TextureSet playerStaticAttackGun, playerStaticAttackSaber;
+    public static TextureSet playerWalkingAttackGun, playerWalkingAttackSaber;
 
     /**
      *  Bad guy texture set.
@@ -133,15 +134,20 @@ public class Assets {
         Animation[] saberWalks    = loadAnimations("textures/player_walk_saber_all.png",   28, 18, 0.08f);
         Animation[] flyingWalks   = loadAnimations("textures/player_flying_all.png",       28, 18, 0.2f);
         Animation[] swimmingWalks = loadAnimations("textures/player_swimming_all.png",     28, 18, 0.2f);
-        Animation[] SaberAttacks  = loadAnimations("textures/player_attack_saber_all.png", 28, 18, 0.08f);
+        Animation[] SaberAttacks  = loadAnimations("textures/player_walk_attack_saber_all.png", 28, 18, 0.08f);
+        Animation[] SaberAttacksStatic  = loadAnimations("textures/player_static_attack_saber_all.png", 28, 18, 0.08f);
+        Animation[] GunAttacks  = loadAnimations("textures/player_walk_attack_gun_all.png", 28, 18, 0.08f);
+        Animation[] GunAttacksStatic  = loadAnimations("textures/player_static_attack_gun_all.png", 28, 18, 0.08f);
 
         playerNormal      = new TextureSet(idle,         baseWalks    );
         playerFlying      = new TextureSet(idle,         flyingWalks  );
         playerSwimming    = new TextureSet(idleSwimming, swimmingWalks);
         playerGun         = new TextureSet(idleGun,      gunWalks     );
         playerSaber       = new TextureSet(idleSaber,    saberWalks   );
-        playerAttackSaber = new TextureSet(SaberAttacks);
-        playerAttackGun   = new TextureSet(SaberAttacks);
+        playerStaticAttackSaber = new TextureSet(SaberAttacksStatic);
+        playerStaticAttackGun   = new TextureSet(GunAttacksStatic);
+        playerWalkingAttackSaber = new TextureSet(SaberAttacks);
+        playerWalkingAttackGun   = new TextureSet(GunAttacks);
 
 
 

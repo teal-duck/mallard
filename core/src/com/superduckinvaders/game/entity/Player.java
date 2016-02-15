@@ -171,7 +171,8 @@ public class Player extends Character {
     protected boolean meleeAttack(Vector2 direction, int damage) {
         if (super.meleeAttack(direction, damage)) {
             currentWeapon = Pickup.LIGHTSABER;
-            setAttackAnimation(Assets.playerAttackSaber.getAnimation(facing));
+            setAttackAnimation((stateTime > 0 ? Assets.playerWalkingAttackSaber :Assets.playerStaticAttackSaber)
+                    .getAnimation(facing));
             return true;
         }
         return false;
@@ -181,7 +182,8 @@ public class Player extends Character {
     protected boolean rangedAttack(Vector2 direction, int damage) {
         if (super.rangedAttack(direction, damage)) {
             currentWeapon = Pickup.GUN;
-            setAttackAnimation(Assets.playerAttackGun.getAnimation(facing));
+            setAttackAnimation((stateTime > 0 ? Assets.playerWalkingAttackGun :Assets.playerStaticAttackGun)
+                    .getAnimation(facing));
             return true;
         }
         return false;

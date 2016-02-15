@@ -298,7 +298,7 @@ public class Player extends Character {
         }
         
         targetVelocity.setLength(speed);
-        setVelocity(targetVelocity, state == State.SWIMMING ? 0.5f : 4f);
+        setVelocity(targetVelocity, state == State.SWIMMING ? 1f : 4f);
         
 
         // Update movement.

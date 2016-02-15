@@ -261,7 +261,7 @@ public class Assets {
 
         Animation[] animations = new Animation[count];
         for (int i = 0; i < count; i++){
-            animations[i] = new Animation(frameDuration, new Array(frames[i]));
+            animations[i] = new Animation(frameDuration, new Array<>(frames[i]));
         }
         return animations;
     }

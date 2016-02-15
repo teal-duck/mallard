@@ -15,7 +15,7 @@ public class WaterEntity extends PhysicsEntity {
         super(parent, x, y);
         this.width = width;
         this.height = height;
-        createBody(BodyDef.BodyType.StaticBody, WATER_BITS, ALL_BITS, NO_GROUP, false);
+        createBody(BodyDef.BodyType.StaticBody, WATER_BITS, (short)(ALL_BITS ^ PROJECTILE_BITS), NO_GROUP, false);
     }
 
     @Override

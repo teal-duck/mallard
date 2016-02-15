@@ -198,7 +198,7 @@ public class GameScreen extends BaseScreen {
         this.drawGame();
         spriteBatch.end();
 
-        this.drawDebug();
+//        this.drawDebug();
 
         uiBatch.setProjectionMatrix(uiCamera.combined);
 

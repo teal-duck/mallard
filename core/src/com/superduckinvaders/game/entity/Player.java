@@ -248,16 +248,13 @@ public class Player extends Character {
 
 
         if (! isFlying() && !isSwimming()) {
-            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && hasPickup(Pickup.LIGHTSABER)) {
                 Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
                 meleeAttack(vectorTo(new Vector2(target.x, target.y)), 1);
             }
-            else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-                if (hasPickup(Pickup.GUN)) {
-
-                    Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
-                    rangedAttack(vectorTo(new Vector2(target.x, target.y)), 1);
-                }
+            else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && hasPickup(Pickup.GUN)) {
+                Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
+                rangedAttack(vectorTo(new Vector2(target.x, target.y)), 1);
             }
         }
 

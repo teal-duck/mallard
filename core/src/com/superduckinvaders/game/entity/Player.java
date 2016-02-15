@@ -20,6 +20,8 @@ import java.util.EnumMap;
  */
 public class Player extends Character {
 
+    public static final Vector2 TEXTURE_OFFSET = new Vector2(-8, 0);
+
     /**
      * Player's maximum health.
      */
@@ -133,7 +135,7 @@ public class Player extends Character {
      */
     @Override
     public float getWidth() {
-        return Assets.playerNormal.getWidth();
+        return 12;
     }
 
     /**
@@ -141,7 +143,7 @@ public class Player extends Character {
      */
     @Override
     public float getHeight() {
-        return Assets.playerNormal.getHeight();
+        return 18;
     }
 
     /**
@@ -166,15 +168,23 @@ public class Player extends Character {
     }
 
     @Override
-    protected void meleeAttack(Vector2 direction, int damage) {
-        currentWeapon = Pickup.LIGHTSABER;
-        super.meleeAttack(direction, damage);
+    protected boolean meleeAttack(Vector2 direction, int damage) {
+        if (super.meleeAttack(direction, damage)) {
+            currentWeapon = Pickup.LIGHTSABER;
+            setAttackAnimation(Assets.playerAttackSaber.getAnimation(facing));
+            return true;
+        }
+        return false;
     }
 
     @Override
-    protected void rangedAttack(Vector2 direction, int damage) {
-        currentWeapon = Pickup.GUN;
-        super.rangedAttack(direction, damage);
+    protected boolean rangedAttack(Vector2 direction, int damage) {
+        if (super.rangedAttack(direction, damage)) {
+            currentWeapon = Pickup.GUN;
+            setAttackAnimation(Assets.playerAttackGun.getAnimation(facing));
+            return true;
+        }
+        return false;
     }
 
     private void setAttackAnimation(Animation animation){
@@ -303,7 +313,7 @@ public class Player extends Character {
      */
     @Override
     public void render(SpriteBatch spriteBatch) {
-        Vector2 pos = getPosition();
+        Vector2 pos = getPosition().add(TEXTURE_OFFSET);
         TextureRegion attackTexture = getAttackAnimationFrame();
         if (attackTexture != null){
             spriteBatch.draw(attackTexture, pos.x, pos.y);

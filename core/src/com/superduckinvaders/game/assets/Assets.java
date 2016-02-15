@@ -130,69 +130,28 @@ public class Assets {
      */
     private static void loadPlayerTextureSets() {
         // Load idle texture map.
-        Texture playerIdle = loadTexture("textures/player_idle.png");
-
-        // Cut idle textures from texture map.
-        
-        TextureRegion[] idle = TextureRegion.split(playerIdle, 14, 18)[0];
-
-        // Load idle texture map.
-        Texture playerIdleSwimming = loadTexture("textures/player_swimming_idle.png");
-
-        TextureRegion[] idleSwimming = TextureRegion.split(playerIdleSwimming, 21, 18)[0];
+        TextureRegion[][] idleAll = TextureRegion.split(loadTexture("textures/player_idle_all.png"), 28, 18);
+        TextureRegion[] idle = idleAll[0];
+        TextureRegion[] idleSwimming = idleAll[1];
+        TextureRegion[] idleGun = idleAll[2];
+        TextureRegion[] idleSaber = idleAll[3];
 
         // Load walking animations.
-        Animation walkingFront = loadAnimation("textures/player_walking_front.png", 4, 0.2f);
-        Animation walkingBack = loadAnimation("textures/player_walking_back.png", 4, 0.2f);
-        Animation walkingLeft = loadAnimation("textures/player_walking_left.png", 4, 0.2f);
-        Animation walkingRight = loadAnimation("textures/player_walking_right.png", 4, 0.2f);
+        Animation[] baseWalks = loadAnimations("textures/player_walk_base_all.png", 28, 18, 0.2f);
+        Animation[] gunWalks = loadAnimations("textures/player_walk_gun_all.png", 28, 18, 0.2f);
+        Animation[] saberWalks = loadAnimations("textures/player_walk_saber_all.png", 28, 18, 0.08f);
+        Animation[] flyingWalks = loadAnimations("textures/player_flying_all.png", 28, 18, 0.2f);
+        Animation[] swimmingWalks = loadAnimations("textures/player_swimming_all.png", 28, 18, 0.2f);
 
-        Animation walkingFrontGun = loadAnimation("textures/player_walking_front_gun.png", 4, 0.2f);
-        Animation walkingBackGun = loadAnimation("textures/player_walking_back_gun.png", 4, 0.2f);
-        Animation walkingLeftGun = loadAnimation("textures/player_walking_left_gun.png", 4, 0.2f);
-        Animation walkingRightGun = loadAnimation("textures/player_walking_right_gun.png", 4, 0.2f);
+        Animation[] SaberAttacks = loadAnimations("textures/player_attack_saber_all.png", 28, 18, 0.08f);
 
-        // Load flying animations.
-        Animation flyingFront = loadAnimation("textures/player_flying_front.png", 2, 0.2f);
-        Animation flyingBack = loadAnimation("textures/player_flying_back.png", 2, 0.2f);
-        Animation flyingLeft = loadAnimation("textures/player_flying_left.png", 2, 0.2f);
-        Animation flyingRight = loadAnimation("textures/player_flying_right.png", 2, 0.2f);
-
-        // Load swimming animations.
-        Animation swimmingFront = loadAnimation("textures/player_swimming_front.png", 4, 0.2f);
-        Animation swimmingBack = loadAnimation("textures/player_swimming_back.png", 4, 0.2f);
-        Animation swimmingLeft = loadAnimation("textures/player_swimming_left.png", 4, 0.2f);
-        Animation swimmingRight = loadAnimation("textures/player_swimming_right.png", 4, 0.2f);
-
-        playerNormal = new TextureSet(idle[0], idle[1], idle[2], idle[3], walkingFront, walkingBack, walkingLeft, walkingRight);
-        playerFlying = new TextureSet(idle[0], idle[1], idle[2], idle[3], flyingFront, flyingBack, flyingLeft, flyingRight);
-        playerSwimming = new TextureSet(idleSwimming[0], idleSwimming[1], idleSwimming[2], idleSwimming[3], swimmingFront, swimmingBack, swimmingLeft, swimmingRight);
-
-        // Load idle gun texture map.
-        Texture playerIdleGun = loadTexture("textures/player_idle_gun.png");
-
-        // Cut idle textures from texture map.
-        TextureRegion[] Gun = TextureRegion.split(playerIdleGun, 18, 18)[0];
-
-        Texture playerIdleMelee = loadTexture("textures/player_idle_saber.png");
-
-        // Cut idle textures from texture map.
-        TextureRegion[] Melee = TextureRegion.split(playerIdleMelee, 18, 18)[0];
-
-        Texture playerAttackMelee = loadTexture("textures/player_attack_melee_all.png");
-
-        TextureRegion[][] MeleeAttacks = TextureRegion.split(playerAttackMelee, 28, 18);
-
-        Animation[] MeleeAttackAnimations = new Animation[4];
-        for (int i = 0; i < 4; i++){
-                MeleeAttackAnimations[i] = new Animation(0.08f, new Array(MeleeAttacks[i]));
-
-        };
-
-
-        playerGun   = new TextureSet(Gun[0], Gun[1], Gun[2], Gun[3], walkingFrontGun, walkingBackGun, walkingLeftGun, walkingRightGun);
-        playerSaber = new TextureSet(Melee[0], Melee[1], Melee[2], Melee[3],
-                MeleeAttackAnimations[0], MeleeAttackAnimations[1], MeleeAttackAnimations[2], MeleeAttackAnimations[3]);
+        playerNormal = new TextureSet(idle, baseWalks);
+        playerFlying = new TextureSet(idle, flyingWalks);
+        playerSwimming = new TextureSet(idleSwimming, swimmingWalks);
+        playerGun   = new TextureSet(idleGun, gunWalks);
+        playerSaber = new TextureSet(idleSaber, saberWalks);
+        playerAttackSaber = new TextureSet(SaberAttacks);
+        playerAttackGun = new TextureSet(SaberAttacks);
 
 
 
@@ -291,6 +250,20 @@ public class Assets {
         }
 
         return new Animation(frameDuration, keyFrames);
+    }
+    public static Animation[] loadAnimations(String file, int frameWidth, int frameHeight, float frameDuration) {
+        Texture texture = loadTexture(file);
+
+        TextureRegion[][] frames = TextureRegion.split(
+                texture,
+                frameWidth, frameHeight);
+        int count = frames.length;
+
+        Animation[] animations = new Animation[count];
+        for (int i = 0; i < count; i++){
+            animations[i] = new Animation(frameDuration, new Array(frames[i]));
+        }
+        return animations;
     }
 
     /**

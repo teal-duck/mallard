@@ -193,11 +193,12 @@ public abstract class Character extends PhysicsEntity {
      * @param direction
      * @param damage how much damage the attack deals
      */
-    protected void meleeAttack(Vector2 direction, int damage) {
+    protected boolean meleeAttack(Vector2 direction, int damage) {
         if (isStunned()) {
-            return;
+            return false;
         }
-        if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN && !enemiesInRange.isEmpty()){
+//        if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN && !enemiesInRange.isEmpty()){
+        if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN){
             for (PhysicsEntity entity : enemiesInRange) {
                 if (Math.abs(vectorTo(entity.getCentre()).angle(direction)) < 45) {
                     if (entity instanceof Character) {
@@ -216,19 +217,23 @@ public abstract class Character extends PhysicsEntity {
             meleeAttackTimer = 0f;
             faceAttackTimer = 0f;
             lookDirection(direction.cpy().nor());
+            return true;
         }
+        return false;
     }
     
-    protected void rangedAttack(Vector2 direction, int damage) {
+    protected boolean rangedAttack(Vector2 direction, int damage) {
         if (isStunned()) {
-            return;
+            return false;
         }
         if (rangedAttackTimer > RANGED_ATTACK_COOLDOWN){
             rangedAttackTimer = 0f;
             faceAttackTimer = 0f;
             fireAt(direction, damage);
             lookDirection(direction.cpy().nor());
+            return true;
         }
+        return false;
     }
 
     @Override

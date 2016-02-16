@@ -7,7 +7,7 @@ import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.desktop.util.LwjglTestRunner;
-import com.superduckinvaders.game.entity.Mob;
+import com.superduckinvaders.game.entity.mob.Mob;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.objective.Objective;
 import org.junit.Before;

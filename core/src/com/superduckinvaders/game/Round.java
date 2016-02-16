@@ -519,7 +519,7 @@ public final class Round {
     public void createProjectile(Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
         entities.add(new Projectile(this, pos, velocity, damage, owner));
         gunShot = Gdx.audio.newSound(Gdx.files.internal("Gun.mp3"));
-        gunShot.play();
+        gunShot.setVolume(gunShot.play(), 0.5f);
 
 
     }

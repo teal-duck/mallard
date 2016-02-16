@@ -90,6 +90,7 @@ public class Player extends Character {
         MELEE_ATTACK_COOLDOWN = 0.2f;
         STUNNED_DURATION = 0f;
         createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
+        swimming = Gdx.audio.newMusic(Gdx.files.internal("swimming.mp3"));
         // body.setLinearDamping(10f);
     }
 
@@ -221,10 +222,14 @@ public class Player extends Character {
             state = State.FLYING;
         }
         else if (isSwimming()){
-            swimming = Gdx.audio.newMusic(Gdx.files.internal("swimming.mp3"));
-            //if (swimming.isPlaying() == false){
-            //    swimming.play();
-            //}
+
+            boolean  isPlaying = swimming.isPlaying();
+            if (isPlaying == false){
+                swimming.play();
+
+
+
+            }
             state = State.SWIMMING;
         }else if (currentWeapon == Pickup.GUN && hasPickup(Pickup.GUN)) {
             state = State.HOLDING_GUN;

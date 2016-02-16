@@ -50,7 +50,7 @@ public class DuckGame extends Game {
         //MenuTheme.ogg is credited to SIMG, originally name Passionate.
 
         menuTheme.play();
-        menuTheme.setVolume(0.5f);
+        menuTheme.setVolume(0.2f);
         menuTheme.setLooping(true);
     }
 

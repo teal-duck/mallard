@@ -382,13 +382,15 @@ public class Player extends Character {
             Pickup pickup = null;
 
             if (random < 0.05) {
-                pickup = Player.Pickup.SCORE_MULTIPLIER;
+                pickup = Pickup.SCORE_MULTIPLIER;
             } else if (random >= 0.05 && random < 0.1) {
-                pickup = Player.Pickup.INVULNERABLE;
+                pickup = Pickup.INVULNERABLE;
             } else if (random >= 0.1 && random < 0.15) {
-                pickup = Player.Pickup.SUPER_SPEED;
+                pickup = Pickup.SUPER_SPEED;
             } else if (random >= 0.15 && random < 0.2) {
-                pickup = Player.Pickup.RATE_OF_FIRE;
+                pickup = Pickup.RATE_OF_FIRE;
+            } else {
+                pickup = Pickup.HEALTH;
             }
 
             return pickup;

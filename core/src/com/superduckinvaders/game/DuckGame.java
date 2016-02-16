@@ -45,10 +45,13 @@ public class DuckGame extends Game {
     public void create() {
         Assets.load();
         this.setScreen(new StartScreen(this));
+
         menuTheme = Gdx.audio.newMusic(Gdx.files.internal("MenuTheme.ogg"));
+        //MenuTheme.ogg is credited to SIMG, originally name Passionate.
 
         menuTheme.play();
         menuTheme.setVolume(0.5f);
+        menuTheme.setLooping(true);
     }
 
     /**

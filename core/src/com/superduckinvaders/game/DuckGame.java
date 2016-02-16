@@ -21,7 +21,7 @@ public class DuckGame extends Game {
      */
     public static final int GAME_HEIGHT = 720;
 
-    Music theme;
+    Music menuTheme;
 
     public static final Session session = new Session();
 
@@ -45,10 +45,10 @@ public class DuckGame extends Game {
     public void create() {
         Assets.load();
         this.setScreen(new StartScreen(this));
-        theme = Gdx.audio.newMusic(Gdx.files.internal("menuTheme.mp3"));
+        menuTheme = Gdx.audio.newMusic(Gdx.files.internal("MenuTheme.ogg"));
 
-        theme.play();
-        theme.setVolume(0.5f);
+        menuTheme.play();
+        menuTheme.setVolume(0.5f);
     }
 
     /**

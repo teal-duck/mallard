@@ -1,16 +1,13 @@
 package com.superduckinvaders.game.desktop;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.desktop.util.LwjglTestRunner;
-import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.Particle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;

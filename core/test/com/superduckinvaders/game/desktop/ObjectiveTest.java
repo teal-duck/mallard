@@ -1,9 +1,7 @@
 package com.superduckinvaders.game.desktop;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.desktop.util.LwjglTestRunner;
-import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.objective.Objective;
 import org.junit.Before;
 import org.junit.Test;

@@ -117,8 +117,8 @@ public class Round {
         entities.add(player);
 
         if (parent.session.currentLevel == 1){
-            createPickup(startX + 60, startY, Player.Pickup.GUN, Float.POSITIVE_INFINITY);
-            createPickup(startX - 60, startY, Player.Pickup.LIGHTSABER, Float.POSITIVE_INFINITY);
+            createPickup(startX + 60, startY, Player.Pickup.GUN);
+            createPickup(startX - 60, startY, Player.Pickup.LIGHTSABER);
         }
         else {
             player.givePickup(Player.Pickup.GUN, Float.POSITIVE_INFINITY);
@@ -520,10 +520,9 @@ public class Round {
      * @param x       the x coordinate of the powerup
      * @param y       the y coordinate of the powerup
      * @param pickup the powerup to grant to the player
-     * @param time    how long the powerup should last for
      */
-    public void createPickup(float x, float y, Player.Pickup pickup, float time) {
-        entities.add(new PickupItem(this, x, y, pickup, time));
+    public void createPickup(float x, float y, Player.Pickup pickup) {
+        entities.add(new PickupItem(this, x, y, pickup, pickup.getDuration()));
     }
 
     /**

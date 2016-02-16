@@ -88,7 +88,7 @@ public class Mob extends Character {
         if (isDead()) {
             Player.Pickup pickup = Player.Pickup.random();
             if (pickup != null) {
-                parent.createPickup(getX(), getY(), pickup, 10);
+                parent.createPickup(getX(), getY(), pickup);
             }
         }
 

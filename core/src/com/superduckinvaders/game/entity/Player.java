@@ -243,20 +243,20 @@ public class Player extends Character {
             rangedAttackTimer+=delta*(PLAYER_RANGED_ATTACK_MULTIPLIER-1);
         }
 
+        if (hasPickup(Pickup.HEALTH)) {
+            heal(2);
+        }
+
 
         // Decrement pickup timer.
         for (Map.Entry<Pickup, Float> entry : pickupMap.entrySet()){
             float value = entry.getValue();
-            if (value < 0) {
+            if (value <= 0) {
                 pickupMap.remove(entry.getKey());
             }
             else {
                 entry.setValue(value - delta);
             }
-        }
-
-        if (hasPickup(Pickup.HEALTH)) {
-            heal(1);
         }
 
 
@@ -358,23 +358,28 @@ public class Player extends Character {
      * Available pickups.
      */
     public enum Pickup {
-        GUN               (Assets.floorItemGun         ),
-        LIGHTSABER        (Assets.floorItemSaber       ),
-        SCORE_MULTIPLIER  (Assets.floorItemScore       ),
-        SUPER_SPEED       (Assets.floorItemSpeed       ),
-        RATE_OF_FIRE      (Assets.floorItemFireRate    ),
-        HEALTH            (Assets.floorItemHeart       ),
-        INVULNERABLE      (Assets.floorItemInvulnerable);
+        GUN               (Assets.floorItemGun,          Float.POSITIVE_INFINITY),
+        LIGHTSABER        (Assets.floorItemSaber,        Float.POSITIVE_INFINITY),
+        SCORE_MULTIPLIER  (Assets.floorItemScore,        30                     ),
+        SUPER_SPEED       (Assets.floorItemSpeed,        10                     ),
+        RATE_OF_FIRE      (Assets.floorItemFireRate,     60                     ),
+        HEALTH            (Assets.floorItemHeart,        0                      ),
+        INVULNERABLE      (Assets.floorItemInvulnerable, 10                     );
 
     
         private final TextureRegion texture;
-        
-        Pickup(TextureRegion texture){
+        private final float duration;
+
+        Pickup(TextureRegion texture, float duration){
             this.texture = texture;
+            this.duration = duration;
         }
         
         public TextureRegion getTexture() {
             return texture;
+        }
+        public float getDuration() {
+            return duration;
         }
 
         public static Pickup random(){

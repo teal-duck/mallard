@@ -31,7 +31,6 @@ public class SurviveObjective extends Objective {
     public void update(float delta) {
         if (timer >= (20)) {
             status = ObjectiveStatus.COMPLETED;
-            parent.getGame().session.incrementLevelCounter();
         } else {
             this.timer += delta;
         }

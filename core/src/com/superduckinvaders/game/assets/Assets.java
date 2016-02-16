@@ -25,6 +25,8 @@ public class Assets {
     public static TextureSet playerStaticAttackGun, playerStaticAttackSaber;
     public static TextureSet playerWalkingAttackGun, playerWalkingAttackSaber;
 
+    public static TextureSet boss;
+
     /**
      *  Bad guy texture set.
      */
@@ -53,8 +55,10 @@ public class Assets {
     /**
      *  Tile maps for levels.
      */
-    public static TiledMap levelOneMap, levelTwoMap, levelThreeMap, levelFourMap;
-    public static TiledMap levelFiveMap, levelSixMap, levelSevenMap, levelEightMap;
+    public static TiledMap levelOneMap, levelTwoMap, levelThreeMap, levelFourMap,
+            levelFiveMap, levelSixMap, levelSevenMap, levelEightMap;
+
+    public static TiledMap[] maps;
     /**
      *  The font for the UI.
      */
@@ -106,6 +110,17 @@ public class Assets {
         levelSixMap = loadTiledMap("maps/Library.tmx");
         levelSevenMap = loadTiledMap("maps/HesEast.tmx");
         levelEightMap = loadTiledMap("maps/Compsci.tmx");
+
+        maps = new TiledMap[]{
+                Assets.levelOneMap,
+                Assets.levelTwoMap,
+                Assets.levelThreeMap,
+                Assets.levelFourMap,
+                Assets.levelFiveMap,
+                Assets.levelSixMap,
+                Assets.levelSevenMap,
+                Assets.levelEightMap
+        };
 
         font = loadFont("Lato-Regular.ttf");
 
@@ -186,6 +201,10 @@ public class Assets {
 
         badGuyNormal       = new TextureSet(idle[0], idle[1], idle[2], idle[3], walkingFront, walkingBack, walkingLeft, walkingRight);
         rangedBadGuyNormal = new TextureSet(rangedIdle[0], rangedIdle[1], rangedIdle[2], rangedIdle[3], rangedWalkingFront, rangedWalkingBack, rangedWalkingLeft, rangedWalkingRight);
+
+        TextureRegion[] idleBoss = TextureRegion.split(loadTexture("textures/ranged_mechaboss_idle.png"), 42, 48)[0];
+
+        boss = new TextureSet(idleBoss);
     }
 
     /**

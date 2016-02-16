@@ -44,8 +44,5 @@ public class CollectObjective extends Objective {
     public void update(float delta) {
         if (target.isRemoved())
             status = ObjectiveStatus.COMPLETED;
-            if (getStatus() == ObjectiveStatus.COMPLETED) {
-                parent.getGame().session.incrementLevelCounter();
-            }
     }
 }

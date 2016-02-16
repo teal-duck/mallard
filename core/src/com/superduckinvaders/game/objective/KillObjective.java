@@ -53,7 +53,6 @@ public class KillObjective extends Objective {
 
         if (targets.size() == 0) {
             status = ObjectiveStatus.COMPLETED;
-            parent.getGame().session.incrementLevelCounter();
         }
     }
 

@@ -12,6 +12,8 @@ import com.superduckinvaders.game.entity.mob.MeleeMob;
  * Convenience. can be removed if not needed
  */
 public class RangedMob extends MeleeMob {
+
+    public static float range = 1280 / 4f;
     
     public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
         super(parent, x, y, health, textureSet, speed, ai);
@@ -24,7 +26,7 @@ public class RangedMob extends MeleeMob {
     public void update(float delta){
         super.update(delta);
         Vector2 playerPos = parent.getPlayer().getCentre();
-        if (distanceTo(playerPos) < 1280 / 4 && parent.rayCast(getCentre(), playerPos)) {
+        if (distanceTo(playerPos) < range && parent.rayCast(getCentre(), playerPos)) {
             rangedAttack(vectorTo(playerPos), 1);
         }
     }

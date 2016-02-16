@@ -25,17 +25,11 @@ public class Mob extends Character {
      * AI class for the mob
      */
     private AI ai;
-    
-    /**
-     * checks whether mob should be updated
-     */
-    private boolean active = false;
+
     /**
      * speed of the mob in pixels per second
      */
     private float speed;
-    
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
         super(parent, x, y, health);
@@ -104,24 +98,6 @@ public class Mob extends Character {
     @Override
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
-
-
-        //DEBUGGING CODE -- remove when ready
-
-        if (ai instanceof PathfindingAI) {
-            PathfindingAI.Coordinate coord = ((PathfindingAI)ai).target;
-            if (coord != null) {
-                spriteBatch.end();
-                shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                shapeRenderer.setColor(1, 1, 0, 1);
-                shapeRenderer.x(coord.vector(), 10);
-                shapeRenderer.end();
-                spriteBatch.begin();
-            }            
-        }
-
-        //END DEBUGGING CODE
     }
 
     public void applyVelocity(Vector2 destination){

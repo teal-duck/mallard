@@ -52,10 +52,7 @@ public class Projectile extends PhysicsEntity {
 
     public void setOwner(PhysicsEntity owner) {
         this.owner = owner;
-        Fixture fixture = body.getFixtureList().get(0);
-        Filter filter = fixture.getFilterData();
-        filter.maskBits = (short) ~owner.categoryBits;
-        fixture.setFilterData(filter);
+        setMaskBits((short) ~owner.categoryBits);
 
     }
 

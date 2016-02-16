@@ -149,6 +149,11 @@ public class GameScreen extends BaseScreen {
         mapRenderer = new OrthogonalTiledMapRenderer(round.getMap(), spriteBatch);
         
         debugRenderer = new Box2DDebugRenderer();
+
+        if (getGame().session.currentLevel == 8){
+            camera.zoom = 2f;
+        }
+
     }
 
     @Override

@@ -155,6 +155,17 @@ public abstract class PhysicsEntity extends Entity {
         Vector2 impulse = deltaVelocity.scl(body.getMass());
         body.applyLinearImpulse(impulse, body.getWorldCenter(), true);
     }
+
+    public short getMaskBits(){
+        Fixture fixture = body.getFixtureList().get(0);
+        return fixture.getFilterData().maskBits;
+    }
+    public void setMaskBits(short maskBits){
+        Fixture fixture = body.getFixtureList().get(0);
+        Filter filter = fixture.getFilterData();
+        filter.maskBits = maskBits;
+        fixture.setFilterData(filter);
+    }
     
     @Override
     public void dispose(){

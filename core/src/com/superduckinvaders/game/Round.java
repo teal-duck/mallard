@@ -9,8 +9,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.entity.item.*;
+import com.superduckinvaders.game.entity.mob.BossMob;
 import com.superduckinvaders.game.entity.mob.GunnerMob;
 import com.superduckinvaders.game.entity.mob.Mob;
 import com.superduckinvaders.game.entity.mob.ZombieMob;
@@ -22,6 +24,7 @@ import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
 import com.superduckinvaders.game.screen.WinScreen;
 import com.superduckinvaders.game.util.Collision;
+import com.superduckinvaders.game.util.CustomContactListener;
 import com.superduckinvaders.game.util.RayCast;
 
 import java.util.ArrayList;
@@ -81,75 +84,19 @@ public class Round {
      */
     public GameScreen gameScreen;
 
-    interface Callback {
-        void callback(PhysicsEntity entity, PhysicsEntity other, boolean sensorA, boolean sensorB);
-    }
-
     /**
      * Initialises a new Round with the specified map.
      *
      * @param parent the game the round is associated with
-     * @param map the Round's map
      */
-    public Round(DuckGame parent, TiledMap map) {
+    public Round(DuckGame parent) {
+
         this.parent = parent;
-        this.map = map;
+        this.map = Assets.maps[DuckGame.session.currentLevel-1];
         
         world = new World(Vector2.Zero.cpy(), true);
         
-        world.setContactListener(new ContactListener() {
-            @Override
-            public void beginContact(Contact contact) {
-                applyCallback(contact,
-                        (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> {
-                            if (sensorA) {
-                                ea.beginSensorContact(eb, contact);
-                            }
-                            else if (!sensorB){
-                                ea.beginCollision(eb, contact);
-                            }
-                        }
-                );
-            }
-            @Override
-            public void endContact(Contact contact) {
-                applyCallback(contact,
-                        (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> {
-                            if (sensorA) {
-                                ea.endSensorContact(eb, contact);
-                            }
-                            else if (!sensorB){
-                                ea.endCollision(eb, contact);
-                            }
-                        }
-                );
-            }
-            @Override
-            public void preSolve(Contact contact, Manifold manifold) {
-                applyCallback(contact,
-                     (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> ea.preSolve(eb, contact, manifold)
-                );
-            }
-            @Override
-            public void postSolve(Contact contact, ContactImpulse contactImpulse) {
-                applyCallback(contact,
-                     (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> ea.postSolve(eb, contact, contactImpulse)
-                );
-            }
-
-            public void applyCallback(Contact contact, Callback cb) {
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
-                Object a = fixtureA.getBody().getUserData();
-                Object b = fixtureB.getBody().getUserData();
-                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity) {
-                    PhysicsEntity ea = (PhysicsEntity) a;
-                    PhysicsEntity eb = (PhysicsEntity) b;
-                    cb.callback(ea, eb, fixtureA.isSensor(), fixtureB.isSensor());
-                    cb.callback(eb, ea, fixtureB.isSensor(), fixtureA.isSensor());
-                }
-            }
-        });
+        world.setContactListener(new CustomContactListener());
 
         // Choose which obstacles to use.
         obstaclesLayer = chooseObstacles();
@@ -166,18 +113,34 @@ public class Round {
 
         player = new Player(this, startX, startY);
 
-        entities = new ArrayList<Entity>(128);
+        entities = new ArrayList<>(128);
         entities.add(player);
 
+        if (parent.session.currentLevel == 1){
+            createPickup(startX + 60, startY, Player.Pickup.GUN, Float.POSITIVE_INFINITY);
+            createPickup(startX - 60, startY, Player.Pickup.LIGHTSABER, Float.POSITIVE_INFINITY);
+        }
+        else {
+            player.givePickup(Player.Pickup.GUN, Float.POSITIVE_INFINITY);
+            player.givePickup(Player.Pickup.LIGHTSABER, Float.POSITIVE_INFINITY);
+        }
+        if (parent.session.currentLevel == 8) {
+            addMob(new BossMob(this, 50, 24));
+        }
+        else {
+            spawnRandomMobs(50, 0, 0, getMapWidth(), getMapHeight());
+        }
 
-        Mob debugMob = addMob(new ZombieMob(this, startX + 400, startY+50));
-        Mob debugMob2 = addMob(new GunnerMob(this, startX - 400, startY-50));
+        ArrayList<Mob> targets = new ArrayList<>();
 
-        ArrayList<Mob> targets = new ArrayList<Mob>();
-        targets.add(debugMob);
-        targets.add(debugMob2);
+        for (Entity entity : entities){
+            if (entity instanceof Mob){
+                targets.add((Mob)entity);
+            }
+        }
 
-        if(parent.session.levelCounter < 3  || parent.session.levelCounter == 7 ) {
+
+        if(parent.session.currentLevel < 3  || parent.session.currentLevel == 7 ) {
 
             // Determine where to spawn the objective.
             int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
@@ -187,7 +150,7 @@ public class Round {
             setObjective(new CollectObjective(this, objective));
             entities.add(objective);
 
-        } else if (parent.session.levelCounter == 4 ||parent.session.levelCounter == 5 || parent.session.levelCounter == 6  ) {
+        } else if (parent.session.currentLevel == 4 ||parent.session.currentLevel == 5 || parent.session.currentLevel == 6  ) {
 
             setObjective (new SurviveObjective(this));
 
@@ -200,16 +163,6 @@ public class Round {
             );
         }
         //FIXME:the score from the last enemy is not added.
-
-
-
-        createPickup(startX + 20, startY, Player.Pickup.GUN, Float.POSITIVE_INFINITY);
-        createPickup(startX + 40, startY, Player.Pickup.RATE_OF_FIRE, 60);
-        createPickup(startX - 40, startY-40, Player.Pickup.HEALTH, 0);
-        createPickup(startX - 60, startY-40, Player.Pickup.LIGHTSABER, Float.POSITIVE_INFINITY);
-
-
-        //spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
     }
 
     /**
@@ -258,7 +211,18 @@ public class Round {
 
 
     private void createEnvironmentBodies() {
-        Constructor createObstacle = (float x, float y, float w, float h) -> (new Obstacle(this, x, y, w, h));
+        Constructor createObstacle;
+        if (parent.session.currentLevel==8){
+            createObstacle = (float x, float y, float w, float h) -> {
+                Obstacle o = new Obstacle(this, x, y, w, h);
+                o.setMaskBits((short) PhysicsEntity.MOB_BITS);
+//                o.setMaskBits((short) (o.getMaskBits() & ~PhysicsEntity.PROJECTILE_BITS));
+                return o;
+            };
+        }
+        else {
+            createObstacle = (float x, float y, float w, float h) -> (new Obstacle(this, x, y, w, h));
+        }
         Constructor createWater = (float x, float y, float w, float h) -> (new WaterEntity(this, x, y, w, h));
 
         layerMap(getCollisionLayer(), createObstacle);
@@ -344,7 +308,12 @@ public class Round {
             int x = MathUtils.random(minX, maxX);
             int y = MathUtils.random(minY, maxY);
             if (!collidePoint(x, y))
-                addMob(new ZombieMob(this, x, y));
+                if (MathUtils.random()>0.2) {
+                    addMob(new ZombieMob(this, x, y));
+                }
+                else {
+                    addMob(new GunnerMob(this, x, y));
+                }
                 i++;
         }
     }
@@ -564,16 +533,6 @@ public class Round {
      */
     public void update(float delta) {
         world.step(delta, 6, 2);
-        if (objective != null) {
-            objective.update(delta);
-
-            if (objective.getStatus() == Objective.ObjectiveStatus.COMPLETED) {
-                parent.setScreen(new WinScreen(parent, player.getScore()));
-            } else if (player.isDead()) {
-                parent.setScreen(new LoseScreen(parent));
-
-            }
-        }
 
         for (int i = 0; i < entities.size();i++) {
             Entity entity = entities.get(i);
@@ -587,6 +546,19 @@ public class Round {
             } else if (entity.distanceTo(player.getX(), player.getY()) < UPDATE_DISTANCE){
                 // Don't bother updating entities that aren't on screen.
                 entity.update(delta);
+            }
+        }
+
+        if (objective != null) {
+            objective.update(delta);
+
+            if (objective.getStatus() == Objective.ObjectiveStatus.COMPLETED) {
+                parent.session.unlockNext();
+                parent.session.incrementLevelCounter();
+                parent.setScreen(new WinScreen(parent, player.getScore()));
+            } else if (player.isDead()) {
+                parent.setScreen(new LoseScreen(parent));
+
             }
         }
     }

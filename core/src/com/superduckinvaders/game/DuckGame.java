@@ -34,13 +34,27 @@ public class DuckGame extends Game {
     public static final Session session = new Session();
 
      public static class Session{
-         public int levelCounter = 1;
-         public int healthCounter = 6;
-         public int totalScore = 0;
-         public void incrementLevelCounter(){
-            levelCounter += 1;
+
+        public int currentLevel = 1;
+        public int maxUnlocked = 1;
+        public int healthCounter = 6;
+        public int totalScore = 0;
+        public void incrementLevelCounter(){
+            currentLevel += 1;
         }
-        public void setLevel(int level){levelCounter = level;}
+
+        public void setLevel(int level){
+             currentLevel = level;
+        }
+        public void unlock(int level){
+             maxUnlocked = Math.max(maxUnlocked, level);
+        }
+        public boolean isUnlocked(int level){
+             return maxUnlocked >= level;
+        }
+        public void unlockNext(){
+            unlock(currentLevel+1);
+        }
         public void setHealthCounter(int health){
             healthCounter = health;
         }

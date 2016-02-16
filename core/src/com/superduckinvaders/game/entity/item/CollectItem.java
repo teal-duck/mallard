@@ -1,5 +1,6 @@
 package com.superduckinvaders.game.entity.item;
 
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.PhysicsEntity;
@@ -13,7 +14,7 @@ public class CollectItem extends Item {
     }
     
     @Override
-    public void onCollision(PhysicsEntity other){
+    public void beginSensorContact(PhysicsEntity other, Contact contact){
         if (other instanceof Player) {
             removed = true;
         }

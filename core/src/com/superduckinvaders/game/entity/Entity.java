@@ -93,7 +93,7 @@ public abstract class Entity {
     }
     
     public Vector2 vectorTo(Vector2 dest){
-        return dest.cpy().sub(getPosition());
+        return dest.cpy().sub(getCentre());
     }
 
     /**

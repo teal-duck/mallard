@@ -1,5 +1,6 @@
 package com.superduckinvaders.game.entity.item;
 
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.PhysicsEntity;
 import com.superduckinvaders.game.entity.Player;
@@ -27,7 +28,7 @@ public class PickupItem extends Item {
     }
     
     @Override
-    public void onCollision(PhysicsEntity other){
+    public void beginSensorContact(PhysicsEntity other, Contact contact){
         if (other instanceof Player) {
             ((Player)other).givePickup(pickup, time);
             removed = true;

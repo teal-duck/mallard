@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.entity.item.*;
 import com.superduckinvaders.game.entity.mob.GunnerMob;
@@ -50,6 +49,9 @@ public final class Round {
      */
     private TiledMap map;
 
+    private float tileWidth;
+    private float tileHeight;
+
     /**
      * Map layer containing randomly-chosen layer of predefined obstacles.
      */
@@ -81,6 +83,10 @@ public final class Round {
      */
     public GameScreen gameScreen;
 
+    interface Callback {
+        void callback(PhysicsEntity entity, PhysicsEntity other, boolean sensorA, boolean sensorB);
+    }
+
     /**
      * Initialises a new Round with the specified map.
      *
@@ -91,33 +97,70 @@ public final class Round {
         this.parent = parent;
         this.map = map;
         
-        world = new World(Vector2.Zero, true);
+        world = new World(Vector2.Zero.cpy(), true);
         
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                Object a = contact.getFixtureA().getBody().getUserData();
-                Object b = contact.getFixtureB().getBody().getUserData();
-                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
-                    PhysicsEntity ea = (PhysicsEntity)a;
-                    PhysicsEntity eb = (PhysicsEntity)b;
-                    ea.onCollision(eb);
-                    eb.onCollision(ea);
-                }
+                applyCallback(contact,
+                        (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> {
+                            if (sensorA) {
+                                ea.beginSensorContact(eb, contact);
+                            }
+                            else if (!sensorB){
+                                ea.beginCollision(eb, contact);
+                            }
+                        }
+                );
             }
             @Override
-            public void endContact(Contact contact) {}
+            public void endContact(Contact contact) {
+                applyCallback(contact,
+                        (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> {
+                            if (sensorA) {
+                                ea.endSensorContact(eb, contact);
+                            }
+                            else if (!sensorB){
+                                ea.endCollision(eb, contact);
+                            }
+                        }
+                );
+            }
             @Override
-            public void postSolve(Contact arg0, ContactImpulse arg1) {}
+            public void preSolve(Contact contact, Manifold manifold) {
+                applyCallback(contact,
+                     (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> ea.preSolve(eb, contact, manifold)
+                );
+            }
             @Override
-            public void preSolve(Contact arg0, Manifold arg1) {}
+            public void postSolve(Contact contact, ContactImpulse contactImpulse) {
+                applyCallback(contact,
+                     (PhysicsEntity ea, PhysicsEntity eb, boolean sensorA, boolean sensorB) -> ea.postSolve(eb, contact, contactImpulse)
+                );
+            }
+
+            public void applyCallback(Contact contact, Callback cb) {
+                Fixture fixtureA = contact.getFixtureA();
+                Fixture fixtureB = contact.getFixtureB();
+                Object a = fixtureA.getBody().getUserData();
+                Object b = fixtureB.getBody().getUserData();
+                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity) {
+                    PhysicsEntity ea = (PhysicsEntity) a;
+                    PhysicsEntity eb = (PhysicsEntity) b;
+                    cb.callback(ea, eb, fixtureA.isSensor(), fixtureB.isSensor());
+                    cb.callback(eb, ea, fixtureB.isSensor(), fixtureA.isSensor());
+                }
+            }
         });
 
         // Choose which obstacles to use.
         obstaclesLayer = chooseObstacles();
         collisionLayer = getCollisionLayer();
 
-        createObstacleBodies();
+        tileWidth = collisionLayer.getTileWidth();
+        tileHeight = collisionLayer.getTileHeight();
+
+        createEnvironmentBodies();
 
         // Determine starting coordinates for player (0, 0 default).
         int startX = Integer.parseInt(map.getProperties().get("StartX", "0", String.class)) * getTileWidth();
@@ -129,8 +172,8 @@ public final class Round {
         entities.add(player);
 
 
-        Mob debugMob = addMob(new ZombieMob(this, startX + 40, startY+50));
-        Mob debugMob2 = addMob(new GunnerMob(this, startX - 40, startY-50));
+        Mob debugMob = addMob(new ZombieMob(this, startX + 400, startY+50));
+        Mob debugMob2 = addMob(new GunnerMob(this, startX - 400, startY-50));
 
         ArrayList<Mob> targets = new ArrayList<Mob>();
         targets.add(debugMob);
@@ -190,30 +233,46 @@ public final class Round {
             return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count - 1)));
         }
     }
-    
-    private void createObstacleBodies() {
+
+    private interface Constructor {
+        Entity construct(float x, float y, float w, float h);
+    }
+
+    private void layerMap(TiledMapTileLayer layer, Constructor constructor){
+        if (layer == null){
+            return;
+        }
+
         float tw = collisionLayer.getTileWidth();
         float th = collisionLayer.getTileHeight();
 
-        //ArrayList<Obstacle> obstacleEntities = new ArrayList<Obstacle>();
-
-        TiledMapTileLayer[] layers = {collisionLayer, obstaclesLayer};
-
-        for (TiledMapTileLayer layer : layers){
-            for (int x = 0; x < layer.getWidth(); x++) {
-                for (int y = 0; y < layer.getHeight(); y++) {
-                    if (layer.getCell(x, y) != null) {
-                        float tileX = x * tw;
-                        float tileY = y * th;
-                        // obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
-                        new Obstacle(this, tileX, tileY, tw, th);
-                    }
+        for (int x = 0; x < layer.getWidth(); x++) {
+            for (int y = 0; y < layer.getHeight(); y++) {
+                if (layer.getCell(x, y) != null) {
+                    float tileX = x * tw;
+                    float tileY = y * th;
+                    // obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
+                    constructor.construct(tileX, tileY, tw, th);
                 }
             }
         }
+    }
+
+
+    private void createEnvironmentBodies() {
+        Constructor createObstacle = (float x, float y, float w, float h) -> (new Obstacle(this, x, y, w, h));
+        Constructor createWater = (float x, float y, float w, float h) -> (new WaterEntity(this, x, y, w, h));
+
+        layerMap(getCollisionLayer(), createObstacle);
+        layerMap(getObstaclesLayer(), createObstacle);
+        layerMap(getWaterLayer(),     createWater   );
+
         
         float mapHeight = getMapHeight();
         float mapWidth = getMapWidth();
+
+        //Assumes square tiles!
+        float tw = collisionLayer.getTileWidth();
         
         // 4 map edge objects
         new Obstacle(this, -tw,      -tw,       tw,          mapHeight+tw);
@@ -320,6 +379,9 @@ public final class Round {
      */
     public TiledMapTileLayer getCollisionLayer() {
         return (TiledMapTileLayer) getMap().getLayers().get("Collision");
+    }
+    public TiledMapTileLayer getWaterLayer() {
+        return (TiledMapTileLayer) getMap().getLayers().get("Water");
     }
 
     /**

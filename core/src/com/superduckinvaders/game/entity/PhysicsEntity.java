@@ -13,10 +13,13 @@ public abstract class PhysicsEntity extends Entity {
     public static final short MOB_BITS         = 0x4;
     public static final short PROJECTILE_BITS  = 0x8;
     public static final short ITEM_BITS        = 0x10;
-    public static final short ALL_BITS         = WORLD_BITS | PLAYER_BITS | MOB_BITS | PROJECTILE_BITS | ITEM_BITS;
+    public static final short WATER_BITS        = 0x10;
+    public static final short ALL_BITS         = WORLD_BITS | PLAYER_BITS | MOB_BITS |
+                                             PROJECTILE_BITS | ITEM_BITS | WATER_BITS;
     public static final short NO_GROUP         = 0;
     public static final short MOB_GROUP        = -1;
-    
+    public static final short SENSOR_GROUP        = -2;
+
     public short categoryBits = PLAYER_BITS;
 
     public Body body;
@@ -131,11 +134,11 @@ public abstract class PhysicsEntity extends Entity {
     }
     
     public Vector2 getVelocity() {
-        return body.getLinearVelocity().scl(PIXELS_PER_METRE);
+        return getPhysicsVelocity().scl(PIXELS_PER_METRE);
     }
     
     public Vector2 getPhysicsVelocity() {
-        return body.getLinearVelocity();
+        return body.getLinearVelocity().cpy();
     }
     
     public void setVelocity(Vector2 targetVelocity) {
@@ -160,6 +163,21 @@ public abstract class PhysicsEntity extends Entity {
         }
     }
     
-    public void onCollision(PhysicsEntity other) {
+    public void beginCollision(PhysicsEntity other, Contact contact) {
+    }
+
+    public void endCollision(PhysicsEntity other, Contact contact) {
+    }
+
+    public void beginSensorContact(PhysicsEntity other, Contact contact) {
+    }
+
+    public void endSensorContact(PhysicsEntity other, Contact contact) {
+    }
+
+    public void preSolve(PhysicsEntity other , Contact contact, Manifold manifold) {
+    }
+
+    public void postSolve(PhysicsEntity other , Contact contact, ContactImpulse contactImpulse) {
     }
 }

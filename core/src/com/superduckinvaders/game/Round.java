@@ -163,8 +163,8 @@ public final class Round {
         createEnvironmentBodies();
 
         // Determine starting coordinates for player (0, 0 default).
-        int startX = Integer.parseInt(map.getProperties().get("StartX", "5", String.class)) * getTileWidth();
-        int startY = Integer.parseInt(map.getProperties().get("StartY", "5", String.class)) * getTileHeight();
+        int startX = Integer.parseInt(map.getProperties().get("StartX", "0", String.class)) * getTileWidth();
+        int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
 
@@ -179,7 +179,7 @@ public final class Round {
         targets.add(debugMob);
         targets.add(debugMob2);
 
-        if(parent.session.levelCounter < 3 || parent.session.levelCounter == 5 || parent.session.levelCounter == 7 ) {
+        if(parent.session.levelCounter < 3  || parent.session.levelCounter == 7 ) {
 
             // Determine where to spawn the objective.
             int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
@@ -189,7 +189,7 @@ public final class Round {
             setObjective(new CollectObjective(this, objective));
             entities.add(objective);
 
-        } else if (parent.session.levelCounter == 4 || parent.session.levelCounter == 6  ) {
+        } else if (parent.session.levelCounter == 4 ||parent.session.levelCounter == 5 || parent.session.levelCounter == 6  ) {
 
             setObjective (new SurviveObjective(this));
 

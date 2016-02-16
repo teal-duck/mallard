@@ -26,7 +26,7 @@ public class DuckGame extends Game {
     public static final Session session = new Session();
 
      public static class Session{
-         public int levelCounter = 8;
+         public int levelCounter = 1;
          public int healthCounter = 6;
          public int totalScore = 0;
          public void incrementLevelCounter(){

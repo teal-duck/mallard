@@ -1,7 +1,7 @@
 package com.superduckinvaders.game.desktop.util;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
@@ -61,7 +61,7 @@ public class LwjglTestRunner extends BlockJUnit4ClassRunner {
     @Override
     public void run(RunNotifier notifier) {
         // Create an ApplicationAdapter to run the test.
-        LwjglApplication app = new LwjglApplication(new TestApplicationAdapter(notifier));
+        HeadlessApplication app = new HeadlessApplication(new TestApplicationAdapter(notifier));
 
         try {
             // Wait for the test to terminate (or throw an exception).
@@ -71,7 +71,7 @@ public class LwjglTestRunner extends BlockJUnit4ClassRunner {
             // This might happen, but who cares?
         }
         finally {
-            app.stop();
+            app.exit();
         }
     }
 }

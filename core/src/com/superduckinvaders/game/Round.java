@@ -25,12 +25,10 @@ import com.superduckinvaders.game.util.RayCast;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
  * Represents a round of the game played on one level with a single objective.
  */
-public final class Round {
+public class Round {
 
     /**
      * How near entities must be to the player to get updated in the game loop.

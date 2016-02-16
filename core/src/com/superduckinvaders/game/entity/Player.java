@@ -27,7 +27,7 @@ public class Player extends Character {
     /**
      * Player's maximum health.
      */
-    public static final int PLAYER_HEALTH = 6;
+    public static final int PLAYER_HEALTH = 8;
     /**
      * Player's standard movement speed in pixels per second.
      */

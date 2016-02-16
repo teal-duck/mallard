@@ -27,7 +27,7 @@ public class PathfindingAITest {
     @Before
     public void setUp() {
         TiledMap map = new TiledMap(); // FIXME: Replace with a dummy map or something.
-        round = spy(new Round(mock(DuckGame.class), map));
+        round = spy(new Round(mock(DuckGame.class)));
         textureSet = mock(TextureSet.class);
     }
 

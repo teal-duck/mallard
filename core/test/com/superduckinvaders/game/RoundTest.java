@@ -1,6 +1,7 @@
 package com.superduckinvaders.game;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.objective.Objective;
 import org.junit.Ignore;
@@ -35,7 +36,7 @@ public class RoundTest {
 
     @Test
     public void CanSetObjective() {
-        Round round = new Round(mock(DuckGame.class), new TiledMap());
+        Round round = new Round(new DuckGame());
         Objective testObj = new TestObjective(round);
         round.setObjective(testObj);
         assertEquals(round.getObjective().getObjectiveString(), TEST_OBJECTIVE_STRING);

@@ -51,7 +51,7 @@ public class StartScreen extends BaseScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
-                getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), Assets.levelOneMap)));
+                getGame().setScreen(new GameScreen(getGame(), new Round(getGame(), Assets.levelTwoMap)));
 
             }
         });

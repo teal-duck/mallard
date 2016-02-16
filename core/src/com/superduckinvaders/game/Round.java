@@ -163,8 +163,8 @@ public final class Round {
         createEnvironmentBodies();
 
         // Determine starting coordinates for player (0, 0 default).
-        int startX = Integer.parseInt(map.getProperties().get("StartX", "0", String.class)) * getTileWidth();
-        int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
+        int startX = Integer.parseInt(map.getProperties().get("StartX", "5", String.class)) * getTileWidth();
+        int startY = Integer.parseInt(map.getProperties().get("StartY", "5", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
 
@@ -515,6 +515,7 @@ public final class Round {
      */
 
     Sound gunShot;
+
     public void createProjectile(Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
         entities.add(new Projectile(this, pos, velocity, damage, owner));
         gunShot = Gdx.audio.newSound(Gdx.files.internal("Gun.mp3"));

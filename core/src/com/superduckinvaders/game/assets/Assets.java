@@ -51,10 +51,10 @@ public class Assets {
     public static Animation explosionAnimation;
 
     /**
-     *  Tile map for level one.
+     *  Tile maps for levels.
      */
-    public static TiledMap levelOneMap;
-
+    public static TiledMap levelOneMap, levelTwoMap, levelThreeMap, levelFourMap;
+    public static TiledMap levelFiveMap, levelSixMap, levelSevenMap, levelEightMap;
     /**
      *  The font for the UI.
      */
@@ -99,6 +99,13 @@ public class Assets {
         explosionAnimation = loadAnimation("textures/explosion.png", 2, 0.3f);
 
         levelOneMap = loadTiledMap("maps/map.tmx");
+        levelTwoMap = loadTiledMap("maps/James.tmx");
+        levelThreeMap = loadTiledMap("maps/Halifax.tmx");
+        levelFourMap = loadTiledMap("maps/QuietPlace.tmx");
+        levelFiveMap = loadTiledMap("maps/bridges.tmx");
+        levelSixMap = loadTiledMap("maps/Library.tmx");
+        levelSevenMap = loadTiledMap("maps/HesEast.tmx");
+        levelEightMap = loadTiledMap("maps/Compsci.tmx");
 
         font = loadFont("Lato-Regular.ttf");
 

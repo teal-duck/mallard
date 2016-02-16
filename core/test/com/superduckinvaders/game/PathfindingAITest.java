@@ -1,12 +1,10 @@
-package com.superduckinvaders.game.desktop;
+package com.superduckinvaders.game;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
-import com.superduckinvaders.game.DuckGame;
-import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.TextureSet;
-import com.superduckinvaders.game.desktop.util.LwjglTestRunner;
+import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.entity.mob.Mob;
 import org.junit.Before;

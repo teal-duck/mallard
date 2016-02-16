@@ -1,9 +1,7 @@
-package com.superduckinvaders.game.desktop;
+package com.superduckinvaders.game;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.superduckinvaders.game.DuckGame;
-import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.desktop.util.LwjglTestRunner;
+import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.objective.Objective;
 import org.junit.Ignore;
 import org.junit.Test;

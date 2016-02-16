@@ -1,10 +1,8 @@
-package com.superduckinvaders.game.desktop;
+package com.superduckinvaders.game;
 
 import com.badlogic.gdx.math.Vector2;
-import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.desktop.util.LwjglTestRunner;
+import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.entity.Player;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

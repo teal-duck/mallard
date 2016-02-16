@@ -1,9 +1,8 @@
-package com.superduckinvaders.game.desktop;
+package com.superduckinvaders.game;
 
 import com.badlogic.gdx.math.Vector2;
-import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.desktop.util.LwjglTestRunner;
+import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.entity.PhysicsEntity;
 import com.superduckinvaders.game.entity.Projectile;
 import org.junit.Before;

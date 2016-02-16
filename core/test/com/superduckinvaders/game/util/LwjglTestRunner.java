@@ -1,4 +1,4 @@
-package com.superduckinvaders.game.desktop.util;
+package com.superduckinvaders.game.util;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;

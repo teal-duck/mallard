@@ -1,7 +1,7 @@
 package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.Mob;
+import com.superduckinvaders.game.entity.mob.Mob;
 
 /**
  * Defines movement and attacking behaviour for Mobs.

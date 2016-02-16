@@ -1,0 +1,83 @@
+package com.superduckinvaders.game.desktop;
+
+import static org.junit.Assert.*;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.superduckinvaders.game.DuckGame;
+import com.superduckinvaders.game.assets.Assets;
+import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.entity.mob.Mob;
+import com.superduckinvaders.game.entity.Projectile;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
+
+public class ProjectileTest {
+	
+	protected static DuckGame duckGame;
+	protected static Round testRound;
+ 
+    @BeforeClass
+    public static void setUp() {
+    	duckGame = new DuckGame();
+ 
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = 1280;
+		config.height = 720;
+		config.resizable = false;
+		config.title = "SUPER DUCK INVADERS! - Team Mallard";
+		new LwjglApplication(duckGame, config);
+        
+		while (duckGame.onGameScreen == false) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		testRound = duckGame.getRound();
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }
+	
+	@Test
+	public void pathFindingTest1() {
+
+		//simple movement tests
+		//x direction test
+		Mob testMob = new Mob(testRound, 300, 300, 5, Assets.badGuyNormal, 100);
+		Projectile testProjectile = new Projectile(testRound, testMob.getX()+100, testMob.getY()+100, testMob.getX()+100, testMob.getY()+100, 10, 10, testMob);
+		int[] expectedCoord = new int[] {400, 400};
+		int[] actualCoord = new int[]{(int)testProjectile.getX(), (int)testProjectile.getY()};
+		assertArrayEquals(expectedCoord, actualCoord);
+		testProjectile.update(1);
+		expectedCoord = new int[] {410, 400};
+		actualCoord = new int[] {(int)testProjectile.getX(), (int)testProjectile.getY()};
+		assertArrayEquals(expectedCoord, actualCoord);
+		
+		//y direction test
+		testProjectile = new Projectile(testRound, testMob.getX(), testMob.getY(), testMob.getX(), testMob.getY()+100, 10, 10, testMob);
+		testProjectile.update(1);
+		expectedCoord = new int[]{300, 310};
+		actualCoord = new int[]{(int)testProjectile.getX(), (int)testProjectile.getY()};
+		assertArrayEquals(expectedCoord, actualCoord);
+		
+		//collision detection tests
+		//move the mob to some boundary of the map
+		testMob.setVelocity(-1, 0);
+		for (int i =0; i<100; i++){
+			testMob.update((float)0.1);
+		}
+		//the mob should be colliding with something to the left here and be removed
+		testProjectile= new Projectile(testRound, testMob.getX(), testMob.getY(), testMob.getX(), testMob.getY()-100, 10, 10, testMob);
+		testProjectile.update(1);
+		assertEquals(false,  testProjectile.isRemoved());
+		}
+
+}

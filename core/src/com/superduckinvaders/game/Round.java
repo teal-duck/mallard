@@ -7,16 +7,18 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.*;
 import com.superduckinvaders.game.entity.item.*;
-import com.superduckinvaders.game.objective.CollectObjective;
+import com.superduckinvaders.game.entity.mob.GunnerMob;
+import com.superduckinvaders.game.entity.mob.Mob;
+import com.superduckinvaders.game.entity.mob.ZombieMob;
+import com.superduckinvaders.game.objective.KillObjective;
 import com.superduckinvaders.game.objective.Objective;
 import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
 import com.superduckinvaders.game.screen.WinScreen;
-import com.superduckinvaders.game.objective.SurviveObjective;
+import com.superduckinvaders.game.util.Collision;
+import com.superduckinvaders.game.util.RayCast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,9 @@ public class Round {
      * The Round's map.
      */
     private TiledMap map;
+
+    private float tileWidth;
+    private float tileHeight;
 
     /**
      * Map layer containing randomly-chosen layer of predefined obstacles.
@@ -92,12 +97,21 @@ public class Round {
                 if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
                     PhysicsEntity ea = (PhysicsEntity)a;
                     PhysicsEntity eb = (PhysicsEntity)b;
-                    ea.onCollision(eb);
-                    eb.onCollision(ea);
+                    ea.beginContact(eb, contact);
+                    eb.beginContact(ea, contact);
                 }
             }
             @Override
-            public void endContact(Contact contact) {}
+            public void endContact(Contact contact) {
+                Object a = contact.getFixtureA().getBody().getUserData();
+                Object b = contact.getFixtureB().getBody().getUserData();
+                if (a instanceof PhysicsEntity && b instanceof PhysicsEntity){
+                    PhysicsEntity ea = (PhysicsEntity)a;
+                    PhysicsEntity eb = (PhysicsEntity)b;
+                    ea.endContact(eb, contact);
+                    eb.endContact(ea, contact);
+                }
+            }
             @Override
             public void postSolve(Contact arg0, ContactImpulse arg1) {}
             @Override
@@ -108,31 +122,52 @@ public class Round {
         obstaclesLayer = chooseObstacles();
         collisionLayer = getCollisionLayer();
 
-        createObstacleBodies();
+        tileWidth = collisionLayer.getTileWidth();
+        tileHeight = collisionLayer.getTileHeight();
+
+        createEnvironmentBodies();
 
         // Determine starting coordinates for player (0, 0 default).
         int startX = Integer.parseInt(map.getProperties().get("StartX", "0", String.class)) * getTileWidth();
         int startY = Integer.parseInt(map.getProperties().get("StartY", "0", String.class)) * getTileHeight();
 
         player = new Player(this, startX, startY);
-/*
         // Determine where to spawn the objective.
         int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
         int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
 
-        Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
-        CollectItem objective = new CollectItem(this, objectiveX, objectiveY);
-        setObjective(new CollectObjective(this, objective));
-        */
-        setObjective (new SurviveObjective(this));
+
+
+//        Item objective = new Item(this, objectiveX, objectiveY, Assets.flag);
+//        setObjective(new CollectObjective(this, objective));
+
+//        setObjective (new SurviveObjective(this));
         entities = new ArrayList<Entity>(128);
         entities.add(player);
         //entities.add(objective);
 
+        Mob debugMob = addMob(new ZombieMob(this, startX + 40, startY+50));
+        Mob debugMob2 = addMob(new GunnerMob(this, startX - 40, startY-50));
+
+        ArrayList<Mob> targets = new ArrayList<Mob>();
+        targets.add(debugMob);
+        targets.add(debugMob2);
+
+        //FIXME:the score from the last enemy is not added.
+
+        setObjective(new KillObjective(
+                        this,
+                        targets,
+                        "Kill the Enemies!"
+                )
+        );
+
         createPickup(startX + 20, startY, Player.Pickup.GUN, Float.POSITIVE_INFINITY);
         createPickup(startX + 40, startY, Player.Pickup.RATE_OF_FIRE, 60);
-        
-        Mob debugMob = spawnZombieMob(startX + 40, startY+50);
+        createPickup(startX - 40, startY-40, Player.Pickup.HEALTH, 0);
+        createPickup(startX - 60, startY-40, Player.Pickup.LIGHTSABER, Float.POSITIVE_INFINITY);
+
+
         //spawnRandomMobs(10, 0, 0, getMapWidth(), getMapHeight());
     }
 
@@ -155,30 +190,46 @@ public class Round {
             return (TiledMapTileLayer) map.getLayers().get(String.format("Obstacles%d", MathUtils.random(0, count - 1)));
         }
     }
-    
-    private void createObstacleBodies() {
+
+    private interface Constructor {
+        Entity construct(float x, float y, float w, float h);
+    }
+
+    private void layerMap(TiledMapTileLayer layer, Constructor constructor){
+        if (layer == null){
+            return;
+        }
+
         float tw = collisionLayer.getTileWidth();
         float th = collisionLayer.getTileHeight();
 
-        //ArrayList<Obstacle> obstacleEntities = new ArrayList<Obstacle>();
-
-        TiledMapTileLayer[] layers = {collisionLayer, obstaclesLayer};
-
-        for (TiledMapTileLayer layer : layers){
-            for (int x = 0; x < layer.getWidth(); x++) {
-                for (int y = 0; y < layer.getHeight(); y++) {
-                    if (layer.getCell(x, y) != null) {
-                        float tileX = x * tw;
-                        float tileY = y * th;
-                        // obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
-                        new Obstacle(this, tileX, tileY, tw, th);
-                    }
+        for (int x = 0; x < layer.getWidth(); x++) {
+            for (int y = 0; y < layer.getHeight(); y++) {
+                if (layer.getCell(x, y) != null) {
+                    float tileX = x * tw;
+                    float tileY = y * th;
+                    // obstacleEntities.add(new Obstacle(this, tileX, tileY, tw, th));
+                    constructor.construct(tileX, tileY, tw, th);
                 }
             }
         }
+    }
+
+
+    private void createEnvironmentBodies() {
+        Constructor createObstacle = (float x, float y, float w, float h) -> (new Obstacle(this, x, y, w, h));
+        Constructor createWater = (float x, float y, float w, float h) -> (new WaterEntity(this, x, y, w, h));
+
+        layerMap(getCollisionLayer(), createObstacle);
+        layerMap(getObstaclesLayer(), createObstacle);
+        layerMap(getWaterLayer(),     createWater   );
+
         
         float mapHeight = getMapHeight();
         float mapWidth = getMapWidth();
+
+        //Assumes square tiles!
+        float tw = collisionLayer.getTileWidth();
         
         // 4 map edge objects
         new Obstacle(this, -tw,      -tw,       tw,          mapHeight+tw);
@@ -201,7 +252,7 @@ public class Round {
     }
     public boolean collidePoint(Vector2 p, short maskBits) {
         p.scl(PhysicsEntity.METRES_PER_PIXEL);
-        Query q = new QueryPoint(world, p, maskBits);
+        Collision.Query q = new Collision.QueryPoint(world, p, maskBits);
         return q.query();
     }
     
@@ -211,15 +262,15 @@ public class Round {
     public boolean collideArea(Vector2 pos, Vector2 size, short maskBits) {
         pos.scl(PhysicsEntity.METRES_PER_PIXEL);
         size.scl(PhysicsEntity.METRES_PER_PIXEL);
-        Query q = new QueryArea(world, pos, size, maskBits);
+        Collision.Query q = new Collision.QueryArea(world, pos, size, maskBits);
         return q.query();
     }
     
     public boolean rayCast(Vector2 pos1, Vector2 pos2){
-        return rayCast(pos1, pos2, PhysicsEntity.PLAYER_BITS);
+        return rayCast(pos1, pos2, PhysicsEntity.WORLD_BITS);
     }
     public boolean rayCast(Vector2 pos1, Vector2 pos2, short maskBits) {
-        RayCastCB r = new RayCastCB(maskBits);
+        RayCast.RayCastCB r = new RayCast.RayCastCB(maskBits);
         world.rayCast(
                 r,
                 pos1.cpy().scl(PhysicsEntity.METRES_PER_PIXEL),
@@ -246,39 +297,19 @@ public class Round {
         return result;
     }
 
-    /**
-     * Spawns a number of random mobs the specified distance from the player.
-     * @param amount how many random mobs to spawn
-     * @param minX the minimum x distance from the player to spawn the mobs
-     * @param minY the minimum y distance from the player to spawn the mobs
-     * @param maxX the maximum x distance from the player to spawn the mobs
-     * @param maxY the maximum y distance from the player to spawn the mobs
-     */
+
     private void spawnRandomMobs(int amount, int minX, int minY, int maxX, int maxY) {
         for (int i = 0; i < amount;) {
             int x = MathUtils.random(minX, maxX);
             int y = MathUtils.random(minY, maxY);
             if (!collidePoint(x, y))
-                spawnZombieMob(x, y);
+                addMob(new ZombieMob(this, x, y));
                 i++;
         }
     }
-    
-    private Mob spawnZombieMob(float x, float y){
-        return createMob(x, y, 3, Assets.badGuyNormal, 5);
-    }
-    
-    /**
-     * Creates a mob and adds it to the list of entities, but only if it doesn't intersect with another character.
-     * @param x the initial x coordinate
-     * @param y the initial y coordinate
-     * @param health the initial health of the mob
-     * @param textureSet the texture set to use
-     * @param speed how fast the mob moves in pixels per second
-     * @return true if the mob was successfully added, false if there was an intersection and the mob wasn't added
-     */
-    public Mob createMob(float x, float y, int health, TextureSet textureSet, int speed) {
-        Mob mob = new RangedMob(this, x, y, health, textureSet, speed);
+
+
+    public Mob addMob(Mob mob) {
         entities.add(mob);
         return mob;
     }
@@ -305,6 +336,9 @@ public class Round {
      */
     public TiledMapTileLayer getCollisionLayer() {
         return (TiledMapTileLayer) getMap().getLayers().get("Collision");
+    }
+    public TiledMapTileLayer getWaterLayer() {
+        return (TiledMapTileLayer) getMap().getLayers().get("Water");
     }
 
     /**
@@ -488,7 +522,7 @@ public class Round {
             }
         }
 
-        for (int i = 0; i < entities.size(); i++) {
+        for (int i = 0; i < entities.size();i++) {
             Entity entity = entities.get(i);
 
             if (entity.isRemoved()) {
@@ -496,102 +530,13 @@ public class Round {
                     player.addScore((int) (10 * (player.hasPickup(Player.Pickup.SCORE_MULTIPLIER) ? Player.PLAYER_SCORE_MULTIPLIER : 1)));
                 }
                 entity.dispose();
-                entities.remove(i);
+                entities.remove(i--);
             } else if (entity.distanceTo(player.getX(), player.getY()) < UPDATE_DISTANCE){
                 // Don't bother updating entities that aren't on screen.
                 entity.update(delta);
             }
         }
     }
-        
-    public static abstract class Query implements QueryCallback {
-        public boolean result = false;
-        public World world;
-        public short maskBits;
-        
-        public Query(World world, short maskBits){
-            this.maskBits = maskBits;
-            this.world=world;
-        }
-        public abstract boolean query();
-        public abstract boolean reportFixture(Fixture fixture);
-        
-    }
-    public static class QueryPoint extends Query {
-        public Vector2 p;
-        
-        public QueryPoint(World world, Vector2 p, short maskBits){
-            super(world, maskBits);
-            this.p = p;
-        }
-        
-        public boolean query(){
-            world.QueryAABB(this, p.x, p.y, p.x+1, p.y+1);
-            return result;
-        }
-        
-        public boolean reportFixture(Fixture fixture){
-            if ((fixture.getFilterData().categoryBits & maskBits) != 0 && fixture.testPoint(p)) { 
-                result = true; // we collided
-                return false; // ends the query
-            }
-            return true; // keep searching
-        }
-    }
-    public static class QueryArea extends Query {
-        Vector2 p1;
-        Vector2 p2;
-        
-        public QueryArea(World world, Vector2 pos, Vector2 size, short maskBits){
-            super(world, maskBits);
-            this.p1 = pos;
-            this.p2 = size.add(pos);
-        }
-        
-        public boolean query(){
-            world.QueryAABB(this, p1.x, p1.y, p2.x, p2.y);
-            return result;
-        }
-        
-        public boolean reportFixture(Fixture fixture){
-            // TODO: check fixture categoryBits
-            result = true; //AABB gave us ANY fixture, BB overlaps.
-            return false;
-        }
-    }
-    
-    
-    
-    class RayCastCB implements RayCastCallback {
-        public float fraction;
-        public boolean clear = true;
-        public short maskBits;
-        
-        public RayCastCB(short maskBits){
-            fraction = 1f;
-            this.maskBits = maskBits;
-            
-        }
-        @Override
-        public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction){
-            /* if multiple fixtures are found, because we return the fraction, subsequent fixtures
-             * will always be closer than the previous ones, but we may not always see more distant fixures
-             * past the first intersection found.
-             */
-            if ((fixture.getFilterData().categoryBits & maskBits) != 0){
-                this.clear = true;
-                this.fraction = fraction;
-            }
-            else {
-                this.clear = false;
-                this.fraction = fraction;
-            }
-            /* this reduces the length of the ray to the currently found intersection
-             * this is done because fixtures are not necessarily reported in
-             * in any order, and we only care about the closest intersection
-             */
-            return fraction;
-        }
-    }
-    
+
+
 }

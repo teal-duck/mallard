@@ -1,10 +1,10 @@
-package com.superduckinvaders.game.entity;
+package com.superduckinvaders.game.entity.mob;
 
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.TextureSet;
-
+import com.superduckinvaders.game.entity.mob.MeleeMob;
 
 
 /**

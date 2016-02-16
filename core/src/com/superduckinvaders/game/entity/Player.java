@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.Round;
@@ -55,6 +56,8 @@ public class Player extends Character {
      */
     public static final float PLAYER_FLIGHT_COOLDOWN = 5f;
 
+    public State state = State.DEFAULT;
+
     /**
      * Player's current score.
      */
@@ -71,6 +74,8 @@ public class Player extends Character {
      * How long it has been since the Player last attacked.
      */
     private float attackTimer = 0;
+
+    public int waterBlockCount = 0;
 
     /**
      * Initialises this Player at the specified coordinates and with the specified initial health.
@@ -119,7 +124,11 @@ public class Player extends Character {
     public boolean isFlying() {
         return flyingTimer > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE);
     }
-    
+
+    public boolean isSwimming() {
+        return waterBlockCount > 0 && !isFlying();
+    }
+
     /**
      * @return the width of this Player
      */
@@ -164,6 +173,20 @@ public class Player extends Character {
      */
     @Override
     public void update(float delta) {
+        if (isFlying()){
+            state = State.FLYING;
+        }
+        else if (isSwimming()){
+            state = State.SWIMMING;
+        }
+        else if (hasPickup(Pickup.GUN)) {
+            state = State.HASGUN;
+        }
+        else {
+            state = State.DEFAULT;
+        }
+
+
         // Decrement pickup timer.
         for (Map.Entry<Pickup, Float> entry : pickupMap.entrySet()){
             float value = entry.getValue();
@@ -174,20 +197,22 @@ public class Player extends Character {
                 entry.setValue(value - delta);
             }
         }
+
+        if (hasPickup(Pickup.HEALTH)) {
+            heal(1);
+        }
         
         // Update attack timer.
         attackTimer += delta;
 
         // Left mouse to attack.
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && ! isFlying()) {
             if (attackTimer >= PLAYER_ATTACK_DELAY * ( hasPickup(Pickup.RATE_OF_FIRE) ? PLAYER_ATTACK_DELAY_MULTIPLIER : 1)) {
                 attackTimer = 0;
 
                 if (hasPickup(Pickup.GUN)) {
                     Vector3 target = parent.unproject(Gdx.input.getX(), Gdx.input.getY());
-
-                    // Face target when firing gun.
-                    //facing = directionTo(target.x, target.y);
+                    
                     fireAt(new Vector2(target.x, target.y), 1);
                 } else {
                     // TODO: tweak melee range
@@ -229,12 +254,13 @@ public class Player extends Character {
         else {
             flyingTimer = Math.min((flyingTimer+(delta*0.2f)), PLAYER_FLIGHT_TIME);
         }
-        setVelocity(targetVelocity, 4f);
+        setVelocity(targetVelocity, state == State.SWIMMING ? 0.5f : 4f);
         
 
         // Update movement.
         super.update(delta);
     }
+
 
     /**
      * Renders this Player.
@@ -244,20 +270,41 @@ public class Player extends Character {
     @Override
     public void render(SpriteBatch spriteBatch) {
         // Use the right texture set.
-        TextureSet textureSet = isFlying() ? Assets.playerFlying : Assets.playerNormal;
-        
+//        TextureSet textureSet = isFlying() ? Assets.playerFlying : ( hasPickup(Pickup.GUN) ? Assets.playerGun : Assets.playerNormal);
+        TextureSet textureSet = state.getTextureSet();
+
         Vector2 pos = getPosition();
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), pos.x, pos.y);
     }
 
+    public enum State {
+        DEFAULT    (Assets.playerNormal),
+        HASGUN     (Assets.playerGun),
+        HASSABER   (Assets.playerGun), // for now, we don't have all the saber assets!
+        SWIMMING     (Assets.playerSwimming),
+        FLYING     (Assets.playerFlying);
+
+        private final TextureSet textureSet;
+
+        State (TextureSet textureSet){
+            this.textureSet = textureSet;
+        }
+
+        public TextureSet getTextureSet(){
+            return this.textureSet;
+        }
+    }
+
     /**
-     * Available powerups (only last for a while).
+     * Available pickups.
      */
     public enum Pickup {
         GUN               (Assets.floorItemGun         ),
+        LIGHTSABER        (Assets.floorItemSaber       ),
         SCORE_MULTIPLIER  (Assets.floorItemScore       ),
         SUPER_SPEED       (Assets.floorItemSpeed       ),
         RATE_OF_FIRE      (Assets.floorItemFireRate    ),
+        HEALTH            (Assets.floorItemHeart       ),
         INVULNERABLE      (Assets.floorItemInvulnerable);
 
     
@@ -269,6 +316,23 @@ public class Player extends Character {
         
         public TextureRegion getTexture() {
             return texture;
+        }
+
+        public static Pickup random(){
+            float random = MathUtils.random();
+            Pickup pickup = null;
+
+            if (random < 0.05) {
+                pickup = Player.Pickup.SCORE_MULTIPLIER;
+            } else if (random >= 0.05 && random < 0.1) {
+                pickup = Player.Pickup.INVULNERABLE;
+            } else if (random >= 0.1 && random < 0.15) {
+                pickup = Player.Pickup.SUPER_SPEED;
+            } else if (random >= 0.15 && random < 0.2) {
+                pickup = Player.Pickup.RATE_OF_FIRE;
+            }
+
+            return pickup;
         }
     }
     

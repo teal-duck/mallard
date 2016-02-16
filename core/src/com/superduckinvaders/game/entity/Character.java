@@ -28,17 +28,20 @@ public abstract class Character extends PhysicsEntity {
      * For use when determining player movement direction
      */
     private final Vector2 reference = new Vector2(0f, -1f);
-    private final Vector2 bias = new Vector2(1.5f, 1);
+    private final Vector2 bias = new Vector2(1.1f, 1);
 
     /**
      * The time to wait before the next attack.
      */
     public static float ATTACK_COOLDOWN = 2f;
+    public static float FIRING_DURATION = 0.5f;
 
     /**
      * An attack timer to maintain the cooldown.
      */
     private float attackTimer;
+
+    private float firingTimer;
 
     /**
      * The speed of the launched projectiles.
@@ -125,6 +128,29 @@ public abstract class Character extends PhysicsEntity {
         Vector2 velocity = target.cpy().sub(pos).setLength(projectileSpeed).add(getPhysicsVelocity());
         velocity.setLength(Math.max(projectileSpeed, velocity.len()));
         parent.createProjectile(pos, velocity, damage, this);
+        firingTimer = 0f;
+        lookDirection(velocity.cpy().nor());
+    }
+
+    protected void lookDirection(Vector2 direction) {
+        float angle = direction.scl(bias).angle(reference);
+        int index = (2 + (int)Math.rint(angle/90f)) % 4;
+
+        // Update Character facing.
+        switch (index) {
+            case 0:
+                facing = TextureSet.FaceDirection.BACK;
+                break;
+            case 1:
+                facing = TextureSet.FaceDirection.RIGHT;
+                break;
+            case 2:
+                facing = TextureSet.FaceDirection.FRONT;
+                break;
+            case 3:
+                facing = TextureSet.FaceDirection.LEFT;
+                break;
+        }
     }
 
     /**
@@ -155,28 +181,11 @@ public abstract class Character extends PhysicsEntity {
     @Override
     public void update(float delta) {
         attackTimer += delta;
+        firingTimer += delta;
         Vector2 velocity = getVelocity();
-        
-        if (!velocity.isZero()){
-            float angle = velocity.scl(bias).angle(reference);
-            int index = (2 + (int)Math.rint(angle/90f)) % 4;
-            
-            // Update Character facing.
-            switch (index) {
-                case 0:
-                    facing = TextureSet.FaceDirection.BACK;
-                    break;
-                case 1:
-                    facing = TextureSet.FaceDirection.RIGHT;
-                    break;
-                case 2:
-                    facing = TextureSet.FaceDirection.FRONT;
-                    break;
-                case 3:
-                    facing = TextureSet.FaceDirection.LEFT;
-                    break;
-            }
-            
+
+        if (!velocity.isZero() && firingTimer>FIRING_DURATION){
+            lookDirection(velocity);
         }
 
         // Update animation state time.

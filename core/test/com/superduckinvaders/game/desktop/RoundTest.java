@@ -1,22 +1,16 @@
 package com.superduckinvaders.game.desktop;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.ai.PathfindingAI;
-import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.desktop.util.LwjglTestRunner;
-import com.superduckinvaders.game.entity.mob.Mob;
-import com.superduckinvaders.game.entity.Player;
 import com.superduckinvaders.game.objective.Objective;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test the Character class's special methods.

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -279,9 +280,11 @@ public class GameScreen extends BaseScreen {
     }
 
     private void drawMap() {
-        mapRenderer.renderTileLayer(round.getBaseLayer());
-        mapRenderer.renderTileLayer(round.getCollisionLayer());
-        mapRenderer.renderTileLayer(round.getWaterLayer());
+        for (TiledMapTileLayer layer : new TiledMapTileLayer[]{round.getBaseLayer(), round.getWaterLayer(), round.getCollisionLayer()}) {
+            if (layer != null) {
+                mapRenderer.renderTileLayer(layer);
+            }
+        }
 
         // Render randomly-chosen obstacles layer.
         if (round.getObstaclesLayer() != null) {

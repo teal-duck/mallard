@@ -32,7 +32,7 @@ public class CollectObjective extends Objective {
      */
     @Override
     public String getObjectiveString() {
-        return "Collect the red flag in the top right";
+        return "Find and collect the red flag.";
     }
 
     /**
@@ -44,7 +44,8 @@ public class CollectObjective extends Objective {
     public void update(float delta) {
         if (target.isRemoved())
             status = ObjectiveStatus.COMPLETED;
-            parent.getGame().session.incrementLevelCounter();
-
+            if (getStatus() == ObjectiveStatus.COMPLETED) {
+                parent.getGame().session.incrementLevelCounter();
+            }
     }
 }

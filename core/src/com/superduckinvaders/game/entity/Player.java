@@ -2,6 +2,8 @@ package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -88,6 +90,7 @@ public class Player extends Character {
         MELEE_ATTACK_COOLDOWN = 0.2f;
         STUNNED_DURATION = 0f;
         createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
+        swimming = Gdx.audio.newMusic(Gdx.files.internal("swimming.mp3"));
         // body.setLinearDamping(10f);
     }
 
@@ -97,6 +100,7 @@ public class Player extends Character {
      * @param amount the amount to increase the score by
      */
     public void addScore(int amount) {
+        if (hasPickup(Pickup.SCORE_MULTIPLIER)) amount *= PLAYER_SCORE_MULTIPLIER;
         points += amount;
     }
 
@@ -182,7 +186,7 @@ public class Player extends Character {
     protected boolean rangedAttack(Vector2 direction, int damage) {
         if (super.rangedAttack(direction, damage)) {
             currentWeapon = Pickup.GUN;
-            setAttackAnimation((stateTime > 0 ? Assets.playerWalkingAttackGun :Assets.playerStaticAttackGun)
+            setAttackAnimation((stateTime > 0 ? Assets.playerWalkingAttackGun : Assets.playerStaticAttackGun)
                     .getAnimation(facing));
             return true;
         }
@@ -203,6 +207,7 @@ public class Player extends Character {
         }
     }
 
+    Music swimming;
 
     /**
      * Updates the state of this Player.
@@ -217,6 +222,14 @@ public class Player extends Character {
             state = State.FLYING;
         }
         else if (isSwimming()){
+
+            boolean  isPlaying = swimming.isPlaying();
+            if (isPlaying == false){
+                swimming.play();
+
+
+
+            }
             state = State.SWIMMING;
         }else if (currentWeapon == Pickup.GUN && hasPickup(Pickup.GUN)) {
             state = State.HOLDING_GUN;

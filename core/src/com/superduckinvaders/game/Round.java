@@ -1,5 +1,7 @@
 package com.superduckinvaders.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -166,7 +168,7 @@ public class Round {
 
         entities = new ArrayList<Entity>(128);
         entities.add(player);
-        //entities.add(objective);
+
 
         Mob debugMob = addMob(new ZombieMob(this, startX + 400, startY+50));
         Mob debugMob2 = addMob(new GunnerMob(this, startX - 400, startY-50));
@@ -175,7 +177,7 @@ public class Round {
         targets.add(debugMob);
         targets.add(debugMob2);
 
-        if(parent.session.levelCounter < 3 || parent.session.levelCounter == 5 || parent.session.levelCounter == 7 ) {
+        if(parent.session.levelCounter < 3  || parent.session.levelCounter == 7 ) {
 
             // Determine where to spawn the objective.
             int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
@@ -185,7 +187,7 @@ public class Round {
             setObjective(new CollectObjective(this, objective));
             entities.add(objective);
 
-        } else if (parent.session.levelCounter == 4 || parent.session.levelCounter == 6  ) {
+        } else if (parent.session.levelCounter == 4 ||parent.session.levelCounter == 5 || parent.session.levelCounter == 6  ) {
 
             setObjective (new SurviveObjective(this));
 
@@ -509,8 +511,15 @@ public class Round {
      * @param damage          how much damage the projectile deals
      * @param owner           the owner of the projectile (i.e. the one who fired it)
      */
+
+    Sound gunShot;
+
     public void createProjectile(Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
         entities.add(new Projectile(this, pos, velocity, damage, owner));
+        gunShot = Gdx.audio.newSound(Gdx.files.internal("Gun.mp3"));
+        gunShot.setVolume(gunShot.play(), 0.5f);
+
+
     }
 
     /**
@@ -562,6 +571,7 @@ public class Round {
                 parent.setScreen(new WinScreen(parent, player.getScore()));
             } else if (player.isDead()) {
                 parent.setScreen(new LoseScreen(parent));
+
             }
         }
 

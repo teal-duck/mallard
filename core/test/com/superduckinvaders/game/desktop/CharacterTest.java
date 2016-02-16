@@ -36,8 +36,13 @@ public class CharacterTest {
     @Test
     public void CanAccessMaxHealth() {
         MyCharacter ch = new MyCharacter(round, 10, 10, 50);
-        assertEquals(ch.getCurrentHealth(), 50);
         assertEquals(ch.getMaximumHealth(), 50);
+    }
+
+    @Test
+    public void CanAccessCurrentHealth() {
+        MyCharacter ch = new MyCharacter(round, 10, 10, 25);
+        assertEquals(ch.getCurrentHealth(), 25);
     }
 
     @Test

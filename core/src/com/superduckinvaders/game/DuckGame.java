@@ -3,17 +3,12 @@ package com.superduckinvaders.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.audio.Music;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.screen.GameScreen;
-import com.superduckinvaders.game.screen.LoseScreen;
 import com.superduckinvaders.game.screen.StartScreen;
-import com.superduckinvaders.game.screen.WinScreen;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,8 +23,6 @@ public class DuckGame extends Game {
      * The height of the game window.
      */
     public static final int GAME_HEIGHT = 720;
-
-    Music menuTheme;
 
     public static final Session session = new Session();
 
@@ -68,12 +61,9 @@ public class DuckGame extends Game {
         Assets.load();
         this.setScreen(new StartScreen(this));
 
-        menuTheme = Gdx.audio.newMusic(Gdx.files.internal("MenuTheme.ogg"));
-        //MenuTheme.ogg is credited to SIMG, originally name Passionate.
-
-        menuTheme.play();
-        menuTheme.setVolume(0.2f);
-        menuTheme.setLooping(true);
+        Assets.menuTheme.play();
+        Assets.menuTheme.setVolume(0.2f);
+        Assets.menuTheme.setLooping(true);
     }
 
     /**

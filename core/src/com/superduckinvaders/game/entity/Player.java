@@ -2,8 +2,6 @@ package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -90,7 +88,6 @@ public class Player extends Character {
         MELEE_ATTACK_COOLDOWN = 0.2f;
         STUNNED_DURATION = 0f;
         createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
-        swimming = Gdx.audio.newMusic(Gdx.files.internal("swimming.mp3"));
         // body.setLinearDamping(10f);
     }
 
@@ -207,8 +204,6 @@ public class Player extends Character {
         }
     }
 
-    Music swimming;
-
     /**
      * Updates the state of this Player.
      *
@@ -223,9 +218,9 @@ public class Player extends Character {
         }
         else if (isSwimming()){
 
-            boolean  isPlaying = swimming.isPlaying();
+            boolean  isPlaying = Assets.swimming.isPlaying();
             if (isPlaying == false){
-                swimming.play();
+                Assets.swimming.play();
 
 
 

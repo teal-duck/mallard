@@ -1,6 +1,8 @@
 package com.superduckinvaders.game.assets;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -83,6 +85,17 @@ public class Assets {
      *  Texture for the game logo.
      */
     public static TextureRegion logo;
+    /**
+     * Creates a new projectile and adds it to the list of entities.
+     *
+     * @param pos      the projectile's starting position
+     * @param velocity the projectile's velocity
+     * @param damage          how much damage the projectile deals
+     * @param owner           the owner of the projectile (i.e. the one who fired it)
+     */
+
+    public static Sound gunShot;
+    public static Music menuTheme, swimming;
 
     /**
      * Responsible for loading maps.
@@ -96,6 +109,7 @@ public class Assets {
         loadPlayerTextureSets();
         loadBadGuyTextureSet();
         loadFloorItems();
+        loadSFX();
 
         minimapHead = new TextureRegion(loadTexture("textures/minimap_head.png"));
         projectile  = new TextureRegion(loadTexture("textures/projectile.png")  );
@@ -137,6 +151,14 @@ public class Assets {
 
         flag = new TextureRegion(loadTexture("textures/flag.png"));
         logo = new TextureRegion(loadTexture("textures/logo.png"));
+    }
+
+    private static void loadSFX(){
+        gunShot = Gdx.audio.newSound(Gdx.files.internal("Gun.mp3"));
+        menuTheme = Gdx.audio.newMusic(Gdx.files.internal("MenuTheme.ogg"));
+        swimming = Gdx.audio.newMusic(Gdx.files.internal("swimming.mp3"));
+        //MenuTheme.ogg is credited to SIMG, originally name Passionate.
+
     }
 
     /**

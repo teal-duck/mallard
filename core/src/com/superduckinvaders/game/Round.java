@@ -1,7 +1,6 @@
 package com.superduckinvaders.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -472,21 +471,9 @@ public class Round {
         this.objective = objective;
     }
 
-    /**
-     * Creates a new projectile and adds it to the list of entities.
-     *
-     * @param pos      the projectile's starting position
-     * @param velocity the projectile's velocity
-     * @param damage          how much damage the projectile deals
-     * @param owner           the owner of the projectile (i.e. the one who fired it)
-     */
-
-    Sound gunShot;
-
     public void createProjectile(Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
         entities.add(new Projectile(this, pos, velocity, damage, owner));
-        gunShot = Gdx.audio.newSound(Gdx.files.internal("Gun.mp3"));
-        gunShot.setVolume(gunShot.play(), 0.5f);
+        Assets.gunShot.setVolume(Assets.gunShot.play(), 0.5f);
 
 
     }

@@ -20,6 +20,7 @@ import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.superduckinvaders.game.entity.mob.Mob;
 
 /**
  * Screen for interaction with the game.
@@ -54,14 +55,17 @@ public class GameScreen extends BaseScreen {
     private float minimapCameraMaxX;
     private float minimapCameraMaxY;
 
-    private int minimapX = 70;
-    private int minimapY = 70;
+    private int minimapX = 20;
+    private int minimapY = 20;
     private int minimapWidth = 250;
     private int minimapHeight = 250;
 
 
     private OrthographicCamera minimapCamera;
     private Viewport minimapViewport;
+
+    private float accumulator = 0f;
+    private float step = 1/60f;
 
     
     Box2DDebugRenderer debugRenderer;
@@ -149,7 +153,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void resize(int width, int height){
         super.resize(width, height);
-        uiViewport.update(width, height, false);
+        uiViewport.update(width, height, true);
         minimapViewport.update(width, height, false);
     }
 
@@ -161,8 +165,11 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        round.update(delta);  // TODO(avinash): If round calls dispose, stop here.
-        
+        accumulator+=delta;
+        while (accumulator>=step) {
+            round.update(step);  // TODO(avinash): If round calls dispose, stop here.
+            accumulator-=step;
+        }
         Player player = round.getPlayer();
         
         float playerX = player.getX() + player.getWidth() / 2;
@@ -191,16 +198,7 @@ public class GameScreen extends BaseScreen {
         this.drawGame();
         spriteBatch.end();
 
-        this.drawDebug();
-
-        uiBatch.setProjectionMatrix(uiCamera.combined);
-
-
-
-        uiViewport.apply();
-        uiBatch.begin();
-        this.drawUI();
-        uiBatch.end();
+//        this.drawDebug();
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -208,25 +206,26 @@ public class GameScreen extends BaseScreen {
         shapeRenderer.setProjectionMatrix(new Matrix4(uiBatch.getProjectionMatrix()));
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.6f);
+
+        //Minimap underlay
         shapeRenderer.rect(minimapX-3, minimapY-3, minimapWidth+6, minimapHeight+6);
+
+        shapeRenderer.setColor(0.1f, 0.1f, 0.1f, 0.25f);
+
+        //bottom right
+        shapeRenderer.rect(1070, 3, 207, 120);
+
+        //top left
+        shapeRenderer.rect(5, 680, 400, 33);
+        shapeRenderer.rect(5, 644, 130, 33);
+
         shapeRenderer.end();
 
-        spriteBatch.setColor(1, 1, 1, 0.7f);
-        spriteBatch.begin();
         drawMiniMap();
-
-        Vector2 playerPos = round.getPlayer().getPosition();
-        int width = Assets.minimapHead.getRegionWidth()*6;
-        int height = Assets.minimapHead.getRegionHeight()*6;
-
-        spriteBatch.draw(Assets.minimapHead, playerPos.x-width/2, playerPos.y-height/2, width, height);
-
-        spriteBatch.end();
-        spriteBatch.setColor(Color.WHITE);
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-
+        this.drawUI();
 
 
     }
@@ -234,7 +233,8 @@ public class GameScreen extends BaseScreen {
 
 
     public void drawMiniMap() {
-
+        spriteBatch.setColor(1, 1, 1, 0.7f);
+        spriteBatch.begin();
 
         Vector3 screenPos = uiViewport.project(new Vector3(minimapX, minimapY, 0));
         // strange maths to accommodate non-uniform projections.
@@ -252,15 +252,31 @@ public class GameScreen extends BaseScreen {
         mapRenderer.setView(minimapCamera);
         drawMap();
         drawOverhang();
+
+
+        Vector2 playerPos = round.getPlayer().getPosition();
+        int width = Assets.minimapHead.getRegionWidth()*6;
+        int height = Assets.minimapHead.getRegionHeight()*6;
+
+        spriteBatch.draw(Assets.minimapHead, playerPos.x-width/2, playerPos.y-height/2, width, height);
+
+        spriteBatch.end();
+        spriteBatch.setColor(Color.WHITE);
+
+        shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0.9f, 0.2f, 0.2f, 0.7f);
+
+        for (Entity entity : round.getEntities()) {
+            if (entity instanceof Mob){
+                Vector2 pos = entity.getCentre();
+                shapeRenderer.circle(pos.x, pos.y, 10f);
+            }
+        }
+        shapeRenderer.end();
+
+
     }
-
-
-
-
-
-
-
-
 
     private void drawMap() {
         mapRenderer.renderTileLayer(round.getBaseLayer());
@@ -309,10 +325,15 @@ public class GameScreen extends BaseScreen {
      * TODO(avinash): Use Stage2D, like we are for the static screens?
      */
     private void drawUI() {
+
+        uiBatch.setProjectionMatrix(uiCamera.combined);
+        uiViewport.apply();
+        uiBatch.begin();
+
         Assets.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        Assets.font.draw(uiBatch, "Objective: " + round.getObjective().getObjectiveString(), 10, 710);
-        Assets.font.draw(uiBatch, "Score: " + round.getPlayer().getScore(), 10, 680);
-        Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 650);
+        Assets.font.draw(uiBatch, round.getObjective().getObjectiveString(), 10, 705);
+        Assets.font.draw(uiBatch, "Score: " + round.getPlayer().getScore(), 10, 670);
+        Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 630);
 
         // Draw stamina bar (for flight);
         uiBatch.draw(Assets.staminaEmpty, 1080, 10);
@@ -331,17 +352,24 @@ public class GameScreen extends BaseScreen {
             TextureRegion texture = pickup.getTexture();
             float width = texture.getRegionWidth();
             float height = texture.getRegionHeight();
-            uiBatch.draw(texture, 1080+(50*i++), 50, width*2, height*2);
+            uiBatch.draw(texture, 1080+(50*i++), 85, width*2, height*2);
         }
 
         for (int x = 0; x < round.getPlayer().getMaximumHealth(); x += 2) {
-            if(x+2 <= round.getPlayer().getCurrentHealth())
-                uiBatch.draw(Assets.heartFull, x * 18 + 10, 10);
-            else if(x+1 <= round.getPlayer().getCurrentHealth())
-                uiBatch.draw(Assets.heartHalf, x * 18 + 10, 10);
-            else
-                uiBatch.draw(Assets.heartEmpty, x * 18 + 10, 10);
+            TextureRegion heart;
+            if(x+2 <= round.getPlayer().getCurrentHealth()) {
+                heart = Assets.heartFull;
+            }
+            else if(x+1 <= round.getPlayer().getCurrentHealth()) {
+                heart = Assets.heartHalf;
+            }
+            else {
+                heart = Assets.heartEmpty;
+            }
+            uiBatch.draw(heart, x * 18 + 1080, 48);
         }
+
+        uiBatch.end();
     }
 
     /**

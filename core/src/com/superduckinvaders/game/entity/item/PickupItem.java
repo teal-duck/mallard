@@ -28,7 +28,7 @@ public class PickupItem extends Item {
     }
     
     @Override
-    public void beginContact(PhysicsEntity other, Contact contact){
+    public void beginSensorContact(PhysicsEntity other, Contact contact){
         if (other instanceof Player) {
             ((Player)other).givePickup(pickup, time);
             removed = true;

@@ -1,7 +1,9 @@
-package com.superduckinvaders.game;
+package com.superduckinvaders.game.ai;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
+import com.superduckinvaders.game.DuckGame;
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.Player;

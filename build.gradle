@@ -1,3 +1,6 @@
+apply plugin: 'java'
+apply plugin: 'java-library-distribution'
+
 buildscript {
     repositories {
         mavenCentral()
@@ -5,10 +8,25 @@ buildscript {
     }
 }
 
+jar {
+    // Keep jar clean:
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+
+    manifest {
+        attributes 'Main-Class': 'com.superduckinvaders.game.DuckGame',
+                'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
+    }
+    // How-to add class path:
+    //     http://stackoverflow.com/questions/22659463/add-classpath-in-manifest-using-gradle
+    //     https://gist.github.com/simon04/6865179
+}
+
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
     apply plugin: 'java'
+
     compileJava {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'

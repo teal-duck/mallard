@@ -107,7 +107,6 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void show() {
-
         minimapCamera = new OrthographicCamera();
         minimapCamera.zoom = 2f;
         minimapViewport = new MinimapViewport();
@@ -115,7 +114,6 @@ public class GameScreen extends BaseScreen {
 
         viewport.setWorldSize(DuckGame.GAME_WIDTH / 2, DuckGame.GAME_HEIGHT / 2);
         minimapViewport.setWorldSize(DuckGame.GAME_HEIGHT / 2, DuckGame.GAME_HEIGHT / 2);
-
         
         /* These values are to get ensure the camera never shows
          * anything outside the map by preventing its position
@@ -136,12 +134,10 @@ public class GameScreen extends BaseScreen {
 
         spriteBatch = new SpriteBatch();
 
-
-
-        uiCamera    = new OrthographicCamera();
+        uiCamera = new OrthographicCamera();
         uiCamera.setToOrtho(false);
 
-        uiBatch     = new SpriteBatch();
+        uiBatch = new SpriteBatch();
 
         uiViewport = new FitViewport(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT, uiCamera);
 
@@ -325,8 +321,6 @@ public class GameScreen extends BaseScreen {
 
     /**
      * Draw the static UI.
-     * TODO(mallard): Finish UI.
-     * TODO(avinash): Use Stage2D, like we are for the static screens?
      */
     private void drawUI() {
 

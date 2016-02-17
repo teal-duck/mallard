@@ -6,9 +6,8 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * Created by james on 07/02/16.
+ * Collision utilities.
  */
-
 public class Collision {
 
     public abstract static class Query implements QueryCallback {

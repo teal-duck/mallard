@@ -4,7 +4,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.superduckinvaders.game.entity.PhysicsEntity;
 
 /**
- * Created by james on 16/02/16.
+ * Helper class to make contact checks between two PhysicsEntities easier.
  */
 public class CustomContactListener implements ContactListener {
     @Override

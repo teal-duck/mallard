@@ -73,7 +73,7 @@ public class Mob extends Character {
     }
 
     /**
-     * Gets the speed of the mob
+     * @return the speed of the mob
      */
     public float getSpeed() {
         return this.speed;

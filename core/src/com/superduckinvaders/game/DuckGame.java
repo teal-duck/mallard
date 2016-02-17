@@ -16,18 +16,24 @@ import java.util.Date;
 public class DuckGame extends Game {
 	
     /**
-     * The width of the game window.
+     * The width of the world.
      */
     public static final int GAME_WIDTH = 1280;
+
     /**
-     * The height of the game window.
+     * The height of the world.
      */
     public static final int GAME_HEIGHT = 720;
 
+    /**
+     * The Session singleton.
+     */
     public static final Session session = new Session();
 
-     public static class Session{
-
+    /**
+     * The Session stores information meant to persist throughout the game.
+     */
+     public static class Session {
         public int currentLevel = 1;
         public int maxUnlocked = 1;
         public int healthCounter = 6;

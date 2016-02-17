@@ -91,7 +91,6 @@ public class WinScreen extends BaseScreen {
         stage.addActor(backLabel);
         stage.addActor(nextLevelButton);
         stage.addActor(nextLevelLabel);
-
     }
 
     /**

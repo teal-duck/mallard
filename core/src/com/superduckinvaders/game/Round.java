@@ -23,7 +23,6 @@ import com.superduckinvaders.game.objective.SurviveObjective;
 import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
 import com.superduckinvaders.game.screen.WinScreen;
-import com.superduckinvaders.game.util.Arrays;
 import com.superduckinvaders.game.util.Collision;
 import com.superduckinvaders.game.util.CustomContactListener;
 import com.superduckinvaders.game.util.RayCast;

@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 /**
- * Created by james on 07/02/16.
+ * Helper Raycasting class. We use raycasting to simplify AI.
  */
 public class RayCast {
     public static class RayCastCB implements RayCastCallback {

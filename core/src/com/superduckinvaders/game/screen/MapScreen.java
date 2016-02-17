@@ -14,9 +14,14 @@ import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 
-
+/**
+ * Shows a list of buttons that take you to unlocked levels.
+ */
 public class MapScreen extends BaseScreen {
 
+    /**
+     * A Scene2D stage to add UI elements to.
+     */
     private Stage stage;
 
     public class CustomClickListener extends ClickListener{
@@ -24,7 +29,6 @@ public class MapScreen extends BaseScreen {
 
         public CustomClickListener(int level){
             this.level = level;
-
         }
 
         @Override

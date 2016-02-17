@@ -13,11 +13,19 @@ import com.superduckinvaders.game.DuckGame;
  */
 abstract public class BaseScreen extends ScreenAdapter {
 
+    /**
+     * The parent game.
+     */
     private DuckGame game;
+
     /**
      * The game camera.
      */
     protected OrthographicCamera camera;
+
+    /**
+     * A Viewport to allow for game resizing.
+     */
     protected FitViewport viewport;
 
     /**
@@ -29,7 +37,6 @@ abstract public class BaseScreen extends ScreenAdapter {
         this.game = game;
         camera = new OrthographicCamera();
         viewport = new FitViewport(DuckGame.GAME_WIDTH, DuckGame.GAME_HEIGHT, camera);
-
     }
 
     /**
@@ -41,7 +48,10 @@ abstract public class BaseScreen extends ScreenAdapter {
         return this.game;
     }
 
-    public Viewport getViewport() {
+    /**
+     * @return the FitViewport the screen uses.
+     */
+    public FitViewport getViewport() {
         return viewport;
     }
     

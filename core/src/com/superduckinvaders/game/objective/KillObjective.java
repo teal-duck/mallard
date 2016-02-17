@@ -1,43 +1,37 @@
 package com.superduckinvaders.game.objective;
+
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.mob.Mob;
 
 import java.util.ArrayList;
 
 /**
- * Created by james on 07/02/16.
- */
-
-/**
  * Represents an enemy defeating objective.
  */
-
 public class KillObjective extends Objective {
 
     /**
-     * Stores the amount of time the player has survived for.
+     * A list of targets the player must kill before progressing.
      */
-    private float timer = 0;
-
     private ArrayList<Mob> targets;
+
+    /**
+     * The objective's provided description.
+     */
     private String description;
 
-    protected KillObjective(Round parent, String description) {
+    /**
+     * Create a new KillObjective
+     * @param parent      the parent round
+     * @param targets     an ArrayList of targets to kill
+     * @param description a description string
+     */
+    public KillObjective(Round parent, ArrayList<Mob> targets, String description) {
         super(parent);
         this.description = description;
-    }
-    public KillObjective(Round parent, Mob target, String description) {
-        this(parent, description);
-        targets = new ArrayList<Mob>();
-        targets.add(target);
-
-    }
-    public KillObjective(Round parent, ArrayList<Mob> targets, String description) {
-        this(parent, description);
         this.targets = targets;
 
     }
-
 
     @Override
     public void update(float delta) {

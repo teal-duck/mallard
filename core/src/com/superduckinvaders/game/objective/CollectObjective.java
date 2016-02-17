@@ -3,7 +3,6 @@ package com.superduckinvaders.game.objective;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.item.Item;
 
-
 /**
  * Represents an objective involving collecting a specific item.
  */

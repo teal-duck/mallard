@@ -1,5 +1,6 @@
-package com.superduckinvaders.game;
+package com.superduckinvaders.game.objective;
 
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.objective.Objective;
 import com.superduckinvaders.game.util.LwjglTestRunner;
 import org.junit.Before;

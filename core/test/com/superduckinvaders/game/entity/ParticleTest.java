@@ -1,6 +1,7 @@
-package com.superduckinvaders.game;
+package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.Particle;
 import com.superduckinvaders.game.util.LwjglTestRunner;
 import org.junit.Before;

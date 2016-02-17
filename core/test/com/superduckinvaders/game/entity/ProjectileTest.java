@@ -1,6 +1,7 @@
-package com.superduckinvaders.game;
+package com.superduckinvaders.game.entity;
 
 import com.badlogic.gdx.math.Vector2;
+import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.PhysicsEntity;
 import com.superduckinvaders.game.entity.Projectile;

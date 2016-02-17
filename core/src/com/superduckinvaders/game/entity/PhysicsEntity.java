@@ -174,7 +174,7 @@ public abstract class PhysicsEntity extends Entity {
             parent.world.destroyBody(body);
         }
     }
-    
+
     public void beginCollision(PhysicsEntity other, Contact contact) {
     }
 

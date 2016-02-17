@@ -29,24 +29,11 @@ public abstract class Entity {
     protected boolean removed = false;
 
     /**
-     * Initialises this Entity with zero initial coordinates.
-     *
-     * @param parent the round this Entity belongs to
+     * Create a new Entity.
+     * @param parent the parent round.
+     * @param x      the initial x position.
+     * @param y      the initial y position.
      */
-    public Entity(Round parent) {
-        this(parent, 0, 0);
-    }
-
-    /**
-     * Initialises this Entity with the specified initial coordinates.
-     *
-     * @param parent the round this Entity belongs to
-     * @param pos    the initial position
-     */
-    public Entity(Round parent, Vector2 pos) {
-        this(parent, pos.x, pos.y);
-    
-    }
     public Entity(Round parent, float x, float y) {
         this.parent = parent;
         this.x = x;

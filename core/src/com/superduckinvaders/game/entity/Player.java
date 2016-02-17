@@ -20,41 +20,64 @@ import java.util.Map;
  */
 public class Player extends Character {
 
+    /**
+     * TEXTURE_OFFSET is a quick way to make certain animations less jumpy.
+     */
     public static final Vector2 TEXTURE_OFFSET = new Vector2(-8, 0);
 
     /**
      * Player's maximum health.
      */
     public static final int PLAYER_HEALTH = 8;
+
     /**
      * Player's standard movement speed in pixels per second.
      */
     public static final float PLAYER_SPEED = 16f;
+
     /**
      * How much the Player's score increases should be multiplied by if they have the score multiplier powerup.
      */
     public static final float PLAYER_SCORE_MULTIPLIER = 5f;
+
     /**
      * How much the Player's speed should be multiplied by if they have the super speed powerup.
      */
     public static final float PLAYER_SUPER_SPEED_MULTIPLIER = 3f;
+
     /**
-     * How much the Player's speed should me multiplied by if they are flying.
+     * How much the Player's speed should be multiplied by if they are flying.
      */
     public static final float PLAYER_FLIGHT_SPEED_MULTIPLIER = 2f;
+
+    /**
+     * How much the Player's speed should be multiplied by if they are swimming.
+     */
     public static final float PLAYER_SWIMMING_SPEED_MULTIPLIER = 1.5f;
+
     /**
      * How much the Player's attack rate should be multiplied by if they have the rate of fire powerup.
      */
     public static final float PLAYER_RANGED_ATTACK_MULTIPLIER = 5f;
+
     /**
      * How long the Player can fly for, in seconds.
      */
     public static final float PLAYER_FLIGHT_TIME = 1f;
 
+    /**
+     * The player's current state.
+     */
     public State state = State.DEFAULT;
 
+    /**
+     * The time spent in the attack animation. This is used to render the correct frame of attackAnimation.
+     */
     private float attackAnimationTimer = 0f;
+
+    /**
+     * The attack animation
+     */
     private Animation attackAnimation;
 
     /**
@@ -62,7 +85,9 @@ public class Player extends Character {
      */
     private int points = 0;
 
-
+    /**
+     * A map of pickups the player currently has, where the values are the time left for each one.
+     */
     public EnumMap<Pickup, Float> pickupMap = new EnumMap<>(Pickup.class);
 
     /**
@@ -70,8 +95,14 @@ public class Player extends Character {
      */
     private float flyingTimer = 5;
 
+    /**
+     * Keeps track of the water blocks encountered, to know when to stop swimming (when this variable is 0).
+     */
     public int waterBlockCount = 0;
 
+    /**
+     * The weapon currently being used.
+     */
     protected Pickup currentWeapon = Pickup.GUN;
 
     /**
@@ -88,7 +119,6 @@ public class Player extends Character {
         MELEE_ATTACK_COOLDOWN = 0.2f;
         STUNNED_DURATION = 0f;
         createDynamicBody(PLAYER_BITS, ALL_BITS, NO_GROUP, false);
-        // body.setLinearDamping(10f);
     }
 
     /**
@@ -120,13 +150,15 @@ public class Player extends Character {
     }
 
     /**
-     * Returns if the player is currently flying
-     * @return true if the Player is currently flying, false if not
+     * @return whether the player is flying
      */
     public boolean isFlying() {
         return flyingTimer > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE);
     }
 
+    /**
+     * @return whether the player is swimming
+     */
     public boolean isSwimming() {
         return waterBlockCount > 0 && !isFlying();
     }
@@ -160,10 +192,19 @@ public class Player extends Character {
         }
     }
 
+    /**
+     * Give a pickup to the player for a certain amount of time.
+     * @param pickup   the pickup
+     * @param duration the amount of time the pickup applies.
+     */
     public void givePickup(Pickup pickup, float duration){
         pickupMap.put(pickup, duration);
     }
 
+    /**
+     * @param pickup the pickup to test for.
+     * @return whether the player has the given pickup.
+     */
     public boolean hasPickup(Pickup pickup){
         return pickupMap.containsKey(pickup);
     }
@@ -190,12 +231,19 @@ public class Player extends Character {
         return false;
     }
 
-    private void setAttackAnimation(Animation animation){
+    /**
+     * Starts the attack animation.
+     * @param animation the attack animation.
+     */
+    private void setAttackAnimation(Animation animation) {
         this.attackAnimationTimer = 0f;
         this.attackAnimation = animation;
     }
 
-    private TextureRegion getAttackAnimationFrame(){
+    /**
+     * @return the frame of the attack animation we are currently in.
+     */
+    private TextureRegion getAttackAnimationFrame() {
         if (attackAnimation == null || attackAnimation.isAnimationFinished(attackAnimationTimer)){
             return null;
         }
@@ -331,6 +379,9 @@ public class Player extends Character {
         }
     }
 
+    /**
+     * The various positions and ways we can show our player.
+     */
     public enum State {
         DEFAULT       (Assets.playerNormal),
         HOLDING_GUN   (Assets.playerGun),

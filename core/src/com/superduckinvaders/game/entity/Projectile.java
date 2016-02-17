@@ -38,19 +38,24 @@ public class Projectile extends PhysicsEntity {
         
         this.damage = damage;
         this.owner = owner;
-        
-        // createDynamicBody(PROJECTILE_BITS, (short) (WORLD_BITS | MOB_BITS), NO_GROUP, false);
+
         createDynamicBody(PROJECTILE_BITS, (short) ~owner.categoryBits, NO_GROUP, false);
         body.setBullet(true);
         setVelocity(velocity);
     }
 
+    /**
+     * Set the owner of the projectile to a new PhysicsEntity.
+     * @param owner the new owner.
+     */
     public void setOwner(PhysicsEntity owner) {
         this.owner = owner;
         setMaskBits((short) ~owner.categoryBits);
-
     }
 
+    /**
+     * @return the current projectile owner.
+     */
     public PhysicsEntity getOwner() {
         return owner;
     }
@@ -63,7 +68,6 @@ public class Projectile extends PhysicsEntity {
             ((Character) other).damage(damage);
         }
     }
-    
 
     /**
      * Updates the state of this Projectile.

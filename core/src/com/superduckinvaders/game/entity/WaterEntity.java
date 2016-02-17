@@ -7,10 +7,18 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.superduckinvaders.game.Round;
 
 /**
- * Created by james on 09/02/16.
+ * A water block. Lets the player know when to swim.
  */
 public class WaterEntity extends PhysicsEntity {
 
+    /**
+     * Create a new WaterEntity.
+     * @param parent the parent round.
+     * @param x      the initial x position.
+     * @param y      the initial y position.
+     * @param width  the block's width.
+     * @param height the block's height.
+     */
     public WaterEntity(Round parent, float x, float y, float width, float height) {
         super(parent, x, y);
         this.width = width;

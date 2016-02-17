@@ -23,6 +23,7 @@ import com.superduckinvaders.game.objective.SurviveObjective;
 import com.superduckinvaders.game.screen.GameScreen;
 import com.superduckinvaders.game.screen.LoseScreen;
 import com.superduckinvaders.game.screen.WinScreen;
+import com.superduckinvaders.game.util.Arrays;
 import com.superduckinvaders.game.util.Collision;
 import com.superduckinvaders.game.util.CustomContactListener;
 import com.superduckinvaders.game.util.RayCast;
@@ -116,6 +117,7 @@ public class Round {
         entities = new ArrayList<>(128);
         entities.add(player);
 
+        //Pickups
         if (parent.session.currentLevel == 1){
             createPickup(startX + 60, startY, Player.Pickup.GUN);
             createPickup(startX - 60, startY, Player.Pickup.LIGHTSABER);
@@ -124,12 +126,13 @@ public class Round {
             player.givePickup(Player.Pickup.GUN, Float.POSITIVE_INFINITY);
             player.givePickup(Player.Pickup.LIGHTSABER, Float.POSITIVE_INFINITY);
         }
-        if (parent.session.currentLevel == 8) {
-//            addMob(new BossMob(this, 25, 16));
-            addMob(new BossMob(this, getPlayer().getX(), getPlayer().getX()));
+
+        // Mob spawning
+        if (parent.session.currentLevel != 8) {
+            spawnRandomMobs(50, 0, 0, getMapWidth(), getMapHeight());
         }
         else {
-            spawnRandomMobs(50, 0, 0, getMapWidth(), getMapHeight());
+            addMob(new BossMob(this, getPlayer().getX(), getPlayer().getX()));
         }
 
         ArrayList<Mob> targets = new ArrayList<>();
@@ -141,28 +144,27 @@ public class Round {
         }
 
 
-        if(parent.session.currentLevel < 3  || parent.session.currentLevel == 7 ) {
-            // Determine where to spawn the objective.
-            int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
-            int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
+        //
+        switch (map.getProperties().get("Objective", "collect", String.class)){
+            case "survive":
+                setObjective (new SurviveObjective(this));
+            case "collect":
+                int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
+                int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
 
-            Item objective = new CollectItem(this, objectiveX, objectiveY);
-            setObjective(new CollectObjective(this, objective));
-            entities.add(objective);
+                Item objective = new CollectItem(this, objectiveX, objectiveY);
+                setObjective(new CollectObjective(this, objective));
+                entities.add(objective);
+            case "kill":
+            default:
+                setObjective(new KillObjective(
+                        this,
+                        targets,
+                        "Kill the Enemies!"
+                ));
 
-        } else if (parent.session.currentLevel == 4 ||parent.session.currentLevel == 5 || parent.session.currentLevel == 6  ) {
 
-            setObjective (new SurviveObjective(this));
-
-        } else{
-            setObjective(new KillObjective(
-                            this,
-                            targets,
-                            "Kill the Enemies!"
-                    )
-            );
         }
-        //FIXME:the score from the last enemy is not added.
     }
 
     /**

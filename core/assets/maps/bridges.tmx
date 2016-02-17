@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="1">
  <properties>
+  <property name="Objective" value="survive"/>
   <property name="ObjectiveX" value=""/>
   <property name="ObjectiveY" value=""/>
   <property name="StartX" value="52"/>
   <property name="StartY" value="0"/>
  </properties>
- <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32" tilecount="400" columns="20">
+ <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32" tilecount="400">
   <image source="Tileset.png" width="640" height="640"/>
  </tileset>
- <tileset firstgid="401" name="TileSet2" tilewidth="32" tileheight="32" tilecount="400" columns="20">
+ <tileset firstgid="401" name="TileSet2" tilewidth="32" tileheight="32" tilecount="400">
   <image source="Tileset.png" width="640" height="640"/>
  </tileset>
- <tileset firstgid="801" name="Water" tilewidth="32" tileheight="32" tilecount="4" columns="2">
+ <tileset firstgid="801" name="Water" tilewidth="32" tileheight="32" tilecount="4">
   <image source="Water.png" width="64" height="64"/>
  </tileset>
- <tileset firstgid="805" name="Tileset" tilewidth="32" tileheight="32" tilecount="400" columns="20">
+ <tileset firstgid="805" name="Tileset" tilewidth="32" tileheight="32" tilecount="400">
   <image source="Tileset.png" width="640" height="640"/>
  </tileset>
- <tileset firstgid="1205" name="Tileset3" tilewidth="32" tileheight="32" tilecount="400" columns="20">
+ <tileset firstgid="1205" name="Tileset3" tilewidth="32" tileheight="32" tilecount="400">
   <image source="Tileset.png" width="640" height="640"/>
  </tileset>
- <tileset firstgid="1605" name="Bridge_fencing" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+ <tileset firstgid="1605" name="Bridge_fencing" tilewidth="32" tileheight="32" tilecount="9">
   <image source="Bridge_fencing.png" width="96" height="96"/>
  </tileset>
  <layer name="Base" width="100" height="100">

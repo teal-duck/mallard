@@ -59,6 +59,7 @@ public class DuckGame extends Game {
     @Override
     public void create() {
         Assets.load();
+        Gdx.graphics.setVSync(true);
         this.setScreen(new StartScreen(this));
 
         Assets.menuTheme.play();

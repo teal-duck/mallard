@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="1">
  <properties>
+  <property name="Objective" value="collect"/>
   <property name="ObjectiveX" value="10"/>
   <property name="ObjectiveY" value="90"/>
   <property name="StartX" value="92"/>
   <property name="StartY" value="1"/>
  </properties>
- <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32" tilecount="400" columns="20">
+ <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32" tilecount="400">
   <image source="Tileset.png" width="640" height="640"/>
  </tileset>
- <tileset firstgid="401" name="LangwithHouse" tilewidth="32" tileheight="32" tilecount="400" columns="20">
+ <tileset firstgid="401" name="LangwithHouse" tilewidth="32" tileheight="32" tilecount="400">
   <image source="LangwithHouse.png" width="640" height="640"/>
  </tileset>
- <tileset firstgid="801" name="Railing" tilewidth="32" tileheight="32" tilecount="12" columns="3">
+ <tileset firstgid="801" name="Railing" tilewidth="32" tileheight="32" tilecount="12">
   <image source="Railing-2.png" width="96" height="128"/>
  </tileset>
- <tileset firstgid="813" name="Bollard_light" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+ <tileset firstgid="813" name="Bollard_light" tilewidth="32" tileheight="32" tilecount="1">
   <image source="Bollard_light.png" width="32" height="32"/>
  </tileset>
- <tileset firstgid="814" name="road3" tilewidth="32" tileheight="32" tilecount="25" columns="5">
+ <tileset firstgid="814" name="road3" tilewidth="32" tileheight="32" tilecount="25">
   <image source="road3.png" width="160" height="160"/>
  </tileset>
- <tileset firstgid="839" name="LangwithHouse2" tilewidth="32" tileheight="32" tilecount="400" columns="20">
+ <tileset firstgid="839" name="LangwithHouse2" tilewidth="32" tileheight="32" tilecount="400">
   <image source="LangwithHouse2.png" width="640" height="640"/>
  </tileset>
  <layer name="Base" width="100" height="100">

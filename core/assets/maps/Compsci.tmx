@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" nextobjectid="1">
  <properties>
+  <property name="Objective" value="kill"/>
   <property name="ObjectiveX" value="25"/>
   <property name="ObjectiveY" value="16"/>
   <property name="StartX" value="25"/>

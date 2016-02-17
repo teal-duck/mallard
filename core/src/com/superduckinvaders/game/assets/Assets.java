@@ -18,6 +18,9 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Assets {
 
+    /**
+     * The texture for the icon that represents the player on the minimap.
+     */
     public static TextureRegion minimapHead;
 
     /**
@@ -150,7 +153,6 @@ public class Assets {
         menuTheme = Gdx.audio.newMusic(Gdx.files.internal("MenuTheme.ogg"));
         swimming = Gdx.audio.newMusic(Gdx.files.internal("swimming.mp3"));
         //MenuTheme.ogg is credited to SIMG, originally name Passionate.
-
     }
 
     /**
@@ -186,9 +188,6 @@ public class Assets {
         playerStaticAttackGun   = new TextureSet(GunAttacksStatic);
         playerWalkingAttackSaber = new TextureSet(SaberAttacks);
         playerWalkingAttackGun   = new TextureSet(GunAttacks);
-
-
-
     }
 
     /**
@@ -227,13 +226,13 @@ public class Assets {
     public static void loadFloorItems() {
         TextureRegion[] items = TextureRegion.split(loadTexture("textures/floor_items.png"), 15, 15)[0];
 
-        floorItemGun =          items[0];
-        floorItemSaber =        items[1];
-        floorItemSpeed =        items[2];
+        floorItemGun          = items[0];
+        floorItemSaber        = items[1];
+        floorItemSpeed        = items[2];
         floorItemInvulnerable = items[3];
-        floorItemScore =        items[4];
-        floorItemFireRate =     items[5];
-        floorItemHeart =        items[6];
+        floorItemScore        = items[4];
+        floorItemFireRate     = items[5];
+        floorItemHeart        = items[6];
     }
 
     /**
@@ -275,6 +274,16 @@ public class Assets {
 
         return new Animation(frameDuration, keyFrames);
     }
+
+    /**
+     * Loads a set of animations from the specified file.
+     *
+     * @param file          the file to load from
+     * @param frameWidth    the width of an individual frame
+     * @param frameHeight   the height of an individual frame
+     * @param frameDuration the time (in seconds) each frame spends on screen.
+     * @return the animation
+     */
     public static Animation[] loadAnimations(String file, int frameWidth, int frameHeight, float frameDuration) {
         Texture texture = loadTexture(file);
 
@@ -284,7 +293,7 @@ public class Assets {
         int count = frames.length;
 
         Animation[] animations = new Animation[count];
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             animations[i] = new Animation(frameDuration, new Array<>(frames[i]));
         }
         return animations;
@@ -297,13 +306,11 @@ public class Assets {
      * @return the bitmap font
      */
     public static BitmapFont loadFont(String fontFile) {
-//        return new BitmapFont(Gdx.files.internal(fontFile), Gdx.files.internal(imageFile), false);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(fontFile));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = 23;
         font = generator.generateFont(parameter);
         generator.dispose();
-        // font.getData().setScale(scale, scale);
         return font;
     }
 

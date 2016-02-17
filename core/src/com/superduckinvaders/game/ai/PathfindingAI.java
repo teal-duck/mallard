@@ -11,49 +11,59 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
-
-
 /**
  * AI that follows and attacks the player within a certain range.
  */
 public class PathfindingAI extends AI {
+
     /**
      * How many iterations to use in the pathfinding algorithm.
      */
     public final static int PATHFINDING_ITERATION_LIMIT = 20;
+
     /**
      * How often to update the AI.
      */
     public final static float PATHFINDING_RATE = (float) 0.4f;
+
     /**
      * The random offset to be added or taken from the base pathfinding rate.
      */
     public final static float PATHFINDING_RATE_OFFSET = (float) 0.05;
+
     /**
      * Width of one tile in the map.
      */
     private int tileWidth;
+
     /**
      * Height of one tile in the map.
      */
     private int tileHeight;
+
     /**
      * Player's last position.
      */
     private Vector2 playerPos;
+
     /**
      * Used to calculate rate of pathfinding.
      */
     private float deltaOffsetLimit = 0;
+
     /**
      * Used to track when to recalculate AI.
      */
     private float currentOffset = 0;
+
     /**
      * How far away from the player this PathfindingAI can attack.
      */
     private int targetRange;
 
+    /**
+     * The Coordinate for the AI to find a path for.
+     */
     public Coordinate target;
 
     /**
@@ -68,14 +78,12 @@ public class PathfindingAI extends AI {
         this.tileWidth = round.getTileWidth();
         this.tileHeight = round.getTileHeight();
         this.targetRange = targetRange;
-        
     }
-
 
     /**
      * Updates this PathfindingAI.
      *
-     * @param mob   pointer to the Mob using this AI
+     * @param mob   the Mob using this AI
      * @param delta time since the previous update
      */
     @Override
@@ -112,7 +120,6 @@ public class PathfindingAI extends AI {
         Coordinate finalCoord = roundToTile(playerPos);
         boolean finalFound = false;
         
-        
         if (round.pathIsClear(mobPos, mobSize, playerPos)){
             if (new Vector2(playerPos).sub(mobPos).len() < targetRange){
                 return null;
@@ -122,7 +129,6 @@ public class PathfindingAI extends AI {
                 return new Coordinate(playerPos);
             }
         }
-        
 
         PriorityQueue<Coordinate> fringe = new PriorityQueue<Coordinate>();
         HashMap<Coordinate, SearchNode> visitedStates = new HashMap<Coordinate, SearchNode>();
@@ -185,11 +191,23 @@ public class PathfindingAI extends AI {
             return resultNode.coord;
         }
     }
-    
+
+    /**
+     * Round an exact position to the nearest tile coordinate.
+     * @param pos the position vector
+     * @return the Coordinate of the tile
+     */
     public Coordinate roundToTile(Vector2 pos){
         return roundToTile(pos.x, pos.y);
         
     }
+
+    /**
+     * Round an exact position to the nearest tile coordinate.
+     * @param x the x position
+     * @param y the y position
+     * @return the Coordinate of the tile
+     */
     public Coordinate roundToTile(float x, float y){
         int nx = (int)(((int)(x/tileWidth)+0.5f) * tileWidth);
         int ny = (int)(((int)(y/tileHeight)+0.5f) * tileHeight);
@@ -215,12 +233,16 @@ public class PathfindingAI extends AI {
          * @param point The point vector.
          */
         public Coordinate(Vector2 point) {
-            this(point.x, point.y);
+            this((int) point.x, (int) point.y);
             
         }
-        public Coordinate(float x, float y) {
-            this((int)x, (int)y);
-        }
+
+        /**
+         * Initialises this Coordinate.
+         *
+         * @param x the x position.
+         * @param y the y position.
+         */
         public Coordinate(int x, int y) {
             this.x = x;
             this.y = y;

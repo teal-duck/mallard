@@ -10,9 +10,11 @@ import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.Player;
 
+/**
+ * A baddie. Not a goodie, a baddie. Bad-die.
+ */
 public class Mob extends Character {
 
-    // TODO: finish me
     /**
      * The texture set to use for this Mob.
      */
@@ -28,6 +30,16 @@ public class Mob extends Character {
      */
     private float speed;
 
+    /**
+     * Create a new Mob.
+     * @param parent     the round parent.
+     * @param x          the initial x position.
+     * @param y          the initial y position.
+     * @param health     the starting health.
+     * @param textureSet a TextureSet to use for displaying.
+     * @param speed      the speed to approach the player.
+     * @param ai         the AI type to use.
+     */
     public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
         super(parent, x, y, health);
 
@@ -43,13 +55,9 @@ public class Mob extends Character {
         createDynamicBody(MOB_BITS, (short)(ALL_BITS & (~MOB_BITS)), MOB_GROUP, false);
         this.body.setLinearDamping(20f);
     }
-
-    public Mob(Round parent, int x, int y, int health, TextureSet textureSet, int speed) {
-        this(parent, x, y, health, textureSet, speed, new DummyAI(parent));
-    }
     
     /**
-     * Sets the AI for this Mob.
+     * Replace the AI for this Mob.
      * @param ai the new AI to use
      */
     public void setAI(AI ai) {
@@ -57,13 +65,17 @@ public class Mob extends Character {
     }
     
     /**
-     * Sets the speed of the mob
+     * Resets the speed of the mob
      * @param speed the updated speed
      */
     public void setSpeed(float speed){
         this.speed = speed;
     }
-    public float getSpeed(){
+
+    /**
+     * Gets the speed of the mob
+     */
+    public float getSpeed() {
         return this.speed;
     }
     
@@ -97,6 +109,10 @@ public class Mob extends Character {
         spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
     }
 
+    /**
+     * Move towards a specific point, basically.
+     * @param destination the destination vector.
+     */
     public void applyVelocity(Vector2 destination){
         Vector2 velocity = destination.sub(getCentre())
                                .nor().scl(getSpeed());

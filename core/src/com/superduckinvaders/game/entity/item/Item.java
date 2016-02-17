@@ -12,7 +12,13 @@ public class Item extends PhysicsEntity {
      */
     protected TextureRegion texture;
 
-    // TODO: finish me
+    /**
+     * Create a new Item.
+     * @param parent  the parent round
+     * @param x       the x position.
+     * @param y       the y position.
+     * @param texture the texture to initialize the item with.
+     */
     public Item(Round parent, float x, float y, TextureRegion texture) {
         super(parent, x, y);
         this.texture = texture;

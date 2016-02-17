@@ -97,9 +97,9 @@ public final class TextureSet {
         idleTextures.put(FaceDirection.RIGHT, right);
 
         movementAnimations.put(FaceDirection.FRONT,  movingFront);
-        movementAnimations.put(FaceDirection.BACK,    movingBack);
-        movementAnimations.put(FaceDirection.LEFT,  movingLeft);
-        movementAnimations.put(FaceDirection.RIGHT, movingRight);
+        movementAnimations.put(FaceDirection.BACK,   movingBack);
+        movementAnimations.put(FaceDirection.LEFT,   movingLeft);
+        movementAnimations.put(FaceDirection.RIGHT,  movingRight);
     }
 
     /**
@@ -135,6 +135,11 @@ public final class TextureSet {
         }
     }
 
+    /**
+     * Get the animation for a particular face direction
+     * @param facing the face direction to get the animation for.
+     * @return the found animation (nullable).
+     */
     public Animation getAnimation(FaceDirection facing) {
         return movementAnimations.get(facing);
     }

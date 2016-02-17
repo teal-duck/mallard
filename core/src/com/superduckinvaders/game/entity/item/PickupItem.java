@@ -20,6 +20,14 @@ public class PickupItem extends Item {
      */
     private float time;
 
+    /**
+     * Create a new PickupItem
+     * @param parent the round parent
+     * @param x      the x position.
+     * @param y      the y position.
+     * @param pickup the type of pickup to create.
+     * @param time   the amount of time the pickup lasts for.
+     */
     public PickupItem(Round parent, float x, float y, Player.Pickup pickup, float time) {
         super(parent, x, y, pickup.getTexture());
 

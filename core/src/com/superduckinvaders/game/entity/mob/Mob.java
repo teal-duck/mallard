@@ -2,13 +2,10 @@
 package com.superduckinvaders.game.entity.mob;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.ai.DummyAI;
-import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.Player;

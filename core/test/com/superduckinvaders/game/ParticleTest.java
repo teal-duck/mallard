@@ -1,8 +1,8 @@
 package com.superduckinvaders.game;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.entity.Particle;
+import com.superduckinvaders.game.util.LwjglTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,14 +1,15 @@
 package com.superduckinvaders.game;
 
 import com.badlogic.gdx.math.Vector2;
-import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.entity.Player;
+import com.superduckinvaders.game.util.LwjglTestRunner;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**

@@ -3,7 +3,6 @@ package com.superduckinvaders.game.entity.mob;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.PathfindingAI;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.assets.TextureSet;
 
 /**
  * Created by james on 16/02/16.

@@ -1,7 +1,7 @@
 package com.superduckinvaders.game;
 
-import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.objective.Objective;
+import com.superduckinvaders.game.util.LwjglTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

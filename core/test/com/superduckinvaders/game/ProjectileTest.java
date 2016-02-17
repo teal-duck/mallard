@@ -2,9 +2,9 @@ package com.superduckinvaders.game;
 
 import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.util.LwjglTestRunner;
 import com.superduckinvaders.game.entity.PhysicsEntity;
 import com.superduckinvaders.game.entity.Projectile;
+import com.superduckinvaders.game.util.LwjglTestRunner;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

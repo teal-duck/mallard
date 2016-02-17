@@ -1,16 +1,17 @@
 package com.superduckinvaders.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.World;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.*;
-import com.superduckinvaders.game.entity.item.*;
+import com.superduckinvaders.game.entity.item.CollectItem;
+import com.superduckinvaders.game.entity.item.Item;
+import com.superduckinvaders.game.entity.item.PickupItem;
 import com.superduckinvaders.game.entity.mob.BossMob;
 import com.superduckinvaders.game.entity.mob.GunnerMob;
 import com.superduckinvaders.game.entity.mob.Mob;

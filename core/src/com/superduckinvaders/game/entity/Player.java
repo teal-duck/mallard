@@ -12,8 +12,8 @@ import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 
-import java.util.Map;
 import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * Represents the player of the game.

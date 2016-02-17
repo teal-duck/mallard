@@ -1,14 +1,12 @@
 package com.superduckinvaders.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
-import com.superduckinvaders.game.DuckGame;
-
-import com.badlogic.gdx.utils.viewport.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.superduckinvaders.game.DuckGame;
 
 /**
  * A Base screen that holds common objects to reduce boilerplate code.

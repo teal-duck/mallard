@@ -190,8 +190,9 @@ public abstract class Character extends PhysicsEntity {
     /**
      * Causes this Character to use a melee attack.
      *
-     * @param direction
-     * @param damage how much damage the attack deals
+     * @param direction the attack direction.
+     * @param damage how much damage the attack deals.
+     * @return whether the attack has occured.
      */
     protected boolean meleeAttack(Vector2 direction, int damage) {
         if (isStunned()) {

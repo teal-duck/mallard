@@ -85,14 +85,6 @@ public class Assets {
      *  Texture for the game logo.
      */
     public static TextureRegion logo;
-    /**
-     * Creates a new projectile and adds it to the list of entities.
-     *
-     * @param pos      the projectile's starting position
-     * @param velocity the projectile's velocity
-     * @param damage          how much damage the projectile deals
-     * @param owner           the owner of the projectile (i.e. the one who fired it)
-     */
 
     public static Sound gunShot;
     public static Music menuTheme, swimming;
@@ -301,8 +293,7 @@ public class Assets {
     /**
      * Loads the bitmap font from the specified files.
      *
-     * @param fontFile  the file containing information about the glyphs stored on the image file
-     * @param imageFile the file containing the actual glyphs
+     * @param fontFile the file containing information about the glyphs stored on the image file
      * @return the bitmap font
      */
     public static BitmapFont loadFont(String fontFile) {

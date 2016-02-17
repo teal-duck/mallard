@@ -35,6 +35,11 @@ public abstract class PhysicsEntity extends Entity {
         this(parent, 0, 0);
     }
 
+    public PhysicsEntity(Round parent, Vector2 pos) {
+        this(parent, pos.x, pos.y);
+    
+    }
+
     /**
      * Initialises this Entity with the specified initial coordinates.
      *
@@ -42,10 +47,6 @@ public abstract class PhysicsEntity extends Entity {
      * @param x      the initial x coordinate
      * @param y      the initial y coordinate
      */
-    public PhysicsEntity(Round parent, Vector2 pos) {
-        this(parent, pos.x, pos.y);
-    
-    }
     public PhysicsEntity(Round parent, float x, float y) {
         super(parent, x, y);
     }

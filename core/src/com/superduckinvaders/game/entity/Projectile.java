@@ -24,14 +24,11 @@ public class Projectile extends PhysicsEntity {
     /**
      * Initialises this Projectile.
      *
-     * @param parent  the round this Projectile belongs to
-     * @param x       the initial x coordinate
-     * @param y       the initial y coordinate
-     * @param targetX the target x coordinate
-     * @param targetY the target y coordinate
-     * @param speed   how fast the projectile moves
-     * @param damage  how much damage the projectile deals
-     * @param owner   the owner of the projectile (i.e. the one who fired it)
+     * @param parent   the round this Projectile belongs to
+     * @param pos      the initial position
+     * @param velocity the projectile velocity
+     * @param damage   how much damage the projectile deals
+     * @param owner    the owner of the projectile (i.e. the one who fired it)
      */
     public Projectile(Round parent, Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
         super(parent, pos);

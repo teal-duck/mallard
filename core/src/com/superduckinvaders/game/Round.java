@@ -238,7 +238,8 @@ public class Round {
     /**
      * Tests if a point resides inside a body
      * @param x x
-     * @param y y 
+     * @param y y
+     * @return whether the point is in the body
      */
     public boolean collidePoint(float x, float y) {
         return collidePoint(new Vector2(x, y));

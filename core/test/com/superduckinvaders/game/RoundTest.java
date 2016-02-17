@@ -1,5 +1,6 @@
 package com.superduckinvaders.game;
 
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.objective.Objective;
 import com.superduckinvaders.game.util.LwjglTestRunner;
 import org.junit.Ignore;
@@ -7,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test the Character class's special methods.
@@ -33,7 +35,7 @@ public class RoundTest {
 
     @Test
     public void CanSetObjective() {
-        Round round = new Round(new DuckGame());
+        Round round = new Round(mock(DuckGame.class));
         Objective testObj = new TestObjective(round);
         round.setObjective(testObj);
         assertEquals(round.getObjective().getObjectiveString(), TEST_OBJECTIVE_STRING);

@@ -124,7 +124,8 @@ public class Round {
             player.givePickup(Player.Pickup.LIGHTSABER, Float.POSITIVE_INFINITY);
         }
         if (parent.session.currentLevel == 8) {
-            addMob(new BossMob(this, 50, 24));
+//            addMob(new BossMob(this, 25, 16));
+            addMob(new BossMob(this, getPlayer().getX(), getPlayer().getX()));
         }
         else {
             spawnRandomMobs(50, 0, 0, getMapWidth(), getMapHeight());
@@ -140,7 +141,6 @@ public class Round {
 
 
         if(parent.session.currentLevel < 3  || parent.session.currentLevel == 7 ) {
-
             // Determine where to spawn the objective.
             int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class)) * getTileWidth();
             int objectiveY = Integer.parseInt(map.getProperties().get("ObjectiveY", "10", String.class)) * getTileHeight();
@@ -210,18 +210,7 @@ public class Round {
 
 
     private void createEnvironmentBodies() {
-        Constructor createObstacle;
-        if (parent.session.currentLevel==8){
-            createObstacle = (float x, float y, float w, float h) -> {
-                Obstacle o = new Obstacle(this, x, y, w, h);
-                o.setMaskBits((short) PhysicsEntity.MOB_BITS);
-//                o.setMaskBits((short) (o.getMaskBits() & ~PhysicsEntity.PROJECTILE_BITS));
-                return o;
-            };
-        }
-        else {
-            createObstacle = (float x, float y, float w, float h) -> (new Obstacle(this, x, y, w, h));
-        }
+        Constructor createObstacle = (float x, float y, float w, float h) -> (new Obstacle(this, x, y, w, h));
         Constructor createWater = (float x, float y, float w, float h) -> (new WaterEntity(this, x, y, w, h));
 
         layerMap(getCollisionLayer(), createObstacle);

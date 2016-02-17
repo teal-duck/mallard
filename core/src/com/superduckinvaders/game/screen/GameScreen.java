@@ -150,10 +150,6 @@ public class GameScreen extends BaseScreen {
         
         debugRenderer = new Box2DDebugRenderer();
 
-        if (getGame().session.currentLevel == 8){
-            camera.zoom = 2f;
-        }
-
     }
 
     @Override

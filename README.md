@@ -1,8 +1,8 @@
-# BigDuckOnCampus
-Game by Team Muscovy, continued by Team Teal
+# Super Duck Invaders
+Game by Teams Mallard and Smew, continued by Team Teal.
 
 ## Importing project to eclipse
-1. Clone with git with ```git clone https://github.com/teal-duck/BigDuckOnCampus.git```
+1. Clone with git with ```git clone https://github.com/teal-duck/mallard.git```
 2. Install gradle to eclipse 
   1. Help -> Install new software... -> Add... (Name: gradle, Location: http://dist.springsource.com/release/TOOLS/gradle)
   2. Select only 'Extensions / Gradle Integration' NOT 'Uncategorized'
@@ -10,25 +10,23 @@ Game by Team Muscovy, continued by Team Teal
 3. Import project to eclipse via gradle (https://github.com/libgdx/libgdx/wiki/Gradle-and-Eclipse)
   1. File -> Import -> Gradle -> Gradle Project -> Browse for BigDuckOnCampus folder (root of project) -> Build Model.
   2. Select all -> Finish.
-4. You have now installed BigDuckOnCampus to eclipse.
+4. You have now installed Super Duck Invaders to eclipse.
 
 
 ## Get changes from GitHub
-1. Exit eclipse.
-2. Run ```git pull``` in BigDuckOnCampus
-3. Re-open eclipse.
+1. Run ```git pull``` in mallard 
+2. Refresh all files in eclipse.
 
 
 ## Push changes to GitHub
-1. Exit eclipse.
-2. Open terminal, ```cd``` to BigDuckOnCampus.
-3. Run ```git branch``` to make sure you are on your correct branch.
-2. Run ```git status``` to see all changes you have made to project.
-3. Run ```git add <filename>``` for each file added/edited.
-4. Run ```git commit -m "<commit message>"``` Try to add a helpful message describing your change(s).
-5. Run ```git push``` to push changes to your branch on GitHub.
-6. Open GitHub, change to your branch. There should be a yellow banner saying that you have recently pushed the branch. Click to open a pull request.
-7. Complete pull request form and submit.
+1. Open terminal, ```cd``` to BigDuckOnCampus.
+2. Run ```git branch``` to make sure you are on your correct branch.
+3. Run ```git status``` to see all changes you have made to project.
+4. Run ```git add <filename>``` for each file added/edited.
+5. Run ```git commit -m "<commit message>"``` Try to add a helpful message describing your change(s).
+6. Run ```git push``` to push changes to your branch on GitHub.
+7. Open GitHub, change to your branch. There should be a yellow banner saying that you have recently pushed the branch. Click to open a pull request.
+8. Complete pull request form and submit.
 
 
 ## Add a dependency

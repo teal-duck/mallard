@@ -122,7 +122,7 @@ public class Player extends Character {
 	public Player(Round parent, float x, float y) {
 		super(parent, x, y, Player.PLAYER_HEALTH);
 		enemyBits = PhysicsEntity.MOB_BITS | PhysicsEntity.PROJECTILE_BITS;
-		MELEE_RANGE = 40f;
+		meleeRange = 40f;
 		Character.MELEE_ATTACK_COOLDOWN = 0.2f;
 		Character.STUNNED_DURATION = 0f;
 		createDynamicBody(PhysicsEntity.PLAYER_BITS, PhysicsEntity.ALL_BITS, PhysicsEntity.NO_GROUP, false);

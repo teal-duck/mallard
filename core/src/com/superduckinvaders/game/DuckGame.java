@@ -32,6 +32,11 @@ public class DuckGame extends Game {
 	 */
 	public static final Session session = new Session();
 
+	/**
+	 *
+	 */
+	public static boolean playSounds = true;
+
 
 	/**
 	 * The Session stores information meant to persist throughout the game.
@@ -81,11 +86,11 @@ public class DuckGame extends Game {
 	public void create() {
 		Assets.load();
 		Gdx.graphics.setVSync(true);
-		setScreen(new StartScreen(this));
 
 		Assets.menuTheme.play();
 		Assets.menuTheme.setVolume(0.2f);
 		Assets.menuTheme.setLooping(true);
+		setScreen(new StartScreen(this));
 	}
 
 

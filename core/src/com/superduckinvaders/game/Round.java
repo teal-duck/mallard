@@ -521,7 +521,7 @@ public class Round {
 
 	public void createProjectile(Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
 		entities.add(new Projectile(this, pos, velocity, damage, owner));
-		Assets.gunShot.setVolume(Assets.gunShot.play(), 0.5f);
+		Assets.gunShot.setVolume(SoundPlayer.play(Assets.gunShot), 0.5f);
 
 	}
 

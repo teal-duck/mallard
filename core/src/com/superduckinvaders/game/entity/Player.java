@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.SoundPlayer;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 
@@ -296,13 +297,11 @@ public class Player extends Character {
 
 		if (isFlying()) {
 			state = State.FLYING;
+		} else if (state != State.SWIMMING && isSwimming()) {
+			// Just started swimming, so play swimming sound
+			SoundPlayer.play(Assets.swimming);
+			state = State.SWIMMING;
 		} else if (isSwimming()) {
-
-			boolean isPlaying = Assets.swimming.isPlaying();
-			if (isPlaying == false) {
-				Assets.swimming.play();
-
-			}
 			state = State.SWIMMING;
 		} else if ((currentWeapon == Pickup.GUN) && hasPickup(Pickup.GUN)) {
 			state = State.HOLDING_GUN;

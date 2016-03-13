@@ -77,6 +77,11 @@ public class Assets {
 	public static TextureRegion button;
 
 	/**
+	 * The textures for the mute/unmute buttons.
+	 */
+	public static TextureRegion muteButtonMute, muteButtonUnmute;
+
+	/**
 	 * Textures for floor items.
 	 */
 	public static TextureRegion floorItemGun, floorItemSaber, floorItemSpeed, floorItemInvulnerable, floorItemScore,
@@ -92,8 +97,8 @@ public class Assets {
 	 */
 	public static TextureRegion logo;
 
-	public static Sound gunShot;
-	public static Music menuTheme, swimming;
+	public static Sound gunShot, swimming;
+	public static Music menuTheme;
 
 	/**
 	 * Responsible for loading maps.
@@ -141,6 +146,9 @@ public class Assets {
 
 		Assets.button = new TextureRegion(Assets.loadTexture("textures/button.png"));
 
+		Assets.muteButtonMute = new TextureRegion(Assets.loadTexture("textures/muteButtonMute.png"));
+		Assets.muteButtonUnmute = new TextureRegion(Assets.loadTexture("textures/muteButtonUnmute.png"));
+
 		Assets.flag = new TextureRegion(Assets.loadTexture("textures/flag.png"));
 		Assets.logo = new TextureRegion(Assets.loadTexture("textures/logo.png"));
 	}
@@ -149,7 +157,7 @@ public class Assets {
 	private static void loadSFX() {
 		Assets.gunShot = Gdx.audio.newSound(Gdx.files.internal("Gun.mp3"));
 		Assets.menuTheme = Gdx.audio.newMusic(Gdx.files.internal("MenuTheme.ogg"));
-		Assets.swimming = Gdx.audio.newMusic(Gdx.files.internal("swimming.mp3"));
+		Assets.swimming = Gdx.audio.newSound(Gdx.files.internal("swimming.mp3"));
 		// MenuTheme.ogg is credited to SIMG, originally name Passionate.
 	}
 

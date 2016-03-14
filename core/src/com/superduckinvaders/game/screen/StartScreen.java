@@ -77,6 +77,16 @@ public class StartScreen extends BaseScreen {
 			}
 		});
 
+		Button cheatsButton = new Button(new Button.ButtonStyle(button, button, button));
+		cheatsButton.setPosition((stage.getWidth() - cheatsButton.getPrefWidth()) / 2, 200);
+		cheatsButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				dispose();
+				getGame().setScreen(new CheatsScreen(getGame()));
+			}
+		});
+
 		Button muteButton = new Button(new Button.ButtonStyle(mute, mute, unmute));
 		muteButton.setPosition(1000, 500);
 		muteButton.addListener(new ClickListener() {
@@ -104,6 +114,10 @@ public class StartScreen extends BaseScreen {
 		Label mapLabel = new Label("LEVEL SELECT", white);
 		mapLabel.setPosition((stage.getWidth() - mapLabel.getPrefWidth()) / 2, 265);
 		mapLabel.setTouchable(Touchable.disabled);
+		
+		Label cheatsLabel = new Label("ENABLE CHEATS", white);
+		cheatsLabel.setPosition((stage.getWidth() - cheatsLabel.getPrefWidth()) / 2, 215);
+		cheatsLabel.setTouchable(Touchable.disabled);
 
 		stage.addActor(logoImage);
 		stage.addActor(playButton);
@@ -111,6 +125,8 @@ public class StartScreen extends BaseScreen {
 		stage.addActor(mapButton);
 		stage.addActor(mapLabel);
 		stage.addActor(muteButton);
+		stage.addActor(cheatsButton);
+		stage.addActor(cheatsLabel);
 	}
 
 

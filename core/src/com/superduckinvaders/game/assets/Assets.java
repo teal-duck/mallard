@@ -80,6 +80,11 @@ public class Assets {
 	 * The textures for the mute/unmute buttons.
 	 */
 	public static TextureRegion muteButtonMute, muteButtonUnmute;
+	
+	/**
+	 * Textures for check buttons.
+	 */
+	public static TextureRegion checkButton, checkButtonChecked;
 
 	/**
 	 * Textures for floor items.
@@ -148,6 +153,9 @@ public class Assets {
 
 		Assets.muteButtonMute = new TextureRegion(Assets.loadTexture("textures/muteButtonMute.png"));
 		Assets.muteButtonUnmute = new TextureRegion(Assets.loadTexture("textures/muteButtonUnmute.png"));
+		
+		Assets.checkButton = new TextureRegion(Assets.loadTexture("textures/checkButton.png"));
+		Assets.checkButtonChecked = new TextureRegion(Assets.loadTexture("textures/checkButtonChecked.png"));
 
 		Assets.flag = new TextureRegion(Assets.loadTexture("textures/flag.png"));
 		Assets.logo = new TextureRegion(Assets.loadTexture("textures/logo.png"));

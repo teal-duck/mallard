@@ -41,6 +41,9 @@ public class DuckGame extends Game {
 		public int healthCounter = 6;
 		public int totalScore = 0;
 
+		// Cheats
+		private boolean infiniteFlight = false;
+
 
 		public void incrementLevelCounter() {
 			currentLevel += 1;
@@ -69,6 +72,14 @@ public class DuckGame extends Game {
 
 		public void setHealthCounter(int health) {
 			healthCounter = health;
+		}
+
+		public void setInfiniteFlight() {
+			infiniteFlight = !infiniteFlight;
+		}
+
+		public boolean isInfiniteFlight() {
+			return infiniteFlight;
 		}
 	}
 

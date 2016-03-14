@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.SoundPlayer;
 import com.superduckinvaders.game.assets.Assets;
@@ -341,7 +342,7 @@ public class Player extends Character {
 
 		// Press space to start flying, but only if flying isn't cooling down and we're moving.
 		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-			if (flyingTimer > 0) {
+			if (flyingTimer > 0 && !(DuckGame.session.isInfiniteFlight())) {
 				flyingTimer -= delta;
 			}
 		} else {

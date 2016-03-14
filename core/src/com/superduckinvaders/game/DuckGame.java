@@ -33,12 +33,6 @@ public class DuckGame extends Game {
 	public static final Session session = new Session();
 
 	/**
-	 *
-	 */
-	public static boolean playSounds = true;
-
-
-	/**
 	 * The Session stores information meant to persist throughout the game.
 	 */
 	public static class Session {

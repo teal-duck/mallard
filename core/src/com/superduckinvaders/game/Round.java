@@ -156,6 +156,7 @@ public class Round {
 		switch (map.getProperties().get("Objective", "collect", String.class)) {
 		case "survive":
 			setObjective(new SurviveObjective(this));
+			break;
 		case "collect":
 			int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class))
 					* getTileWidth();
@@ -165,7 +166,10 @@ public class Round {
 			Item objective = new CollectItem(this, objectiveX, objectiveY);
 			setObjective(new CollectObjective(this, objective));
 			entities.add(objective);
+			break;
 		case "kill":
+			setObjective(new KillObjective(this, targets, "Kill the Enemies!"));
+			break;
 		default:
 			setObjective(new KillObjective(this, targets, "Kill the Enemies!"));
 

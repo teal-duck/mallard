@@ -87,9 +87,12 @@ public class DuckGame extends Game {
 		Assets.load();
 		Gdx.graphics.setVSync(true);
 
-		Assets.menuTheme.play();
+		if (!SoundPlayer.isMuted())
+			Assets.menuTheme.play();
+
 		Assets.menuTheme.setVolume(0.2f);
 		Assets.menuTheme.setLooping(true);
+
 		setScreen(new StartScreen(this));
 	}
 

@@ -428,11 +428,13 @@ public class Player extends Character {
 	 * Available pickups.
 	 */
 	public enum Pickup {
-		GUN(Assets.floorItemGun, Float.POSITIVE_INFINITY), LIGHTSABER(Assets.floorItemSaber,
-				Float.POSITIVE_INFINITY), SCORE_MULTIPLIER(Assets.floorItemScore, 30), SUPER_SPEED(
-						Assets.floorItemSpeed, 10), RATE_OF_FIRE(Assets.floorItemFireRate,
-								60), HEALTH(Assets.floorItemHeart, 0), INVULNERABLE(
-										Assets.floorItemInvulnerable, 10);
+		GUN(Assets.floorItemGun, Float.POSITIVE_INFINITY),
+		LIGHTSABER(Assets.floorItemSaber, Float.POSITIVE_INFINITY),
+		SCORE_MULTIPLIER(Assets.floorItemScore, 30),
+		SUPER_SPEED(Assets.floorItemSpeed, 10),
+		RATE_OF_FIRE(Assets.floorItemFireRate, 60),
+		HEALTH(Assets.floorItemHeart, 0),
+		INVULNERABLE(Assets.floorItemInvulnerable, 10);
 
 		private final TextureRegion texture;
 		private final float duration;

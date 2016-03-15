@@ -316,6 +316,10 @@ public class Player extends Character {
 			rangedAttackTimer += delta * (Player.PLAYER_RANGED_ATTACK_MULTIPLIER - 1);
 		}
 
+		if (DuckGame.session.isRapidCheat()) {
+			rangedAttackTimer += delta * (Player.PLAYER_RANGED_ATTACK_MULTIPLIER - 1);
+		}
+
 		if (hasPickup(Pickup.HEALTH)) {
 			heal(2);
 		}

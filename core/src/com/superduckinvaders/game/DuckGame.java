@@ -43,6 +43,7 @@ public class DuckGame extends Game {
 
 		// Cheats
 		private boolean infiniteFlight = false;
+		private boolean rapidCheat = false;
 
 
 		public void incrementLevelCounter() {
@@ -80,6 +81,14 @@ public class DuckGame extends Game {
 
 		public boolean isInfiniteFlight() {
 			return infiniteFlight;
+		}
+
+		public void setRapidCheat() {
+			rapidCheat = !rapidCheat;
+		}
+
+		public boolean isRapidCheat() {
+			return rapidCheat;
 		}
 	}
 

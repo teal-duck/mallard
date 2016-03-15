@@ -85,11 +85,28 @@ public class CheatsScreen extends BaseScreen {
 		infiniteFlightLabel.setPosition((stage.getWidth() - infiniteFlightLabel.getPrefWidth() - 10) / 2, 315);
 		infiniteFlightLabel.setTouchable(Touchable.disabled);
 		
+		Button rapidCheatButton = new Button(checkButton, checkButton, checkButtonChecked);
+		Label rapidCheatLabel = new Label("Rapider Fire", white);
+
+		rapidCheatButton.setPosition((stage.getWidth() + rapidCheatLabel.getPrefWidth() + 10) / 2, 230);
+		rapidCheatButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				DuckGame.session.setRapidCheat();
+			}
+		});
+		rapidCheatButton.setChecked(DuckGame.session.isRapidCheat());
+
+		rapidCheatLabel.setPosition((stage.getWidth() - rapidCheatLabel.getPrefWidth() - 10) / 2, 245);
+		rapidCheatLabel.setTouchable(Touchable.disabled);
+
 		stage.addActor(startButton);
 		stage.addActor(startLabel);
 		stage.addActor(cheatsLabel);
 		stage.addActor(infiniteFlightButton);
 		stage.addActor(infiniteFlightLabel);
+		stage.addActor(rapidCheatButton);
+		stage.addActor(rapidCheatLabel);
 	}
 
 

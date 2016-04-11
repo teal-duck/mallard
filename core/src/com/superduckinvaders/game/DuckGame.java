@@ -31,6 +31,7 @@ public class DuckGame extends Game {
 	 */
 	public static final Session session = new Session();
 
+
 	/**
 	 * The Session stores information meant to persist throughout the game.
 	 */
@@ -74,17 +75,21 @@ public class DuckGame extends Game {
 			healthCounter = health;
 		}
 
+
 		public void setInfiniteFlight() {
 			infiniteFlight = !infiniteFlight;
 		}
+
 
 		public boolean isInfiniteFlight() {
 			return infiniteFlight;
 		}
 
+
 		public void setRapidCheat() {
 			rapidCheat = !rapidCheat;
 		}
+
 
 		public boolean isRapidCheat() {
 			return rapidCheat;
@@ -100,8 +105,9 @@ public class DuckGame extends Game {
 		Assets.load();
 		Gdx.graphics.setVSync(true);
 
-		if (!SoundPlayer.isMuted())
+		if (!SoundPlayer.isMuted()) {
 			Assets.menuTheme.play();
+		}
 
 		Assets.menuTheme.setVolume(0.2f);
 		Assets.menuTheme.setLooping(true);

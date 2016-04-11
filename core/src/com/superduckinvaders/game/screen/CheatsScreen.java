@@ -19,7 +19,6 @@ import com.superduckinvaders.game.assets.Assets;
  * Shows a list of buttons that take you to unlocked levels.
  */
 public class CheatsScreen extends BaseScreen {
-
 	/**
 	 * A Scene2D stage to add UI elements to.
 	 */
@@ -84,7 +83,7 @@ public class CheatsScreen extends BaseScreen {
 
 		infiniteFlightLabel.setPosition((stage.getWidth() - infiniteFlightLabel.getPrefWidth() - 10) / 2, 315);
 		infiniteFlightLabel.setTouchable(Touchable.disabled);
-		
+
 		Button rapidCheatButton = new Button(checkButton, checkButton, checkButtonChecked);
 		Label rapidCheatLabel = new Label("Rapider Fire", white);
 

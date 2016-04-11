@@ -297,7 +297,7 @@ public class Player extends Character {
 
 		if (isFlying()) {
 			state = State.FLYING;
-		} else if (state != State.SWIMMING && isSwimming()) {
+		} else if ((state != State.SWIMMING) && isSwimming()) {
 			// Just started swimming, so play swimming sound
 			SoundPlayer.play(Assets.swimming);
 			state = State.SWIMMING;
@@ -345,7 +345,7 @@ public class Player extends Character {
 
 		// Press space to start flying, but only if flying isn't cooling down and we're moving.
 		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-			if (flyingTimer > 0 && !(DuckGame.session.isInfiniteFlight())) {
+			if ((flyingTimer > 0) && !(DuckGame.session.isInfiniteFlight())) {
 				flyingTimer -= delta;
 			}
 		} else {
@@ -431,12 +431,12 @@ public class Player extends Character {
 	 * Available pickups.
 	 */
 	public enum Pickup {
-		GUN(Assets.floorItemGun, Float.POSITIVE_INFINITY),
-		LIGHTSABER(Assets.floorItemSaber, Float.POSITIVE_INFINITY),
-		SCORE_MULTIPLIER(Assets.floorItemScore, 30),
-		SUPER_SPEED(Assets.floorItemSpeed, 10),
-		RATE_OF_FIRE(Assets.floorItemFireRate, 60),
-		HEALTH(Assets.floorItemHeart, 0),
+		GUN(Assets.floorItemGun, Float.POSITIVE_INFINITY), //
+		LIGHTSABER(Assets.floorItemSaber, Float.POSITIVE_INFINITY), //
+		SCORE_MULTIPLIER(Assets.floorItemScore, 30), //
+		SUPER_SPEED(Assets.floorItemSpeed, 10), //
+		RATE_OF_FIRE(Assets.floorItemFireRate, 60), //
+		HEALTH(Assets.floorItemHeart, 0), //
 		INVULNERABLE(Assets.floorItemInvulnerable, 10);
 
 		private final TextureRegion texture;
@@ -478,5 +478,4 @@ public class Player extends Character {
 			return pickup;
 		}
 	}
-
 }

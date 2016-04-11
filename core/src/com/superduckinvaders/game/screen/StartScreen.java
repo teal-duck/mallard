@@ -26,7 +26,6 @@ public class StartScreen extends BaseScreen {
 	private Stage stage;
 
 
-
 	/**
 	 * Initialises this StartScreen.
 	 *
@@ -35,8 +34,9 @@ public class StartScreen extends BaseScreen {
 	 */
 	public StartScreen(DuckGame game) {
 		super(game);
-		if (SoundPlayer.isMuted() && Assets.menuTheme.isPlaying())
+		if (SoundPlayer.isMuted() && Assets.menuTheme.isPlaying()) {
 			Assets.menuTheme.stop();
+		}
 	}
 
 
@@ -95,15 +95,13 @@ public class StartScreen extends BaseScreen {
 				if (Assets.menuTheme.isPlaying()) {
 					Assets.menuTheme.stop();
 					SoundPlayer.mute();
-				}
-				else {
+				} else {
 					Assets.menuTheme.play();
 					SoundPlayer.unmute();
 				}
 			}
 		});
 		muteButton.setChecked(SoundPlayer.isMuted());
-
 
 		Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
 
@@ -114,7 +112,7 @@ public class StartScreen extends BaseScreen {
 		Label mapLabel = new Label("LEVEL SELECT", white);
 		mapLabel.setPosition((stage.getWidth() - mapLabel.getPrefWidth()) / 2, 265);
 		mapLabel.setTouchable(Touchable.disabled);
-		
+
 		Label cheatsLabel = new Label("ENABLE CHEATS", white);
 		cheatsLabel.setPosition((stage.getWidth() - cheatsLabel.getPrefWidth()) / 2, 215);
 		cheatsLabel.setTouchable(Touchable.disabled);

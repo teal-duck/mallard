@@ -16,7 +16,6 @@ import com.superduckinvaders.game.screen.StartScreen;
 
 
 public class DuckGame extends Game {
-
 	/**
 	 * The width of the world.
 	 */

@@ -329,7 +329,6 @@ public class GameScreen extends BaseScreen {
 	 * Draw the static UI.
 	 */
 	private void drawUI() {
-
 		uiBatch.setProjectionMatrix(uiCamera.combined);
 		uiViewport.apply();
 		uiBatch.begin();
@@ -339,7 +338,7 @@ public class GameScreen extends BaseScreen {
 		Assets.font.draw(uiBatch, "Score: " + round.getPlayer().getScore(), 10, 670);
 		Assets.font.draw(uiBatch, Gdx.graphics.getFramesPerSecond() + " FPS", 10, 630);
 
-		// Draw stamina bar (for flight);
+		// Draw stamina bar (for flight)
 		uiBatch.draw(Assets.staminaEmpty, 1080, 10);
 		if (round.getPlayer().getFlyingTimer() > 0) {
 			float remainingFlight = round.getPlayer().getFlyingTimer();
@@ -350,7 +349,7 @@ public class GameScreen extends BaseScreen {
 		}
 		uiBatch.draw(Assets.staminaFull, 1080, 10);
 
-		// Draw powerups.
+		// Draw powerups
 		int i = 0;
 		for (Player.Pickup pickup : round.getPlayer().pickupMap.keySet()) {
 			TextureRegion texture = pickup.getTexture();

@@ -107,7 +107,7 @@ public class PathfindingAI extends AI {
 			deltaOffsetLimit = PathfindingAI.PATHFINDING_RATE
 					+ (MathUtils.random() % PathfindingAI.PATHFINDING_RATE_OFFSET);
 			currentOffset = 0;
-			target = FindPath(mob);
+			target = findPath(mob);
 		}
 
 		// targetPoint = (target != null) ? target.vector() : new Vector2(playerPos).setLength(1f);
@@ -125,7 +125,7 @@ public class PathfindingAI extends AI {
 	 *                Mob that a path is being generated for
 	 * @return Returns a Coordinate for the path finding
 	 */
-	private Coordinate FindPath(Mob mob) {
+	private Coordinate findPath(Mob mob) {
 		Vector2 mobPos = mob.getCentre();
 		Vector2 mobSize = mob.getSize();
 		Coordinate startCoord = roundToTile(mobPos);

@@ -42,7 +42,6 @@ import com.superduckinvaders.game.util.RayCast;
  * Represents a round of the game played on one level with a single objective.
  */
 public class Round {
-
 	/**
 	 * How near entities must be to the player to get updated in the game loop.
 	 */
@@ -102,7 +101,6 @@ public class Round {
 	 *                the game the round is associated with
 	 */
 	public Round(DuckGame parent) {
-
 		this.parent = parent;
 		map = Assets.maps[DuckGame.session.currentLevel - 1];
 

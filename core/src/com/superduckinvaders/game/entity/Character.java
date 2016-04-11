@@ -33,7 +33,7 @@ public abstract class Character extends PhysicsEntity {
 	 */
 	protected int maximumHealth, currentHealth;
 
-	protected float MELEE_RANGE = 30f;
+	protected float meleeRange = 30f;
 	/**
 	 * For use when determining player movement direction
 	 */
@@ -88,7 +88,7 @@ public abstract class Character extends PhysicsEntity {
 		super.createBody(bodyType, categoryBits, maskBits, groupIndex, isSensor);
 
 		CircleShape meleeSensorShape = new CircleShape();
-		meleeSensorShape.setRadius(MELEE_RANGE / PhysicsEntity.PIXELS_PER_METRE);
+		meleeSensorShape.setRadius(meleeRange / PhysicsEntity.PIXELS_PER_METRE);
 
 		FixtureDef meleeFixtureDef = new FixtureDef();
 		meleeFixtureDef.shape = meleeSensorShape;

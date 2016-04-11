@@ -12,7 +12,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.SoundPlayer;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 
@@ -295,13 +297,11 @@ public class Player extends Character {
 
 		if (isFlying()) {
 			state = State.FLYING;
+		} else if (state != State.SWIMMING && isSwimming()) {
+			// Just started swimming, so play swimming sound
+			SoundPlayer.play(Assets.swimming);
+			state = State.SWIMMING;
 		} else if (isSwimming()) {
-
-			boolean isPlaying = Assets.swimming.isPlaying();
-			if (isPlaying == false) {
-				Assets.swimming.play();
-
-			}
 			state = State.SWIMMING;
 		} else if ((currentWeapon == Pickup.GUN) && hasPickup(Pickup.GUN)) {
 			state = State.HOLDING_GUN;
@@ -312,6 +312,10 @@ public class Player extends Character {
 		}
 
 		if (hasPickup(Pickup.RATE_OF_FIRE)) {
+			rangedAttackTimer += delta * (Player.PLAYER_RANGED_ATTACK_MULTIPLIER - 1);
+		}
+
+		if (DuckGame.session.isRapidCheat()) {
 			rangedAttackTimer += delta * (Player.PLAYER_RANGED_ATTACK_MULTIPLIER - 1);
 		}
 
@@ -341,7 +345,7 @@ public class Player extends Character {
 
 		// Press space to start flying, but only if flying isn't cooling down and we're moving.
 		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-			if (flyingTimer > 0) {
+			if (flyingTimer > 0 && !(DuckGame.session.isInfiniteFlight())) {
 				flyingTimer -= delta;
 			}
 		} else {
@@ -427,11 +431,13 @@ public class Player extends Character {
 	 * Available pickups.
 	 */
 	public enum Pickup {
-		GUN(Assets.floorItemGun, Float.POSITIVE_INFINITY), LIGHTSABER(Assets.floorItemSaber,
-				Float.POSITIVE_INFINITY), SCORE_MULTIPLIER(Assets.floorItemScore, 30), SUPER_SPEED(
-						Assets.floorItemSpeed, 10), RATE_OF_FIRE(Assets.floorItemFireRate,
-								60), HEALTH(Assets.floorItemHeart, 0), INVULNERABLE(
-										Assets.floorItemInvulnerable, 10);
+		GUN(Assets.floorItemGun, Float.POSITIVE_INFINITY),
+		LIGHTSABER(Assets.floorItemSaber, Float.POSITIVE_INFINITY),
+		SCORE_MULTIPLIER(Assets.floorItemScore, 30),
+		SUPER_SPEED(Assets.floorItemSpeed, 10),
+		RATE_OF_FIRE(Assets.floorItemFireRate, 60),
+		HEALTH(Assets.floorItemHeart, 0),
+		INVULNERABLE(Assets.floorItemInvulnerable, 10);
 
 		private final TextureRegion texture;
 		private final float duration;

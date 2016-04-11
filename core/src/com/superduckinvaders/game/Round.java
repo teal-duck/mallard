@@ -154,6 +154,7 @@ public class Round {
 		switch (map.getProperties().get("Objective", "collect", String.class)) {
 		case "survive":
 			setObjective(new SurviveObjective(this));
+			break;
 		case "collect":
 			int objectiveX = Integer.parseInt(map.getProperties().get("ObjectiveX", "10", String.class))
 					* getTileWidth();
@@ -163,7 +164,10 @@ public class Round {
 			Item objective = new CollectItem(this, objectiveX, objectiveY);
 			setObjective(new CollectObjective(this, objective));
 			entities.add(objective);
+			break;
 		case "kill":
+			setObjective(new KillObjective(this, targets, "Kill the Enemies!"));
+			break;
 		default:
 			setObjective(new KillObjective(this, targets, "Kill the Enemies!"));
 
@@ -519,7 +523,7 @@ public class Round {
 
 	public void createProjectile(Vector2 pos, Vector2 velocity, int damage, PhysicsEntity owner) {
 		entities.add(new Projectile(this, pos, velocity, damage, owner));
-		Assets.gunShot.setVolume(Assets.gunShot.play(), 0.5f);
+		Assets.gunShot.setVolume(SoundPlayer.play(Assets.gunShot), 0.5f);
 
 	}
 

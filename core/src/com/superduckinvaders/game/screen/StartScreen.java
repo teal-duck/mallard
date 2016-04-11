@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.superduckinvaders.game.DuckGame;
 import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.SoundPlayer;
 import com.superduckinvaders.game.assets.Assets;
 
 
@@ -25,6 +26,7 @@ public class StartScreen extends BaseScreen {
 	private Stage stage;
 
 
+
 	/**
 	 * Initialises this StartScreen.
 	 *
@@ -33,6 +35,8 @@ public class StartScreen extends BaseScreen {
 	 */
 	public StartScreen(DuckGame game) {
 		super(game);
+		if (SoundPlayer.isMuted() && Assets.menuTheme.isPlaying())
+			Assets.menuTheme.stop();
 	}
 
 
@@ -48,6 +52,8 @@ public class StartScreen extends BaseScreen {
 		logoImage.setPosition((stage.getWidth() - logoImage.getPrefWidth()) / 2, 400);
 
 		Drawable button = new TextureRegionDrawable(Assets.button);
+		Drawable mute = new TextureRegionDrawable(Assets.muteButtonMute);
+		Drawable unmute = new TextureRegionDrawable(Assets.muteButtonUnmute);
 
 		Button playButton = new Button(new Button.ButtonStyle(button, button, button));
 		playButton.setPosition((stage.getWidth() - playButton.getPrefWidth()) / 2, 300);
@@ -71,6 +77,34 @@ public class StartScreen extends BaseScreen {
 			}
 		});
 
+		Button cheatsButton = new Button(new Button.ButtonStyle(button, button, button));
+		cheatsButton.setPosition((stage.getWidth() - cheatsButton.getPrefWidth()) / 2, 200);
+		cheatsButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				dispose();
+				getGame().setScreen(new CheatsScreen(getGame()));
+			}
+		});
+
+		Button muteButton = new Button(new Button.ButtonStyle(mute, mute, unmute));
+		muteButton.setPosition(1000, 500);
+		muteButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (Assets.menuTheme.isPlaying()) {
+					Assets.menuTheme.stop();
+					SoundPlayer.mute();
+				}
+				else {
+					Assets.menuTheme.play();
+					SoundPlayer.unmute();
+				}
+			}
+		});
+		muteButton.setChecked(SoundPlayer.isMuted());
+
+
 		Label.LabelStyle white = new Label.LabelStyle(Assets.font, Color.WHITE);
 
 		Label playLabel = new Label("START", white);
@@ -80,12 +114,19 @@ public class StartScreen extends BaseScreen {
 		Label mapLabel = new Label("LEVEL SELECT", white);
 		mapLabel.setPosition((stage.getWidth() - mapLabel.getPrefWidth()) / 2, 265);
 		mapLabel.setTouchable(Touchable.disabled);
+		
+		Label cheatsLabel = new Label("ENABLE CHEATS", white);
+		cheatsLabel.setPosition((stage.getWidth() - cheatsLabel.getPrefWidth()) / 2, 215);
+		cheatsLabel.setTouchable(Touchable.disabled);
 
 		stage.addActor(logoImage);
 		stage.addActor(playButton);
 		stage.addActor(playLabel);
 		stage.addActor(mapButton);
 		stage.addActor(mapLabel);
+		stage.addActor(muteButton);
+		stage.addActor(cheatsButton);
+		stage.addActor(cheatsLabel);
 	}
 
 

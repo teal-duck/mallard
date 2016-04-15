@@ -186,8 +186,7 @@ public abstract class Character extends PhysicsEntity {
 	 *                how much damage the projectile deals
 	 */
 	protected void fireAt(Vector2 direction, int damage) {
-		Vector2 velocity = direction.setLength(projectileSpeed).add(getPhysicsVelocity());
-		velocity.setLength(Math.max(projectileSpeed, velocity.len()));
+		Vector2 velocity = direction.setLength(projectileSpeed);
 		parent.createProjectile(getCentre(), velocity, damage, this);
 	}
 

@@ -3,9 +3,11 @@ package com.superduckinvaders.game.entity.mob;
 
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
+import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.PhysicsEntity;
@@ -50,9 +52,11 @@ public class Mob extends Character {
 	 *                the speed to approach the player.
 	 * @param ai
 	 *                the AI type to use.
+	 * @param demented
+	 *                the mob's initial mental state
 	 */
-	public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
-		super(parent, x, y, health);
+	public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai, boolean demented) {
+		super(parent, x, y, health, demented);
 
 		meleeRange = 20f;
 
@@ -66,6 +70,29 @@ public class Mob extends Character {
 		createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
 				PhysicsEntity.MOB_GROUP, false);
 		body.setLinearDamping(20f);
+	}
+
+
+	/**
+	 * Create a new mob, defaulting demented to false
+	 *
+	 * @param parent
+	 *                the round parent.
+	 * @param x
+	 *                the initial x position.
+	 * @param y
+	 *                the initial y position.
+	 * @param health
+	 *                the starting health.
+	 * @param textureSet
+	 *                a TextureSet to use for displaying.
+	 * @param speed
+	 *                the speed to approach the player.
+	 * @param ai
+	 *                the AI type to use.
+	 */
+	public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
+		this(parent, x, y, health, textureSet, speed, ai, false);
 	}
 
 
@@ -129,7 +156,12 @@ public class Mob extends Character {
 
 	@Override
 	public void render(SpriteBatch spriteBatch) {
+		TextureRegion tex = textureSet.getTexture(facing, stateTime);
 		spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
+		if (this.isDemented()) {
+			TextureRegion dem = Assets.dementedIcon;
+			spriteBatch.draw(dem, getX() + 0.5f*(tex.getRegionWidth() - dem.getRegionWidth()), getY() + tex.getRegionHeight() + dem.getRegionHeight());
+		}
 	}
 
 

@@ -18,8 +18,25 @@ public class ZombieMob extends MeleeMob {
 	 *                the starting x position
 	 * @param y
 	 *                the starting y position
+	 * @param demented
+	 *                the mob's initial mental state
+	 */
+	public ZombieMob(Round parent, float x, float y, boolean demented) {
+		super(parent, x, y, 4, Assets.badGuyNormal, 5, demented);
+	}
+
+
+	/**
+	 * Create a ZombieMob, defaulting demented to false.
+	 *
+	 * @param parent
+	 *                the round parent
+	 * @param x
+	 *                the starting x position
+	 * @param y
+	 *                the starting y position
 	 */
 	public ZombieMob(Round parent, float x, float y) {
-		super(parent, x, y, 4, Assets.badGuyNormal, 5);
+		this(parent, x, y, false);
 	}
 }

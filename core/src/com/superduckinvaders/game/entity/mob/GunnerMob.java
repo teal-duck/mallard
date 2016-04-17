@@ -18,8 +18,25 @@ public class GunnerMob extends RangedMob {
 	 *                the initial x position.
 	 * @param y
 	 *                the initial y position.
+	 * @param demented
+	 *                true if the mob is created in a poor mental state.
+	 */
+	public GunnerMob(Round parent, float x, float y, boolean demented) {
+		super(parent, x, y, 2, Assets.rangedBadGuyNormal, 3, demented);
+	}
+
+
+	/**
+	 * Create a new GunnerMob. Defaults demented to false.
+	 *
+	 * @param parent
+	 *                the round parent.
+	 * @param x
+	 *                the initial x position.
+	 * @param y
+	 *                the initial y position.
 	 */
 	public GunnerMob(Round parent, float x, float y) {
-		super(parent, x, y, 2, Assets.rangedBadGuyNormal, 3);
+		this(parent, x, y, false);
 	}
 }

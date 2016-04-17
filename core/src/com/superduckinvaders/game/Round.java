@@ -319,7 +319,10 @@ public class Round {
 			int x = MathUtils.random(minX, maxX);
 			int y = MathUtils.random(minY, maxY);
 			if (!collidePoint(x, y)) {
-				if (MathUtils.random() > 0.2) {
+				float n = MathUtils.random();
+				if (n < 0.1) {
+					addMob(new ZombieMob(this, x, y, true));
+				} else if (n < 0.85) {
 					addMob(new ZombieMob(this, x, y));
 				} else {
 					addMob(new GunnerMob(this, x, y));

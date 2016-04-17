@@ -29,14 +29,84 @@ public class MeleeMob extends Mob {
 	 *                the speed to approach the player.
 	 * @param ai
 	 *                the AI type to use.
+	 * @param demented 
+	 *                true if the mob is created in a poor mental state.
 	 */
-	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
-		super(parent, x, y, health, textureSet, speed, ai);
+	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai, boolean demented) {
+		super(parent, x, y, health, textureSet, speed, ai, demented);
 	}
 
 
+	/**
+	 * Create a new MeleeMob. Creates a default AI.
+	 *
+	 * @param parent
+	 *                the round parent.
+	 * @param x
+	 *                the initial x position.
+	 * @param y
+	 *                the initial y position.
+	 * @param health
+	 *                the starting health.
+	 * @param textureSet
+	 *                a TextureSet to use for displaying.
+	 * @param speed
+	 *                the speed to approach the player.
+	 * @param demented 
+	 *                true if the mob is created in a poor mental state.
+	 */
+	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, boolean demented) {
+		this(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 0), demented);
+	}
+
+
+	/**
+	 * Create a new MeleeMob. Defaults demented to false.
+	 *
+	 * @param parent
+	 *                the round parent.
+	 * @param x
+	 *                the initial x position.
+	 * @param y
+	 *                the initial y position.
+	 * @param health
+	 *                the starting health.
+	 * @param textureSet
+	 *                a TextureSet to use for displaying.
+	 * @param speed
+	 *                the speed to approach the player.
+	 * @param ai
+	 *                the AI type to use.
+	 * @param demented 
+	 *                true if the mob is created in a poor mental state.
+	 */
+	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
+		this(parent, x, y, health, textureSet, speed, ai, false);
+	}
+
+
+	/**
+	 * Create a new MeleeMob. Creates a default AI, and defaults demented to false.
+	 *
+	 * @param parent
+	 *                the round parent.
+	 * @param x
+	 *                the initial x position.
+	 * @param y
+	 *                the initial y position.
+	 * @param health
+	 *                the starting health.
+	 * @param textureSet
+	 *                a TextureSet to use for displaying.
+	 * @param speed
+	 *                the speed to approach the player.
+	 * @param ai
+	 *                the AI type to use.
+	 * @param demented 
+	 *                true if the mob is created in a poor mental state.
+	 */
 	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed) {
-		this(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 0));
+		this(parent, x, y, health, textureSet, speed, false);
 	}
 
 

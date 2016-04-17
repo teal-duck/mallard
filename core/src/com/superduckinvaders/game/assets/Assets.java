@@ -45,6 +45,11 @@ public class Assets {
 	public static TextureRegion projectile;
 
 	/**
+	 * Texture for demented icon.
+	 */
+	public static TextureRegion dementedIcon;
+
+	/**
 	 * Textures for Hearts
 	 */
 	public static TextureRegion heartFull, heartHalf, heartEmpty;
@@ -121,6 +126,7 @@ public class Assets {
 		Assets.loadSFX();
 
 		Assets.minimapHead = new TextureRegion(Assets.loadTexture("textures/minimap_head.png"));
+		Assets.dementedIcon = new TextureRegion(Assets.loadTexture("textures/demented_debuff.png"));
 		Assets.projectile = new TextureRegion(Assets.loadTexture("textures/projectile.png"));
 
 		Assets.explosionAnimation = Assets.loadAnimation("textures/explosion.png", 2, 0.3f);

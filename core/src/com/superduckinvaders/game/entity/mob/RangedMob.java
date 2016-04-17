@@ -36,9 +36,11 @@ public class RangedMob extends MeleeMob {
 	 *                the speed to approach the player.
 	 * @param ai
 	 *                the AI type to use.
+	 * @param demented
+	 *                true if mob is created in a poor mental state
 	 */
-	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
-		super(parent, x, y, health, textureSet, speed, ai);
+	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai, boolean demented) {
+		super(parent, x, y, health, textureSet, speed, ai, demented);
 	}
 
 
@@ -57,9 +59,55 @@ public class RangedMob extends MeleeMob {
 	 *                a TextureSet to use for displaying.
 	 * @param speed
 	 *                the speed to approach the player.
+	 * @param demented
+	 *                true if mob is created in a poor mental state.
+	 */
+	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, boolean demented) {
+		super(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 200), demented);
+	}
+
+
+	/**
+	 * Create a new RangedMob. Defaults demented to false.
+	 *
+	 * @param parent
+	 *                the round parent.
+	 * @param x
+	 *                the initial x position.
+	 * @param y
+	 *                the initial y position.
+	 * @param health
+	 *                the starting health.
+	 * @param textureSet
+	 *                a TextureSet to use for displaying.
+	 * @param speed
+	 *                the speed to approach the player.
+	 * @param ai
+	 *                the AI type to use.
+	 */
+	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
+		this(parent, x, y, health, textureSet, speed, ai, false);
+	}
+
+
+	/**
+	 * Create a new RangedMob with a default PathfindingAI. Defaults demented to false.
+	 *
+	 * @param parent
+	 *                the round parent.
+	 * @param x
+	 *                the initial x position.
+	 * @param y
+	 *                the initial y position.
+	 * @param health
+	 *                the starting health.
+	 * @param textureSet
+	 *                a TextureSet to use for displaying.
+	 * @param speed
+	 *                the speed to approach the player.
 	 */
 	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed) {
-		super(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 200));
+		this(parent, x, y, health, textureSet, speed, false);
 	}
 
 

@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
+import com.superduckinvaders.game.entity.mob.Mob;
 
 
 /**

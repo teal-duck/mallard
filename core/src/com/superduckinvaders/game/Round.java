@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.entity.Entity;
+import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.Obstacle;
 import com.superduckinvaders.game.entity.Particle;
 import com.superduckinvaders.game.entity.PhysicsEntity;
@@ -509,6 +510,24 @@ public class Round {
 		return entities;
 	}
 
+
+	public Character getNearestCharacter(Character baseChar) {
+		Vector2 pos = baseChar.getPosition();
+		List<Entity> entities = getEntities();
+		Character nearestChar = null;
+		float nearestDist = Float.MAX_VALUE;
+		for (Entity entity : entities) {
+			if (entity instanceof Character && !((Character) entity).equals(baseChar)) {
+				Character c = (Character) entity;
+				float cDist = pos.dst(c.getPosition()); 
+				if (cDist < nearestDist) {
+					nearestChar = c;
+					nearestDist = cDist;
+				}
+			}
+		}
+		return nearestChar;
+	}
 
 	/**
 	 * Adds an entity to the entity list.

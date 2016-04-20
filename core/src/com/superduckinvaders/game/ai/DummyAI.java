@@ -2,6 +2,7 @@ package com.superduckinvaders.game.ai;
 
 
 import com.superduckinvaders.game.Round;
+import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.mob.Mob;
 
 
@@ -31,6 +32,11 @@ public class DummyAI extends AI {
 	 */
 	@Override
 	public void update(Mob mob, float delta) {
+	}
+
+
+	@Override
+	public void setTarget(Character c) {
 	}
 
 }

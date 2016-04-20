@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.mob.Mob;
+import com.superduckinvaders.game.entity.Character;
 
 
 /**
@@ -45,8 +46,14 @@ public class PathfindingAI extends AI {
 
 	/**
 	 * Player's last position.
+	 * @deprecated
 	 */
 	private Vector2 playerPos;
+
+	/**
+	 * Target's last position.
+	 */
+	private Vector2 targetPos;
 
 	/**
 	 * Used to calculate rate of pathfinding.
@@ -66,8 +73,12 @@ public class PathfindingAI extends AI {
 	/**
 	 * The Coordinate for the AI to find a path for.
 	 */
-	public Coordinate target;
+	public Coordinate targetCoord;
 
+	/**
+	 * The Character that this AI is pathfinding towards.
+	 */
+	public Character target;
 
 	/**
 	 * Initialises this PathfindingAI.
@@ -83,6 +94,18 @@ public class PathfindingAI extends AI {
 		tileWidth = round.getTileWidth();
 		tileHeight = round.getTileHeight();
 		this.targetRange = targetRange;
+		this.target = round.getPlayer();
+	}
+	
+	
+	/**
+	 * Sets this AI's target.
+	 * 
+	 * @param c
+	 *                New target for the AI.
+	 */
+	public void setTarget(Character c) {
+		target = c;
 	}
 
 
@@ -96,23 +119,23 @@ public class PathfindingAI extends AI {
 	 */
 	@Override
 	public void update(Mob mob, float delta) {
-		playerPos = round.getPlayer().getCentre();
+		targetPos = target.getCentre();
 
-		float distanceToPlayer = mob.distanceTo(playerPos);
-		float distanceToTargetTile = (target != null) ? mob.getCentre().sub(target.vector()).len() : 0f;
+		float distanceToTarget = mob.distanceTo(targetPos);
+		float distanceToTargetTile = (targetCoord != null) ? mob.getCentre().sub(targetCoord.vector()).len() : 0f;
 
 		currentOffset += delta;
 		if (((currentOffset >= deltaOffsetLimit) || (distanceToTargetTile < 2))
-				&& ((int) distanceToPlayer < (1280 / 4))) {
+				&& ((int) distanceToTarget < (1280 / 4))) {
 			deltaOffsetLimit = PathfindingAI.PATHFINDING_RATE
 					+ (MathUtils.random() % PathfindingAI.PATHFINDING_RATE_OFFSET);
 			currentOffset = 0;
-			target = findPath(mob);
+			targetCoord = findPath(mob);
 		}
 
 		// targetPoint = (target != null) ? target.vector() : new Vector2(playerPos).setLength(1f);
-		if (target != null) {
-			mob.applyVelocity(target.vector());
+		if (targetCoord != null) {
+			mob.applyVelocity(targetCoord.vector());
 		}
 	}
 
@@ -129,15 +152,15 @@ public class PathfindingAI extends AI {
 		Vector2 mobPos = mob.getCentre();
 		Vector2 mobSize = mob.getSize();
 		Coordinate startCoord = roundToTile(mobPos);
-		Coordinate finalCoord = roundToTile(playerPos);
+		Coordinate finalCoord = roundToTile(targetPos);
 		boolean finalFound = false;
 
-		if (round.pathIsClear(mobPos, mobSize, playerPos)) {
-			if (new Vector2(playerPos).sub(mobPos).len() < targetRange) {
+		if (round.pathIsClear(mobPos, mobSize, targetPos)) {
+			if (new Vector2(targetPos).sub(mobPos).len() < targetRange) {
 				return null;
 			} else {
 				currentOffset = deltaOffsetLimit;
-				return new Coordinate(playerPos);
+				return new Coordinate(targetPos);
 			}
 		}
 
@@ -282,8 +305,8 @@ public class PathfindingAI extends AI {
 		 */
 		@Override
 		public int compareTo(Coordinate o) {
-			float playerDistanceA = vector().sub(playerPos).len();
-			float playerDistanceB = o.vector().sub(playerPos).len();
+			float playerDistanceA = vector().sub(targetPos).len();
+			float playerDistanceB = o.vector().sub(targetPos).len();
 			return new Float(playerDistanceA).compareTo(playerDistanceB);
 		}
 

@@ -3,6 +3,7 @@ package com.superduckinvaders.game.ai;
 
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.entity.mob.Mob;
+import com.superduckinvaders.game.entity.Character;
 
 
 /**
@@ -25,6 +26,15 @@ public abstract class AI {
 	public AI(Round round) {
 		this.round = round;
 	}
+	
+	
+	/**
+	 * Sets this AI's target.
+	 * 
+	 * @param c
+	 *                New target for the AI.
+	 */
+	public abstract void setTarget(Character c);
 
 
 	/**

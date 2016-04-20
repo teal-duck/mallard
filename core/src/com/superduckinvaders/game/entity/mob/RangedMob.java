@@ -116,9 +116,9 @@ public class RangedMob extends MeleeMob {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-		Vector2 playerPos = parent.getPlayer().getCentre();
-		if ((distanceTo(playerPos) < RangedMob.range) && parent.rayCast(getCentre(), playerPos)) {
-			rangedAttack(vectorTo(playerPos), 1);
+		Vector2 targetPos = target.getCentre();
+		if ((distanceTo(targetPos) < RangedMob.range) && parent.rayCast(getCentre(), targetPos)) {
+			rangedAttack(vectorTo(targetPos), 1);
 		}
 	}
 }

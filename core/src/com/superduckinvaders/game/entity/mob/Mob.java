@@ -32,6 +32,14 @@ public class Mob extends Character {
 	 * speed of the mob in pixels per second
 	 */
 	private float speed;
+	
+	
+	protected Character target;
+	
+	
+	private static final float MAX_DEMENTED_SWITCH_TARGET_TIME = 5f;
+	private float dementedTargetSwitchTime = 0;
+	//private float maxDementedTargetSwitchTime = 5;
 
 
 	/**
@@ -70,6 +78,8 @@ public class Mob extends Character {
 		createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
 				PhysicsEntity.MOB_GROUP, false);
 		body.setLinearDamping(20f);
+		
+		target = parent.getPlayer();
 	}
 
 
@@ -104,6 +114,12 @@ public class Mob extends Character {
 	 */
 	public void setAI(AI ai) {
 		this.ai = ai;
+	}
+	
+	
+	public void setAITarget(Character c) {
+		ai.setTarget(c);
+		target = c;
 	}
 
 
@@ -147,6 +163,15 @@ public class Mob extends Character {
 			Player.Pickup pickup = Player.Pickup.random();
 			if (pickup != null) {
 				parent.createPickup(getX(), getY(), pickup);
+			}
+		}
+		
+		if (demented) {
+			if (dementedTargetSwitchTime > MAX_DEMENTED_SWITCH_TARGET_TIME) {
+				dementedTargetSwitchTime = 0;
+				setAITarget(parent.getNearestCharacter(this));
+			} else {
+				dementedTargetSwitchTime += delta;
 			}
 		}
 

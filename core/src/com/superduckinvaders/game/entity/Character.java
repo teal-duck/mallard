@@ -252,7 +252,7 @@ public abstract class Character extends PhysicsEntity {
 	 *                the attack direction.
 	 * @param damage
 	 *                how much damage the attack deals.
-	 * @return whether the attack has occured.
+	 * @return whether the attack has occurred.
 	 */
 	protected boolean meleeAttack(Vector2 direction, int damage) {
 		if (isStunned()) {
@@ -266,6 +266,10 @@ public abstract class Character extends PhysicsEntity {
 						Character character = (Character) entity;
 						character.damage(damage);
 						character.setVelocity(direction.cpy().setLength(40f));
+						if (isDemented() && character instanceof Player) {
+							Player player = (Player) character;
+							player.becomeDemented();
+						}
 					} else if (entity instanceof Projectile) {
 						Projectile projectile = (Projectile) entity;
 						float speed = projectile.getPhysicsVelocity().len();

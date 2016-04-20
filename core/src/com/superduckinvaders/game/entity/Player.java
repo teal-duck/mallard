@@ -128,7 +128,7 @@ public class Player extends Character {
 		Character.STUNNED_DURATION = 0f;
 		createDynamicBody(PhysicsEntity.PLAYER_BITS, PhysicsEntity.ALL_BITS, PhysicsEntity.NO_GROUP, false);
 
-		becomeDemented();
+//		becomeDemented();
 	}
 
 
@@ -294,7 +294,7 @@ public class Player extends Character {
 	private float dementedTime = 0;
 
 
-	private void becomeDemented() {
+	public void becomeDemented() {
 		demented = true;
 		dementedFlipCommand = 0;
 		maxDementedFlipCommand = Player.MAX_DEMENTED_FLIP_COMMAND_TIME;

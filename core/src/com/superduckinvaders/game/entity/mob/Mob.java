@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
-import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
 import com.superduckinvaders.game.entity.Character;
 import com.superduckinvaders.game.entity.PhysicsEntity;
@@ -159,11 +158,8 @@ public class Mob extends Character {
 	public void render(SpriteBatch spriteBatch) {
 		TextureRegion tex = textureSet.getTexture(facing, stateTime);
 		spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
-		if (isDemented()) {
-			TextureRegion dem = Assets.dementedIcon;
-			spriteBatch.draw(dem, getX() + (0.5f * (tex.getRegionWidth() - dem.getRegionWidth())),
-					getY() + tex.getRegionHeight() + dem.getRegionHeight());
-		}
+
+		super.dementedRender(spriteBatch, tex);
 	}
 
 

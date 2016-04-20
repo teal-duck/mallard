@@ -430,12 +430,18 @@ public class Player extends Character {
 	public void render(SpriteBatch spriteBatch) {
 		Vector2 pos = getPosition().add(Player.TEXTURE_OFFSET);
 		TextureRegion attackTexture = getAttackAnimationFrame();
+
+		TextureRegion tex = attackTexture;
+
 		if (attackTexture != null) {
 			spriteBatch.draw(attackTexture, pos.x, pos.y);
 		} else {
 			TextureSet textureSet = state.getTextureSet();
-			spriteBatch.draw(textureSet.getTexture(facing, stateTime), pos.x, pos.y);
+			tex = textureSet.getTexture(facing, stateTime);
+			spriteBatch.draw(tex, pos.x, pos.y);
 		}
+
+		super.dementedRender(spriteBatch, tex);
 	}
 
 

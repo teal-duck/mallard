@@ -47,7 +47,7 @@ public class LwjglTestRunner extends BlockJUnit4ClassRunner {
 
 	/**
 	 * Launch the test runner for a test class.
-	 * 
+	 *
 	 * @param klass
 	 *                The class to initialize with.
 	 * @throws InitializationError
@@ -67,7 +67,7 @@ public class LwjglTestRunner extends BlockJUnit4ClassRunner {
 
 	/**
 	 * Run the tests in a new LwjglApplication container.
-	 * 
+	 *
 	 * @see BlockJUnit4ClassRunner#run
 	 */
 	@Override

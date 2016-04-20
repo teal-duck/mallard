@@ -55,7 +55,8 @@ public class Mob extends Character {
 	 * @param demented
 	 *                the mob's initial mental state
 	 */
-	public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai, boolean demented) {
+	public Mob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai,
+			boolean demented) {
 		super(parent, x, y, health, demented);
 
 		meleeRange = 20f;
@@ -158,9 +159,10 @@ public class Mob extends Character {
 	public void render(SpriteBatch spriteBatch) {
 		TextureRegion tex = textureSet.getTexture(facing, stateTime);
 		spriteBatch.draw(textureSet.getTexture(facing, stateTime), getX(), getY());
-		if (this.isDemented()) {
+		if (isDemented()) {
 			TextureRegion dem = Assets.dementedIcon;
-			spriteBatch.draw(dem, getX() + 0.5f*(tex.getRegionWidth() - dem.getRegionWidth()), getY() + tex.getRegionHeight() + dem.getRegionHeight());
+			spriteBatch.draw(dem, getX() + (0.5f * (tex.getRegionWidth() - dem.getRegionWidth())),
+					getY() + tex.getRegionHeight() + dem.getRegionHeight());
 		}
 	}
 

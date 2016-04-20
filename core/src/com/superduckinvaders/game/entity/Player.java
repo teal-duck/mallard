@@ -127,6 +127,8 @@ public class Player extends Character {
 		Character.MELEE_ATTACK_COOLDOWN = 0.2f;
 		Character.STUNNED_DURATION = 0f;
 		createDynamicBody(PhysicsEntity.PLAYER_BITS, PhysicsEntity.ALL_BITS, PhysicsEntity.NO_GROUP, false);
+
+		becomeDemented();
 	}
 
 
@@ -285,6 +287,21 @@ public class Player extends Character {
 	}
 
 
+	private static final float MAX_DEMENTED_TIME = 1f;
+	private static final float MAX_DEMENTED_FLIP_COMMAND_TIME = 5f;
+	private float dementedFlipCommand = 0;
+	private float maxDementedFlipCommand = 5;
+	private float dementedTime = 0;
+
+
+	private void becomeDemented() {
+		demented = true;
+		dementedFlipCommand = 0;
+		maxDementedFlipCommand = Player.MAX_DEMENTED_FLIP_COMMAND_TIME;
+		dementedTime = 0;
+	}
+
+
 	/**
 	 * Updates the state of this Player.
 	 *
@@ -367,6 +384,22 @@ public class Player extends Character {
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.S)) {
 			targetVelocity.y = -1f;
+		}
+
+		if (demented) {
+			if (dementedTime > 0) {
+				targetVelocity.scl(-1f);
+				dementedTime -= delta;
+			}
+
+			if (dementedTime <= 0) {
+				dementedTime = 0;
+				dementedFlipCommand += delta;
+				if (dementedFlipCommand >= maxDementedFlipCommand) {
+					dementedFlipCommand = 0;
+					dementedTime = Player.MAX_DEMENTED_TIME;
+				}
+			}
 		}
 
 		// Calculate speed at which to move the player.

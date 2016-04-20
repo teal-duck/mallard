@@ -29,10 +29,11 @@ public class MeleeMob extends Mob {
 	 *                the speed to approach the player.
 	 * @param ai
 	 *                the AI type to use.
-	 * @param demented 
+	 * @param demented
 	 *                true if the mob is created in a poor mental state.
 	 */
-	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai, boolean demented) {
+	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai,
+			boolean demented) {
 		super(parent, x, y, health, textureSet, speed, ai, demented);
 	}
 
@@ -52,10 +53,11 @@ public class MeleeMob extends Mob {
 	 *                a TextureSet to use for displaying.
 	 * @param speed
 	 *                the speed to approach the player.
-	 * @param demented 
+	 * @param demented
 	 *                true if the mob is created in a poor mental state.
 	 */
-	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, boolean demented) {
+	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed,
+			boolean demented) {
 		this(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 0), demented);
 	}
 
@@ -77,7 +79,7 @@ public class MeleeMob extends Mob {
 	 *                the speed to approach the player.
 	 * @param ai
 	 *                the AI type to use.
-	 * @param demented 
+	 * @param demented
 	 *                true if the mob is created in a poor mental state.
 	 */
 	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
@@ -102,7 +104,7 @@ public class MeleeMob extends Mob {
 	 *                the speed to approach the player.
 	 * @param ai
 	 *                the AI type to use.
-	 * @param demented 
+	 * @param demented
 	 *                true if the mob is created in a poor mental state.
 	 */
 	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed) {

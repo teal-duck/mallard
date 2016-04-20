@@ -39,7 +39,8 @@ public class RangedMob extends MeleeMob {
 	 * @param demented
 	 *                true if mob is created in a poor mental state
 	 */
-	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai, boolean demented) {
+	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai,
+			boolean demented) {
 		super(parent, x, y, health, textureSet, speed, ai, demented);
 	}
 
@@ -62,7 +63,8 @@ public class RangedMob extends MeleeMob {
 	 * @param demented
 	 *                true if mob is created in a poor mental state.
 	 */
-	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, boolean demented) {
+	public RangedMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed,
+			boolean demented) {
 		super(parent, x, y, health, textureSet, speed, new PathfindingAI(parent, 200), demented);
 	}
 

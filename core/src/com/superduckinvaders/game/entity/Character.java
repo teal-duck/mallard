@@ -62,7 +62,7 @@ public abstract class Character extends PhysicsEntity {
 	protected short enemyBits = 0;
 	protected ArrayList<PhysicsEntity> enemiesInRange;
 
-	private boolean demented;
+	protected boolean demented;
 
 
 	/**
@@ -81,19 +81,20 @@ public abstract class Character extends PhysicsEntity {
 		this(parent, x, y, maximumHealth, false);
 	}
 
+
 	/**
 	 * Initialises this Character.
 	 *
 	 * @param parent
-	 * 					the round this Character belongs to
+	 *                the round this Character belongs to
 	 * @param x
-	 * 					the initial x coordinate
+	 *                the initial x coordinate
 	 * @param y
-	 * 					the initial y coordinate
+	 *                the initial y coordinate
 	 * @param maximumHealth
-	 * 					the maximum (and initial) health of this Character
+	 *                the maximum (and initial) health of this Character
 	 * @param demented
-	 * 					initial state of character's mental health
+	 *                initial state of character's mental health
 	 */
 	public Character(Round parent, float x, float y, int maximumHealth, boolean demented) {
 		super(parent, x, y);
@@ -134,6 +135,7 @@ public abstract class Character extends PhysicsEntity {
 	public TextureSet.FaceDirection getFacing() {
 		return facing;
 	}
+
 
 	/**
 	 * Gets the current state of the character's mental health.

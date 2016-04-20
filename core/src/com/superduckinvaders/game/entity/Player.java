@@ -127,8 +127,6 @@ public class Player extends Character {
 		Character.MELEE_ATTACK_COOLDOWN = 0.2f;
 		Character.STUNNED_DURATION = 0f;
 		createDynamicBody(PhysicsEntity.PLAYER_BITS, PhysicsEntity.ALL_BITS, PhysicsEntity.NO_GROUP, false);
-
-//		becomeDemented();
 	}
 
 

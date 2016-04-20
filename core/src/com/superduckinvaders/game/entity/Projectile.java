@@ -79,7 +79,11 @@ public class Projectile extends PhysicsEntity {
 		parent.createParticle(getCentre(), 0.6f, Assets.explosionAnimation);
 		removed = true;
 		if ((other instanceof Character) && (other != owner)) {
-			((Character) other).damage(damage);
+			Character character = (Character) other;
+			(character).damage(damage);
+			if (character instanceof Player && owner instanceof Character && ((Character) owner).isDemented()) {
+				((Player) character).becomeDemented();
+			}
 		}
 	}
 

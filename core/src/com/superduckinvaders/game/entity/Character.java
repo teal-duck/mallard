@@ -14,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.assets.Assets;
 import com.superduckinvaders.game.assets.TextureSet;
-import com.superduckinvaders.game.entity.mob.Mob;
 
 
 /**
@@ -66,7 +65,7 @@ public abstract class Character extends PhysicsEntity {
 	protected short enemyBits = 0;
 	protected ArrayList<PhysicsEntity> enemiesInRange;
 
-	protected boolean demented;
+	private boolean isDemented;
 
 
 	/**
@@ -104,7 +103,7 @@ public abstract class Character extends PhysicsEntity {
 		super(parent, x, y);
 		this.maximumHealth = currentHealth = maximumHealth;
 		enemiesInRange = new ArrayList<>();
-		this.demented = demented;
+		isDemented = demented;
 	}
 
 
@@ -147,7 +146,7 @@ public abstract class Character extends PhysicsEntity {
 	 * @return true if character is demented
 	 */
 	public boolean isDemented() {
-		return demented;
+		return isDemented;
 	}
 
 
@@ -270,7 +269,7 @@ public abstract class Character extends PhysicsEntity {
 						Character character = (Character) entity;
 						character.damage(damage);
 						character.setVelocity(direction.cpy().setLength(40f));
-						if (isDemented() && character instanceof Player) {
+						if (isDemented() && (character instanceof Player)) {
 							Player player = (Player) character;
 							player.becomeDemented();
 						}
@@ -363,11 +362,49 @@ public abstract class Character extends PhysicsEntity {
 	}
 
 
-	protected void dementedRender(SpriteBatch spriteBatch, TextureRegion tex) {
-		if (isDemented()) {
-			TextureRegion dem = Assets.dementedIcon;
-			spriteBatch.draw(dem, getX() + (0.5f * (tex.getRegionWidth() - dem.getRegionWidth())),
-					getY() + tex.getRegionHeight() + dem.getRegionHeight());
-		}
+	/**
+	 * Sets this entity to be demented.
+	 */
+	public void becomeDemented() {
+		isDemented = true;
+	}
+
+
+	/**
+	 * Sets this entity to stop being demented.
+	 */
+	public void stopDemented() {
+		isDemented = false;
+	}
+
+
+	/**
+	 * Renders the demented icon above the character.
+	 *
+	 * @param spriteBatch
+	 * @param tex
+	 */
+	protected void dementedRender(SpriteBatch spriteBatch, TextureRegion tex, float xOffset, float yOffset) {
+		dementedRender(spriteBatch, tex, xOffset, yOffset, 1, 1);
+	}
+
+
+	/**
+	 * @param spriteBatch
+	 * @param tex
+	 * @param xOffset
+	 * @param yOffset
+	 */
+	protected void dementedRender(SpriteBatch spriteBatch, TextureRegion tex, float xOffset, float yOffset,
+			float wScale, float hScale) {
+		TextureRegion dem = Assets.dementedIcon;
+
+		float width = dem.getRegionWidth() * wScale;
+		float height = dem.getRegionHeight() * hScale;
+
+		float x = getX() + (0.5f * (tex.getRegionWidth() - width)) + xOffset;
+		float y = getY() + height + yOffset;
+
+		spriteBatch.draw(dem, x, y, width, height);
 	}
 }

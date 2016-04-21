@@ -109,6 +109,18 @@ public class Player extends Character {
 	 */
 	protected Pickup currentWeapon = Pickup.GUN;
 
+	/**
+	 * How long the demented effect should last for
+	 */
+	private static final float MAX_DEMENTED_EFFECT_TIME = 1f;
+	private float dementedEffectTime = 0;
+
+	/**
+	 * How long between demented effects applying
+	 */
+	private static final float MAX_DEMENTED_BETWEEN_EFFECT_TIME = 3f;
+	private float dementedBetweenEffectTime = 0;
+
 
 	/**
 	 * Initialises this Player at the specified coordinates and with the specified initial health.
@@ -285,18 +297,25 @@ public class Player extends Character {
 	}
 
 
-	private static final float MAX_DEMENTED_TIME = 1f;
-	private static final float MAX_DEMENTED_FLIP_COMMAND_TIME = 5f;
-	private float dementedFlipCommand = 0;
-	private float maxDementedFlipCommand = 5;
-	private float dementedTime = 0;
-
-
+	@Override
 	public void becomeDemented() {
-		demented = true;
-		dementedFlipCommand = 0;
-		maxDementedFlipCommand = Player.MAX_DEMENTED_FLIP_COMMAND_TIME;
-		dementedTime = 0;
+		if (isDemented()) {
+			return;
+		}
+		super.becomeDemented();
+		dementedBetweenEffectTime = Player.MAX_DEMENTED_BETWEEN_EFFECT_TIME;
+		dementedEffectTime = 0;
+	}
+
+
+	@Override
+	public void stopDemented() {
+		if (!isDemented()) {
+			return;
+		}
+		super.stopDemented();
+		dementedBetweenEffectTime = 0;
+		dementedEffectTime = 0;
 	}
 
 
@@ -384,18 +403,19 @@ public class Player extends Character {
 			targetVelocity.y = -1f;
 		}
 
-		if (demented) {
-			if (dementedTime > 0) {
-				targetVelocity.scl(-1f);
-				dementedTime -= delta;
+		if (isDemented()) {
+			if (dementedEffectTime > 0) {
+				applyDementedEffect(targetVelocity);
+				dementedEffectTime -= delta;
 			}
 
-			if (dementedTime <= 0) {
-				dementedTime = 0;
-				dementedFlipCommand += delta;
-				if (dementedFlipCommand >= maxDementedFlipCommand) {
-					dementedFlipCommand = 0;
-					dementedTime = Player.MAX_DEMENTED_TIME;
+			if (dementedEffectTime <= 0) {
+				dementedEffectTime = 0;
+				dementedBetweenEffectTime += delta;
+
+				if (dementedBetweenEffectTime >= Player.MAX_DEMENTED_BETWEEN_EFFECT_TIME) {
+					dementedBetweenEffectTime = 0;
+					dementedEffectTime = Player.MAX_DEMENTED_EFFECT_TIME;
 				}
 			}
 		}
@@ -415,6 +435,19 @@ public class Player extends Character {
 
 		// Update movement.
 		super.update(delta);
+
+		currentHealth = Player.PLAYER_HEALTH;
+	}
+
+
+	/**
+	 * Applies the demented effect to parameters passed in.
+	 *
+	 * @param targetVelocity
+	 */
+	private void applyDementedEffect(Vector2 targetVelocity) {
+		// Flip the controls
+		targetVelocity.scl(-1f);
 	}
 
 
@@ -439,7 +472,15 @@ public class Player extends Character {
 			spriteBatch.draw(tex, pos.x, pos.y);
 		}
 
-		super.dementedRender(spriteBatch, tex);
+		if (isDemented()) {
+			float xOffset = -8;
+			float yOffset = 8;
+			dementedRender(spriteBatch, tex, xOffset, yOffset);
+
+			if (dementedEffectTime > 0) {
+				dementedRender(spriteBatch, tex, xOffset, yOffset + 20, 0.8f, 0.8f);
+			}
+		}
 	}
 
 

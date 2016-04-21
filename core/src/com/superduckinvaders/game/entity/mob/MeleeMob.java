@@ -79,7 +79,7 @@ public class MeleeMob extends Mob {
 	 *                the speed to approach the player.
 	 * @param ai
 	 *                the AI type to use.
-	 * @param demented
+	 * @param isDemented
 	 *                true if the mob is created in a poor mental state.
 	 */
 	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed, AI ai) {
@@ -104,7 +104,7 @@ public class MeleeMob extends Mob {
 	 *                the speed to approach the player.
 	 * @param ai
 	 *                the AI type to use.
-	 * @param demented
+	 * @param isDemented
 	 *                true if the mob is created in a poor mental state.
 	 */
 	public MeleeMob(Round parent, float x, float y, int health, TextureSet textureSet, int speed) {

@@ -81,7 +81,8 @@ public class Projectile extends PhysicsEntity {
 		if ((other instanceof Character) && (other != owner)) {
 			Character character = (Character) other;
 			(character).damage(damage);
-			if (character instanceof Player && owner instanceof Character && ((Character) owner).isDemented()) {
+			if ((character instanceof Player) && (owner instanceof Character)
+					&& ((Character) owner).isDemented()) {
 				((Player) character).becomeDemented();
 			}
 		}

@@ -12,8 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.superduckinvaders.game.assets.Assets;
-import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.Character;
+import com.superduckinvaders.game.entity.Entity;
 import com.superduckinvaders.game.entity.Obstacle;
 import com.superduckinvaders.game.entity.Particle;
 import com.superduckinvaders.game.entity.PhysicsEntity;
@@ -323,15 +323,9 @@ public class Round {
 				float n = MathUtils.random();
 
 				/*
-				 * Current mob spawn chances:
-				 * +---------------------+--------+
-				 * |      Mob type       | Chance |
-				 * +---------------------+--------+
-				 * | Melee mob           |  0.75  |
-				 * | Demented melee mob  |  0.10  |
-				 * | Ranged mob          |  0.13  |
-				 * | Demented ranged mob |  0.02  |
-				 * +---------------------+--------+
+				 * Current mob spawn chances: +---------------------+--------+ | Mob type | Chance |
+				 * +---------------------+--------+ | Melee mob | 0.75 | | Demented melee mob | 0.10 | |
+				 * Ranged mob | 0.13 | | Demented ranged mob | 0.02 | +---------------------+--------+
 				 */
 
 				if (n < 0.1) {
@@ -517,9 +511,9 @@ public class Round {
 		Character nearestChar = null;
 		float nearestDist = Float.MAX_VALUE;
 		for (Entity entity : entities) {
-			if (entity instanceof Character && !((Character) entity).equals(baseChar)) {
+			if ((entity instanceof Character) && !((Character) entity).equals(baseChar)) {
 				Character c = (Character) entity;
-				float cDist = pos.dst(c.getPosition()); 
+				float cDist = pos.dst(c.getPosition());
 				if (cDist < nearestDist) {
 					nearestChar = c;
 					nearestDist = cDist;
@@ -528,6 +522,7 @@ public class Round {
 		}
 		return nearestChar;
 	}
+
 
 	/**
 	 * Adds an entity to the entity list.

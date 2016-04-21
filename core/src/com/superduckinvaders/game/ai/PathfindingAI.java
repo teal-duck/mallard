@@ -10,8 +10,8 @@ import java.util.PriorityQueue;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.superduckinvaders.game.Round;
-import com.superduckinvaders.game.entity.mob.Mob;
 import com.superduckinvaders.game.entity.Character;
+import com.superduckinvaders.game.entity.mob.Mob;
 
 
 /**
@@ -46,9 +46,10 @@ public class PathfindingAI extends AI {
 
 	/**
 	 * Player's last position.
+	 *
 	 * @deprecated
 	 */
-	private Vector2 playerPos;
+	// private Vector2 playerPos;
 
 	/**
 	 * Target's last position.
@@ -80,6 +81,7 @@ public class PathfindingAI extends AI {
 	 */
 	public Character target;
 
+
 	/**
 	 * Initialises this PathfindingAI.
 	 *
@@ -94,16 +96,17 @@ public class PathfindingAI extends AI {
 		tileWidth = round.getTileWidth();
 		tileHeight = round.getTileHeight();
 		this.targetRange = targetRange;
-		this.target = round.getPlayer();
+		target = round.getPlayer();
 	}
-	
-	
+
+
 	/**
 	 * Sets this AI's target.
-	 * 
+	 *
 	 * @param c
 	 *                New target for the AI.
 	 */
+	@Override
 	public void setTarget(Character c) {
 		target = c;
 	}
@@ -122,7 +125,8 @@ public class PathfindingAI extends AI {
 		targetPos = target.getCentre();
 
 		float distanceToTarget = mob.distanceTo(targetPos);
-		float distanceToTargetTile = (targetCoord != null) ? mob.getCentre().sub(targetCoord.vector()).len() : 0f;
+		float distanceToTargetTile = (targetCoord != null) ? mob.getCentre().sub(targetCoord.vector()).len()
+				: 0f;
 
 		currentOffset += delta;
 		if (((currentOffset >= deltaOffsetLimit) || (distanceToTargetTile < 2))

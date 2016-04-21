@@ -262,14 +262,27 @@ public class GameScreen extends BaseScreen {
 
 		shapeRenderer.setProjectionMatrix(new Matrix4(spriteBatch.getProjectionMatrix()));
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.setColor(0.9f, 0.2f, 0.2f, 0.7f);
+		// shapeRenderer.setColor(0.9f, 0.2f, 0.2f, 0.7f);
+
+		final Color MOB_COLOUR = new Color(0.9f, 0.2f, 0.2f, 0.7f);
+		final Color DEMENTED_MOB_COLOUR = new Color(0.6f, 0.1f, 0.9f, 0.7f);
+		final float MOB_RADIUS = 10f;
 
 		for (Entity entity : round.getEntities()) {
 			if (entity instanceof Mob) {
+				Mob mob = (Mob) entity;
+
+				if (mob.isDemented()) {
+					shapeRenderer.setColor(DEMENTED_MOB_COLOUR);
+				} else {
+					shapeRenderer.setColor(MOB_COLOUR);
+				}
+
 				Vector2 pos = entity.getCentre();
-				shapeRenderer.circle(pos.x, pos.y, 10f);
+				shapeRenderer.circle(pos.x, pos.y, MOB_RADIUS);
 			}
 		}
+
 		shapeRenderer.end();
 
 	}

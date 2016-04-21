@@ -121,6 +121,10 @@ public class Player extends Character {
 	private static final float MAX_DEMENTED_BETWEEN_EFFECT_TIME = 3f;
 	private float dementedBetweenEffectTime = 0;
 
+	// How long being demented applies before it wears off
+	private static final float MAX_DEMENTED_TIME = 10;
+	private float dementedTime = 0;
+
 
 	/**
 	 * Initialises this Player at the specified coordinates and with the specified initial health.
@@ -299,23 +303,19 @@ public class Player extends Character {
 
 	@Override
 	public void becomeDemented() {
-		if (isDemented()) {
-			return;
-		}
 		super.becomeDemented();
 		dementedBetweenEffectTime = Player.MAX_DEMENTED_BETWEEN_EFFECT_TIME;
 		dementedEffectTime = 0;
+		dementedTime = 0;
 	}
 
 
 	@Override
 	public void stopDemented() {
-		if (!isDemented()) {
-			return;
-		}
 		super.stopDemented();
 		dementedBetweenEffectTime = 0;
 		dementedEffectTime = 0;
+		dementedTime = 0;
 	}
 
 
@@ -418,6 +418,12 @@ public class Player extends Character {
 					dementedEffectTime = Player.MAX_DEMENTED_EFFECT_TIME;
 				}
 			}
+
+			dementedTime += delta;
+			if (dementedTime >= Player.MAX_DEMENTED_TIME) {
+				dementedTime = 0;
+				stopDemented();
+			}
 		}
 
 		// Calculate speed at which to move the player.
@@ -435,8 +441,6 @@ public class Player extends Character {
 
 		// Update movement.
 		super.update(delta);
-
-		currentHealth = Player.PLAYER_HEALTH;
 	}
 
 

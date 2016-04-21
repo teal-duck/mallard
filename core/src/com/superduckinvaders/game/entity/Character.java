@@ -270,8 +270,7 @@ public abstract class Character extends PhysicsEntity {
 						character.damage(damage);
 						character.setVelocity(direction.cpy().setLength(40f));
 						if (isDemented() && (character instanceof Player)) {
-							Player player = (Player) character;
-							player.becomeDemented();
+							character.becomeDemented();
 						}
 					} else if (entity instanceof Projectile) {
 						Projectile projectile = (Projectile) entity;

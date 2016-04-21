@@ -322,11 +322,15 @@ public class Round {
 			if (!collidePoint(x, y)) {
 				float n = MathUtils.random();
 
-				/*
-				 * Current mob spawn chances: +---------------------+--------+ | Mob type | Chance |
-				 * +---------------------+--------+ | Melee mob | 0.75 | | Demented melee mob | 0.10 | |
-				 * Ranged mob | 0.13 | | Demented ranged mob | 0.02 | +---------------------+--------+
-				 */
+				// Current mob spawn chances:
+				// +---------------------+--------+
+				// | Mob type            | Chance |
+				// +---------------------+--------+
+				// | Melee mob           | 0.75   |
+				// | Demented melee mob  | 0.10   |
+				// | Ranged mob          | 0.13   |
+				// | Demented ranged mob | 0.02   |
+				// +---------------------+--------+
 
 				if (n < 0.1) {
 					// demented melee mob

@@ -403,29 +403,6 @@ public class Player extends Character {
 			targetVelocity.y = -1f;
 		}
 
-		if (isDemented()) {
-			if (dementedEffectTime > 0) {
-				applyDementedEffect(targetVelocity);
-				dementedEffectTime -= delta;
-			}
-
-			if (dementedEffectTime <= 0) {
-				dementedEffectTime = 0;
-				dementedBetweenEffectTime += delta;
-
-				if (dementedBetweenEffectTime >= Player.MAX_DEMENTED_BETWEEN_EFFECT_TIME) {
-					dementedBetweenEffectTime = 0;
-					dementedEffectTime = Player.MAX_DEMENTED_EFFECT_TIME;
-				}
-			}
-
-			dementedTime += delta;
-			if (dementedTime >= Player.MAX_DEMENTED_TIME) {
-				dementedTime = 0;
-				stopDemented();
-			}
-		}
-
 		// Calculate speed at which to move the player.
 		float speed = Player.PLAYER_SPEED
 				* (hasPickup(Pickup.SUPER_SPEED) ? Player.PLAYER_SUPER_SPEED_MULTIPLIER : 1);
@@ -437,10 +414,56 @@ public class Player extends Character {
 		}
 
 		targetVelocity.setLength(speed);
+
+		updateDementedTimers(delta, targetVelocity);
+
 		setVelocity(targetVelocity, state == State.SWIMMING ? 1f : 4f);
 
 		// Update movement.
 		super.update(delta);
+	}
+
+
+	/**
+	 * Updates all the demented timers. Calls applyDementedEffect() if the effects should be applied.
+	 *
+	 * @param delta
+	 * @param targetVelocity
+	 */
+	private void updateDementedTimers(float delta, Vector2 targetVelocity) {
+		if (!isDemented()) {
+			return;
+		}
+
+		// Currently applying effects
+		if (dementedEffectTime > 0) {
+			applyDementedEffect(targetVelocity);
+			dementedEffectTime -= delta;
+		}
+
+		// Not applying effect
+		if (dementedEffectTime <= 0) {
+			dementedEffectTime = 0;
+
+			// Step the between time
+			dementedBetweenEffectTime += delta;
+
+			// If it's been long enough since last effect application
+			// Start applying
+			if (dementedBetweenEffectTime >= Player.MAX_DEMENTED_BETWEEN_EFFECT_TIME) {
+				dementedBetweenEffectTime = 0;
+				dementedEffectTime = Player.MAX_DEMENTED_EFFECT_TIME;
+			}
+		}
+
+		// Step the time for the whole
+		dementedTime += delta;
+
+		// Stop if player has been demented long enough
+		if (dementedTime >= Player.MAX_DEMENTED_TIME) {
+			dementedTime = 0;
+			stopDemented();
+		}
 	}
 
 

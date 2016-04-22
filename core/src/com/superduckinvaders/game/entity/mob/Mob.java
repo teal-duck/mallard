@@ -5,6 +5,8 @@ package com.superduckinvaders.game.entity.mob;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.assets.TextureSet;
@@ -35,8 +37,9 @@ public class Mob extends Character {
 
 	protected Character target;
 
-	private static final float MAX_DEMENTED_SWITCH_TARGET_TIME = 5f;
-	private float dementedTargetSwitchTime = 0;
+	private static final float MOB_NEW_DEMENTED_EFFECT_TIME = 5f;
+	private float dementedNewEffectTimer = 0;
+	private DementedMobBehaviour dementedBehaviour;
 	// private float maxDementedTargetSwitchTime = 5;
 
 
@@ -69,17 +72,24 @@ public class Mob extends Character {
 		this.textureSet = textureSet;
 		this.speed = speed;
 		this.ai = ai;
+		
+		categoryBits = PhysicsEntity.MOB_BITS;
+		enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
+		createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
+				PhysicsEntity.NO_GROUP, false);
 
 		if (demented) {
 			categoryBits = PhysicsEntity.DEMENTED_BITS;
 			enemyBits = PhysicsEntity.PLAYER_BITS | PhysicsEntity.MOB_BITS;
-			createDynamicBody(PhysicsEntity.DEMENTED_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.DEMENTED_BITS)), PhysicsEntity.NO_GROUP, false);
-		} else {
-			categoryBits = PhysicsEntity.MOB_BITS;
-			enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
-			createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
-					PhysicsEntity.NO_GROUP, false);
+//			createDynamicBody(PhysicsEntity.DEMENTED_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.DEMENTED_BITS)), PhysicsEntity.NO_GROUP, false);
+			becomeDemented();
 		}
+//		} else {
+//			categoryBits = PhysicsEntity.MOB_BITS;
+//			enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
+//			createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
+//					PhysicsEntity.NO_GROUP, false);
+//		}
 
 		
 		body.setLinearDamping(20f);
@@ -172,11 +182,16 @@ public class Mob extends Character {
 		}
 
 		if (isDemented()) {
-			if (dementedTargetSwitchTime > Mob.MAX_DEMENTED_SWITCH_TARGET_TIME) {
-				dementedTargetSwitchTime = 0;
+			if (dementedTime > MAX_DEMENTED_TIME) {
+				stopDemented();
+			}
+			else if (dementedNewEffectTimer > Mob.MOB_NEW_DEMENTED_EFFECT_TIME) {
+				dementedNewEffectTimer = 0;
+				// newDementedEffect();
 				setAITarget(parent.getNearestCharacter(this));
 			} else {
-				dementedTargetSwitchTime += delta;
+				dementedNewEffectTimer += delta;
+				dementedTime += delta;
 			}
 		}
 
@@ -185,12 +200,39 @@ public class Mob extends Character {
 	
 	
 	public void becomeDemented() {
-		super.becomeDemented();
 		if (isDemented()) {
 			// If mob is already demented, reset timer
 			dementedTime = 0;
 		} else {
-			
+			super.becomeDemented();
+			dementedBehaviour = DementedMobBehaviour.
+			categoryBits = PhysicsEntity.DEMENTED_BITS;
+			enemyBits = PhysicsEntity.PLAYER_BITS | PhysicsEntity.MOB_BITS;
+			for (Fixture fix : body.getFixtureList()) {
+				Filter filter = fix.getFilterData();
+				filter.categoryBits = categoryBits;
+				filter.maskBits = enemyBits;
+				fix.setFilterData(filter);
+			}
+		}
+	}
+	
+	
+	public void newDementedEffect() {
+		
+	}
+	
+	
+	public void stopDemented() {
+		super.stopDemented();
+		
+		categoryBits = PhysicsEntity.MOB_BITS;
+		enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
+		for (Fixture fix : body.getFixtureList()) {
+			Filter filter = fix.getFilterData();
+			filter.categoryBits = categoryBits;
+			filter.maskBits = enemyBits;
+			fix.setFilterData(filter);
 		}
 	}
 
@@ -218,5 +260,14 @@ public class Mob extends Character {
 			velocity.scl(0.4f);
 		}
 		setVelocityClamped(velocity);
+	}
+	
+	
+	public enum DementedMobBehaviour {
+		ATTACK_CLOSEST, WALK_AIMLESSLY, WALK_NORTH, RUN_AWAY, STAND_STILL;
+		
+		public DementedMobBehaviour randomBehaviour() {
+			
+		}
 	}
 }

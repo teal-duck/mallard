@@ -67,6 +67,10 @@ public abstract class Character extends PhysicsEntity {
 
 	private boolean isDemented;
 
+	// How long being demented applies before it wears off
+	protected static final float MAX_DEMENTED_TIME = 10;
+
+	protected float dementedTime = 0;
 
 	/**
 	 * Initialises this Character. Defaults demented to false.

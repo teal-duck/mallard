@@ -22,11 +22,12 @@ public abstract class PhysicsEntity extends Entity {
 	public static final short PLAYER_BITS = 0x2;
 	public static final short MOB_BITS = 0x4;
 	public static final short PROJECTILE_BITS = 0x8;
+	public static final short DEMENTED_BITS = 0x20;
 	public static final short ITEM_BITS = 0x10;
 	public static final short WATER_BITS = 0x10;
 	public static final short ALL_BITS = PhysicsEntity.WORLD_BITS | PhysicsEntity.PLAYER_BITS
 			| PhysicsEntity.MOB_BITS | PhysicsEntity.PROJECTILE_BITS | PhysicsEntity.ITEM_BITS
-			| PhysicsEntity.WATER_BITS;
+			| PhysicsEntity.WATER_BITS | PhysicsEntity.DEMENTED_BITS;
 	public static final short NO_GROUP = 0;
 	public static final short MOB_GROUP = -1;
 	public static final short SENSOR_GROUP = -2;

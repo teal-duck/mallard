@@ -70,11 +70,18 @@ public class Mob extends Character {
 		this.speed = speed;
 		this.ai = ai;
 
-		categoryBits = PhysicsEntity.MOB_BITS;
-		enemyBits = PhysicsEntity.PLAYER_BITS;
+		if (demented) {
+			categoryBits = PhysicsEntity.DEMENTED_BITS;
+			enemyBits = PhysicsEntity.PLAYER_BITS | PhysicsEntity.MOB_BITS;
+			createDynamicBody(PhysicsEntity.DEMENTED_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.DEMENTED_BITS)), PhysicsEntity.NO_GROUP, false);
+		} else {
+			categoryBits = PhysicsEntity.MOB_BITS;
+			enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
+			createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
+					PhysicsEntity.NO_GROUP, false);
+		}
 
-		createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
-				PhysicsEntity.MOB_GROUP, false);
+		
 		body.setLinearDamping(20f);
 
 		target = parent.getPlayer();
@@ -174,6 +181,17 @@ public class Mob extends Character {
 		}
 
 		super.update(delta);
+	}
+	
+	
+	public void becomeDemented() {
+		super.becomeDemented();
+		if (isDemented()) {
+			// If mob is already demented, reset timer
+			dementedTime = 0;
+		} else {
+			
+		}
 	}
 
 

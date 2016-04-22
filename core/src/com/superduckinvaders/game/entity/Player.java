@@ -121,11 +121,6 @@ public class Player extends Character {
 	private static final float MAX_DEMENTED_BETWEEN_EFFECT_TIME = 3f;
 	private float dementedBetweenEffectTime = 0;
 
-	// How long being demented applies before it wears off
-	private static final float MAX_DEMENTED_TIME = 10;
-	private float dementedTime = 0;
-
-
 	/**
 	 * Initialises this Player at the specified coordinates and with the specified initial health.
 	 *
@@ -138,7 +133,7 @@ public class Player extends Character {
 	 */
 	public Player(Round parent, float x, float y) {
 		super(parent, x, y, Player.PLAYER_HEALTH);
-		enemyBits = PhysicsEntity.MOB_BITS | PhysicsEntity.PROJECTILE_BITS;
+		enemyBits = PhysicsEntity.MOB_BITS | PhysicsEntity.PROJECTILE_BITS | PhysicsEntity.DEMENTED_BITS;
 		meleeRange = 40f;
 		Character.MELEE_ATTACK_COOLDOWN = 0.2f;
 		Character.STUNNED_DURATION = 0f;
@@ -420,7 +415,7 @@ public class Player extends Character {
 			}
 
 			dementedTime += delta;
-			if (dementedTime >= Player.MAX_DEMENTED_TIME) {
+			if (dementedTime >= Character.MAX_DEMENTED_TIME) {
 				dementedTime = 0;
 				stopDemented();
 			}

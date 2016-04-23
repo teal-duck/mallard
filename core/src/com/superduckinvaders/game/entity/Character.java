@@ -107,7 +107,7 @@ public abstract class Character extends PhysicsEntity {
 		super(parent, x, y);
 		this.maximumHealth = currentHealth = maximumHealth;
 		enemiesInRange = new ArrayList<>();
-		isDemented = demented;
+		//isDemented = demented;
 	}
 
 

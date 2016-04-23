@@ -4,6 +4,7 @@ package com.superduckinvaders.game.entity.mob;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -171,8 +172,12 @@ public class Mob extends Character {
 
 	@Override
 	public void update(float delta) {
-		ai.update(this, delta);
-
+		// If duck is demented and is currently walking north or standing still, do not use AI to move.
+		if ((!isDemented()) || 
+				(! 	(dementedBehaviour.equals(DementedMobBehaviour.WALK_NORTH)) ||
+					(dementedBehaviour.equals(DementedMobBehaviour.STAND_STILL)))) {
+			ai.update(this, delta);
+		}
 		// Chance of spawning a random powerup.
 		if (isDead()) {
 			Player.Pickup pickup = Player.Pickup.random();
@@ -187,25 +192,27 @@ public class Mob extends Character {
 			}
 			else if (dementedNewEffectTimer > Mob.MOB_NEW_DEMENTED_EFFECT_TIME) {
 				dementedNewEffectTimer = 0;
-				// newDementedEffect();
-				setAITarget(parent.getNearestCharacter(this));
+				newDementedEffect();
 			} else {
 				dementedNewEffectTimer += delta;
 				dementedTime += delta;
+				if (dementedBehaviour.equals(DementedMobBehaviour.WALK_NORTH)) {
+					applyVelocity(this.getCentre().sub(new Vector2(0, 500)));
+				}
 			}
 		}
-
 		super.update(delta);
 	}
-	
+
 	
 	public void becomeDemented() {
 		if (isDemented()) {
 			// If mob is already demented, reset timer
 			dementedTime = 0;
+			dementedNewEffectTimer = 0;
 		} else {
 			super.becomeDemented();
-			dementedBehaviour = DementedMobBehaviour.
+			dementedBehaviour = DementedMobBehaviour.randomBehaviour();
 			categoryBits = PhysicsEntity.DEMENTED_BITS;
 			enemyBits = PhysicsEntity.PLAYER_BITS | PhysicsEntity.MOB_BITS;
 			for (Fixture fix : body.getFixtureList()) {
@@ -219,7 +226,27 @@ public class Mob extends Character {
 	
 	
 	public void newDementedEffect() {
-		
+		dementedBehaviour = DementedMobBehaviour.randomBehaviour();
+		if (dementedBehaviour.equals(DementedMobBehaviour.ATTACK_CLOSEST)) {
+			setAITarget(parent.getNearestCharacter(this));
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.RUN_AWAY)) {
+			setSpeed(-1);
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.STAND_STILL)) {
+			setSpeed(0);
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.WALK_NORTH)) {
+			// Do nothing here, handled in update().
+		}
+	}
+	
+	
+	public void clearDementedEffect() {
+		if (dementedBehaviour.equals(DementedMobBehaviour.ATTACK_CLOSEST)) {
+			setAITarget(parent.getPlayer());
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.RUN_AWAY)) {
+			setSpeed(1);
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.STAND_STILL)) {
+			setSpeed(1);
+		}
 	}
 	
 	
@@ -264,10 +291,12 @@ public class Mob extends Character {
 	
 	
 	public enum DementedMobBehaviour {
-		ATTACK_CLOSEST, WALK_AIMLESSLY, WALK_NORTH, RUN_AWAY, STAND_STILL;
+		ATTACK_CLOSEST, SHOOT_AIMLESSLY, WALK_NORTH, RUN_AWAY, STAND_STILL;
 		
-		public DementedMobBehaviour randomBehaviour() {
-			
+		public static DementedMobBehaviour randomBehaviour() {
+			DementedMobBehaviour[] behaviours = DementedMobBehaviour.values();
+			int n = MathUtils.random(behaviours.length - 1);
+			return behaviours[n];
 		}
 	}
 }

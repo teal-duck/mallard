@@ -9,6 +9,8 @@ import com.superduckinvaders.game.assets.Assets;
  * A guy with the gun. Initializes the RangedMob with a gunner texture.
  */
 public class GunnerMob extends RangedMob {
+
+	public static final int MOVE_SPEED = 3;
 	/**
 	 * Create a new GunnerMob.
 	 *
@@ -22,7 +24,7 @@ public class GunnerMob extends RangedMob {
 	 *                true if the mob is created in a poor mental state.
 	 */
 	public GunnerMob(Round parent, float x, float y, boolean demented) {
-		super(parent, x, y, 2, Assets.rangedBadGuyNormal, 3, demented);
+		super(parent, x, y, 2, Assets.rangedBadGuyNormal, MOVE_SPEED, demented);
 	}
 
 

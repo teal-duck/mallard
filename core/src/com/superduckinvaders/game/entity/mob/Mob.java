@@ -4,7 +4,10 @@ package com.superduckinvaders.game.entity.mob;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.superduckinvaders.game.Round;
 import com.superduckinvaders.game.ai.AI;
 import com.superduckinvaders.game.assets.TextureSet;
@@ -35,8 +38,11 @@ public class Mob extends Character {
 
 	protected Character target;
 
-	private static final float MAX_DEMENTED_SWITCH_TARGET_TIME = 5f;
-	private float dementedTargetSwitchTime = 0;
+	private static final double MOB_DEMENTED_CHANCE = 0.00015f;
+	private static final float MOB_NEW_DEMENTED_EFFECT_TIME = 5f;
+	private int defaultMoveSpeed;
+	private float dementedNewEffectTimer = 0;
+	private DementedMobBehaviour dementedBehaviour;
 	// private float maxDementedTargetSwitchTime = 5;
 
 
@@ -68,13 +74,28 @@ public class Mob extends Character {
 
 		this.textureSet = textureSet;
 		this.speed = speed;
+		this.defaultMoveSpeed = speed;
 		this.ai = ai;
-
+		
 		categoryBits = PhysicsEntity.MOB_BITS;
-		enemyBits = PhysicsEntity.PLAYER_BITS;
-
+		enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
 		createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
 				PhysicsEntity.MOB_GROUP, false);
+
+		if (demented) {
+//			categoryBits = PhysicsEntity.DEMENTED_BITS;
+//			enemyBits = PhysicsEntity.PLAYER_BITS | PhysicsEntity.MOB_BITS;
+//			createDynamicBody(PhysicsEntity.DEMENTED_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.DEMENTED_BITS)), PhysicsEntity.NO_GROUP, false);
+			becomeDemented();
+		}
+//		} else {
+//			categoryBits = PhysicsEntity.MOB_BITS;
+//			enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
+//			createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
+//					PhysicsEntity.NO_GROUP, false);
+//		}
+
+		
 		body.setLinearDamping(20f);
 
 		target = parent.getPlayer();
@@ -154,8 +175,18 @@ public class Mob extends Character {
 
 	@Override
 	public void update(float delta) {
-		ai.update(this, delta);
-
+		
+		// Low chance of becoming demented each frame.
+		// Each mob has roughly 54% chance of becoming demented by 60 seconds.
+		if (MathUtils.random() < (float) MOB_DEMENTED_CHANCE) {
+			becomeDemented();
+		}
+		// If duck is demented and is currently walking north or standing still, do not use AI to move.
+		if ((!isDemented()) || 
+				(! 	(dementedBehaviour.equals(DementedMobBehaviour.WALK_NORTH)) ||
+					(dementedBehaviour.equals(DementedMobBehaviour.STAND_STILL)))) {
+			ai.update(this, delta);
+		}
 		// Chance of spawning a random powerup.
 		if (isDead()) {
 			Player.Pickup pickup = Player.Pickup.random();
@@ -165,15 +196,88 @@ public class Mob extends Character {
 		}
 
 		if (isDemented()) {
-			if (dementedTargetSwitchTime > Mob.MAX_DEMENTED_SWITCH_TARGET_TIME) {
-				dementedTargetSwitchTime = 0;
-				setAITarget(parent.getNearestCharacter(this));
+			if (dementedTime > MAX_DEMENTED_TIME) {
+				stopDemented();
+			}
+			else if (dementedNewEffectTimer > Mob.MOB_NEW_DEMENTED_EFFECT_TIME) {
+				dementedNewEffectTimer = 0;
+				clearDementedEffect();
+				newDementedEffect();
 			} else {
-				dementedTargetSwitchTime += delta;
+				dementedNewEffectTimer += delta;
+				dementedTime += delta;
+				if (dementedBehaviour.equals(DementedMobBehaviour.WALK_NORTH)) {
+					applyVelocity(this.getCentre().sub(new Vector2(0, 500)));
+				}
 			}
 		}
-
 		super.update(delta);
+	}
+
+	
+	public void becomeDemented() {
+		if (isDemented()) {
+			// If mob is already demented, reset timer
+			dementedTime = 0;
+			dementedNewEffectTimer = 0;
+		} else {
+			super.becomeDemented();
+			dementedBehaviour = DementedMobBehaviour.randomBehaviour();
+			categoryBits = PhysicsEntity.DEMENTED_BITS;
+			enemyBits = PhysicsEntity.PLAYER_BITS | PhysicsEntity.MOB_BITS;
+			for (Fixture fix : body.getFixtureList()) {
+				Filter filter = fix.getFilterData();
+				filter.categoryBits = categoryBits;
+				if (fix.isSensor())
+					filter.maskBits = enemyBits;
+				else
+					filter.maskBits = PhysicsEntity.ALL_BITS & (~PhysicsEntity.DEMENTED_BITS);
+				fix.setFilterData(filter);
+			}
+		}
+	}
+	
+	
+	public void newDementedEffect() {
+		dementedBehaviour = DementedMobBehaviour.randomBehaviour();
+		if (dementedBehaviour.equals(DementedMobBehaviour.ATTACK_CLOSEST)) {
+			setAITarget(parent.getNearestCharacter(this));
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.RUN_AWAY)) {
+			setSpeed(- defaultMoveSpeed);
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.STAND_STILL)) {
+//			setSpeed(0);
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.WALK_NORTH)) {
+			// Do nothing here, handled in update().
+		}
+	}
+	
+	
+	public void clearDementedEffect() {
+		if (dementedBehaviour.equals(DementedMobBehaviour.ATTACK_CLOSEST)) {
+			setAITarget(parent.getPlayer());
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.RUN_AWAY)) {
+			setSpeed(defaultMoveSpeed);
+		} else if (dementedBehaviour.equals(DementedMobBehaviour.STAND_STILL)) {
+			setSpeed(defaultMoveSpeed);
+		}
+	}
+	
+	
+	public void stopDemented() {
+		super.stopDemented();
+		clearDementedEffect();
+		categoryBits = PhysicsEntity.MOB_BITS;
+		enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
+		for (Fixture fix : body.getFixtureList()) {
+			Filter filter = fix.getFilterData();
+			filter.categoryBits = categoryBits;
+			filter.maskBits = enemyBits;
+			if (fix.isSensor())
+				filter.maskBits = enemyBits;
+			else
+				filter.maskBits = PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS);
+			fix.setFilterData(filter);
+		}
 	}
 
 
@@ -200,5 +304,16 @@ public class Mob extends Character {
 			velocity.scl(0.4f);
 		}
 		setVelocityClamped(velocity);
+	}
+	
+	
+	public enum DementedMobBehaviour {
+		ATTACK_CLOSEST, SHOOT_AIMLESSLY, WALK_NORTH, RUN_AWAY, STAND_STILL;
+		
+		public static DementedMobBehaviour randomBehaviour() {
+			DementedMobBehaviour[] behaviours = DementedMobBehaviour.values();
+			int n = MathUtils.random(behaviours.length - 1);
+			return behaviours[n];
+		}
 	}
 }

@@ -332,7 +332,7 @@ public class Round {
 				// | Demented ranged mob | 0.02   |
 				// +---------------------+--------+
 
-				if (n < 0.1) {
+				if (n < 0.10) {
 					// demented melee mob
 					addMob(new ZombieMob(this, x, y, true));
 				} else if (n < 0.85) {

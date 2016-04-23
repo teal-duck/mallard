@@ -114,7 +114,7 @@ public class Player extends Character {
 	 */
 	private static final float MAX_DEMENTED_EFFECT_TIME = 1f;
 	private float dementedEffectTime = 0;
-
+	
 	/**
 	 * How long between demented effects applying
 	 */
@@ -415,7 +415,7 @@ public class Player extends Character {
 			}
 
 			dementedTime += delta;
-			if (dementedTime >= Character.MAX_DEMENTED_TIME) {
+			if (dementedTime >= MAX_DEMENTED_TIME) {
 				dementedTime = 0;
 				stopDemented();
 			}

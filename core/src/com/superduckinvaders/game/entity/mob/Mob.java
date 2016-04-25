@@ -83,17 +83,8 @@ public class Mob extends Character {
 				PhysicsEntity.MOB_GROUP, false);
 
 		if (demented) {
-			//			categoryBits = PhysicsEntity.DEMENTED_BITS;
-			//			enemyBits = PhysicsEntity.PLAYER_BITS | PhysicsEntity.MOB_BITS;
-			//			createDynamicBody(PhysicsEntity.DEMENTED_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.DEMENTED_BITS)), PhysicsEntity.NO_GROUP, false);
 			becomeDemented();
 		}
-		//		} else {
-		//			categoryBits = PhysicsEntity.MOB_BITS;
-		//			enemyBits = PhysicsEntity.PLAYER_BITS | DEMENTED_BITS;
-		//			createDynamicBody(PhysicsEntity.MOB_BITS, (short) (PhysicsEntity.ALL_BITS & (~PhysicsEntity.MOB_BITS)),
-		//					PhysicsEntity.NO_GROUP, false);
-		//		}
 
 		body.setLinearDamping(20f);
 
@@ -174,17 +165,18 @@ public class Mob extends Character {
 
 	@Override
 	public void update(float delta) {
-
 		// Low chance of becoming demented each frame.
 		// Each mob has roughly 54% chance of becoming demented by 60 seconds.
 		if (MathUtils.random() < (float) Mob.MOB_DEMENTED_CHANCE) {
 			becomeDemented();
 		}
+
 		// If duck is demented and is currently walking north or standing still, do not use AI to move.
 		if ((!isDemented()) || (!(dementedBehaviour.equals(DementedMobBehaviour.WALK_NORTH))
 				|| (dementedBehaviour.equals(DementedMobBehaviour.STAND_STILL)))) {
 			ai.update(this, delta);
 		}
+
 		// Chance of spawning a random powerup.
 		if (isDead()) {
 			Player.Pickup pickup = Player.Pickup.random();
@@ -208,6 +200,7 @@ public class Mob extends Character {
 				}
 			}
 		}
+
 		super.update(delta);
 	}
 
@@ -244,7 +237,7 @@ public class Mob extends Character {
 		} else if (dementedBehaviour.equals(DementedMobBehaviour.RUN_AWAY)) {
 			setSpeed(-defaultMoveSpeed);
 		} else if (dementedBehaviour.equals(DementedMobBehaviour.STAND_STILL)) {
-			//			setSpeed(0);
+			// setSpeed(0);
 		} else if (dementedBehaviour.equals(DementedMobBehaviour.WALK_NORTH)) {
 			// Do nothing here, handled in update().
 		}

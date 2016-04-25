@@ -228,7 +228,6 @@ public class GameScreen extends BaseScreen {
 		drawUI();
 
 	}
-	///
 
 
 	public void drawMiniMap() {
@@ -370,18 +369,6 @@ public class GameScreen extends BaseScreen {
 			float height = texture.getRegionHeight();
 			uiBatch.draw(texture, 1080 + (50 * i++), 85, width * 2, height * 2);
 		}
-
-		// for (int x = 0; x < round.getPlayer().getMaximumHealth(); x += 2) {
-		// 	TextureRegion heart;
-		// 	if ((x + 2) <= round.getPlayer().getCurrentHealth()) {
-		// 		heart = Assets.heartFull;
-		// 	} else if ((x + 1) <= round.getPlayer().getCurrentHealth()) {
-		// 		heart = Assets.heartHalf;
-		// 	} else {
-		// 		heart = Assets.heartEmpty;
-		// 	}
-		// 	uiBatch.draw(heart, (x * 18) + 1080, 48);
-		// }
 
 		int x = 0;
 		TextureRegion heart;

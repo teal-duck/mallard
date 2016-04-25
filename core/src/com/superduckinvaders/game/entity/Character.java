@@ -108,7 +108,7 @@ public abstract class Character extends PhysicsEntity {
 		super(parent, x, y);
 		this.maximumHealth = currentHealth = maximumHealth;
 		enemiesInRange = new ArrayList<>();
-		//isDemented = demented;
+		// isDemented = demented;
 	}
 
 
@@ -266,6 +266,7 @@ public abstract class Character extends PhysicsEntity {
 		if (isStunned()) {
 			return false;
 		}
+
 		// if (meleeAttackTimer > MELEE_ATTACK_COOLDOWN && !enemiesInRange.isEmpty()){
 		if (meleeAttackTimer > Character.MELEE_ATTACK_COOLDOWN) {
 			for (PhysicsEntity entity : enemiesInRange) {
@@ -292,6 +293,7 @@ public abstract class Character extends PhysicsEntity {
 			lookDirection(direction.cpy().nor());
 			return true;
 		}
+
 		return false;
 	}
 

@@ -93,7 +93,7 @@ public class MapScreen extends BaseScreen {
 
 		float[] labelRows = new float[] { 500f, 400f, 300f, 200f };
 
-		float stageWidth = stage.getWidth();// - Assets.button.getRegionWidth();
+		float stageWidth = stage.getWidth(); // - Assets.button.getRegionWidth();
 
 		for (int i = 0; i < 8; i++) {
 			int column = i % 2;

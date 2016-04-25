@@ -8,8 +8,7 @@ public class SoundPlayer {
 	private SoundPlayer() {
 	}
 
-
-	private static boolean playSounds = false;
+	private static boolean playSounds = true;
 
 
 	public static long play(Sound snd) {

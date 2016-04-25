@@ -456,7 +456,7 @@ public class Player extends Character {
 		dementedTime += delta;
 
 		// Stop if player has been demented long enough
-		if (dementedTime >= Player.MAX_DEMENTED_TIME) {
+		if (dementedTime >= Character.MAX_DEMENTED_TIME) {
 			dementedTime = 0;
 			stopDemented();
 		}

@@ -72,6 +72,7 @@ public abstract class Character extends PhysicsEntity {
 
 	protected float dementedTime = 0;
 
+
 	/**
 	 * Initialises this Character. Defaults demented to false.
 	 *

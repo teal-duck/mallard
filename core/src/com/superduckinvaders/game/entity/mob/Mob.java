@@ -302,7 +302,7 @@ public class Mob extends Character {
 
 
 	public enum DementedMobBehaviour {
-		ATTACK_CLOSEST, SHOOT_AIMLESSLY, WALK_NORTH, RUN_AWAY, STAND_STILL;
+		ATTACK_CLOSEST, WALK_NORTH, RUN_AWAY, STAND_STILL;
 
 		public static DementedMobBehaviour randomBehaviour() {
 			DementedMobBehaviour[] behaviours = DementedMobBehaviour.values();

@@ -1,5 +1,5 @@
 /**
- * URL for executable: https://drive.google.com/file/d/0B4to7QAfaHDIeEE0TG4tR0dyRk0/view?usp=sharing
+ * URL for executable: https://github.com/teal-duck/teal-duck/raw/gh-pages/Assessment%204/mallard_a4.jar
  */
 
 package com.superduckinvaders.game.desktop;

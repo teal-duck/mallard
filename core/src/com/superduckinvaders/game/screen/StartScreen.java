@@ -61,6 +61,7 @@ public class StartScreen extends BaseScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				dispose();
+				DuckGame.session.setLevel(1);
 				getGame().setScreen(new GameScreen(getGame(), new Round(getGame())));
 
 			}

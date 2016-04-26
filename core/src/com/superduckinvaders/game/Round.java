@@ -103,9 +103,16 @@ public class Round {
 	 */
 	public Round(DuckGame parent) {
 		this.parent = parent;
-		if (!(DuckGame.session.currentLevel <= 8)) {
-			DuckGame.session.setLevel(8);
+
+		if (DuckGame.session.currentLevel < 1) {
+			DuckGame.session.setLevel(1);
 		}
+
+		final int MAX_LEVELS = Assets.maps.length;
+		if (DuckGame.session.currentLevel > MAX_LEVELS) {
+			DuckGame.session.setLevel(MAX_LEVELS);
+		}
+
 		map = Assets.maps[DuckGame.session.currentLevel - 1];
 
 		world = new World(Vector2.Zero.cpy(), true);
